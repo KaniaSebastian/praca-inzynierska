@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="content-section">
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset>
+
+				<legend class="border-bottom">Zaloguj się</legend>
+
+				<div class="form-group">
+					{{ form.login.label(class="form-control-label") }}
+
+					{% if form.login.errors %}
+						{{ form.login(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.login.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.login(class="form-control form-control-lg") }}
+					{% endif %}
+
+				</div>
+
+				<div class="form-check">
+					{{ form.remember(class="form-check-input") }}
+					{{ form.remember.label(class="form-check-label") }}
+				</div>
+
+			</fieldset>
+
+				<div class="form-group mt-3">
+					{{ form.submit(class="btn btn-outline-info") }}
+				</div>
+		</form>
+	</div>
+{% endblock content%}
