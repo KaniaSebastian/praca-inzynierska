@@ -1,10 +1,7 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from forms import LoginForm, AdminLoginForm
-
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = '66334d8be4b779a6f829916546c8e7df'
-
+from flask import render_template, url_for, flash, redirect
+from flaskapp import app
+from flaskapp.models import User, Project
+from flaskapp.forms import LoginForm, AdminLoginForm
 
 @app.route('/')
 def home():
@@ -27,6 +24,3 @@ def login():
 			flash('Logowanie nieudane. Sprawdź poprawność wpisanych danych', 'danger')	
 
 	return render_template('login.html', title='Zaloguj się', form=form)
-
-if __name__ == '__main__':
-	app.run(debug=True)
