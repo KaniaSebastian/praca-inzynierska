@@ -1,5 +1,11 @@
+body {
+    padding-top: 70px; /* from fixed-top nav bar */
+}
+
+/*
 .container img
 {
 	width: 100%;
 	height: auto;
 }
+*/
