@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 	Project of user with login ''{{ current_user.login }}''
+	{% if current_user.is_admin %}
+		<p> Jesteś adminem </p>
+	{% endif %}
 {% endblock content%}

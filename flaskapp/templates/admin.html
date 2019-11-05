@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="content-section">
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset>
+
+				<legend class="border-bottom">Utwórz grupę</legend>
+
+				<div class="form-group">
+					{{ form.name.label(class="form-control-label") }}
+
+					{% if form.name.errors %}
+						{{ form.name(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.name.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.name(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+                <div class="form-group">
+					{{ form.number.label(class="form-control-label") }}
+
+					{% if form.number.errors %}
+						{{ form.number(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.number.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.number(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+			</fieldset>
+
+				<div class="form-group mt-3">
+					{{ form.submit(class="btn btn-outline-info") }}
+				</div>
+		</form>
+	</div>
+{% endblock content%}
