@@ -56,11 +56,14 @@ def admin():
 	if current_user.is_admin:
 		form = AdminCreateGroup()
 		if form.validate_on_submit():
-			for i in range(form.number.data):
+			x = form.number.data
+			while x > 0:
 				random_key = secrets.token_hex(16)
-				# sprawdzić w bazie czy istnieje
+				if User.query.filter_by(login=random_key).first():
+					continue
 				new_user = User(login=random_key)
 				db.session.add(new_user)
+				x = x - 1
 			# group = Group.query.filter_by(name=form.name.data).first()
 			db.session.commit()
 			flash('Grupa została utworzona', 'success')
@@ -70,9 +73,7 @@ def admin():
 		return redirect(url_for('home'))
 	return render_template('admin.html', title='Panel administracyjny', form=form)
 
-# x = form.number.data
-# while x > 0:
-# 	if User.query.filter_by(login=random_key).first():
-# 		continue
-# 	x = x - 1
-
+# for i in range(form.number.data):
+# 	random_key = secrets.token_hex(16)
+# 	new_user = User(login=random_key)
+# 	db.session.add(new_user)
