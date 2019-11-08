@@ -13,10 +13,10 @@ class User(db.Model, UserMixin):
 	login = db.Column(db.String(20), unique=True, nullable=False)
 	is_admin = db.Column(db.Boolean, nullable=False, default=False)
 	projects = db.relationship('Project', backref='author', lazy=True)
-	# group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+	group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
 
 	def __repr__(self):
-		return f"User('{self.login}'), admin={self.is_admin}"
+		return f"User('{self.login}', admin={self.is_admin})"
 
 
 class Project(db.Model):
@@ -31,7 +31,10 @@ class Project(db.Model):
 		return f"Project('{self.title}', '{self.date_posted}')"
 
 
-# class Group(db.Model):
-# 	id = db.Column(db.Integer, primary_key=True)
-# 	name = db.Column(db.String(20), unique=True, nullable=False)
-# 	users = db.relationship('User', backref='group', lazy=True)
+class Group(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(20), unique=True, nullable=False)
+	users = db.relationship('User', backref='group', lazy=True)
+
+	def __repr__(self):
+		return f"Group ({self.name}, {self.users})"

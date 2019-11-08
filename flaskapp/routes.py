@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from flaskapp import app, db
-from flaskapp.models import User, Project
+from flaskapp.models import User, Project, Group
 from flaskapp.forms import LoginForm, AdminCreateGroup
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
@@ -56,12 +56,17 @@ def admin():
 	if current_user.is_admin:
 		form = AdminCreateGroup()
 		if form.validate_on_submit():
+
+			new_group = Group(name=form.name.data)
+			db.session.add(new_group)
+			db.session.commit()
+
 			x = form.number.data
 			while x > 0:
 				random_key = secrets.token_hex(16)
 				if User.query.filter_by(login=random_key).first():
 					continue
-				new_user = User(login=random_key)
+				new_user = User(login=random_key, group=new_group)
 				db.session.add(new_user)
 				x = x - 1
 			# group = Group.query.filter_by(name=form.name.data).first()
@@ -73,7 +78,7 @@ def admin():
 		return redirect(url_for('home'))
 	return render_template('admin.html', title='Panel administracyjny', form=form)
 
-# for i in range(form.number.data):
-# 	random_key = secrets.token_hex(16)
-# 	new_user = User(login=random_key)
-# 	db.session.add(new_user)
+
+@app.route('/login/admin')
+def admin_login():
+	return "zaloguj sie jako admin"
