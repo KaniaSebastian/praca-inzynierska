@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
-from flaskapp import app, db
+from flaskapp import app, db, bcrypt,admin_password
 from flaskapp.models import User, Project, Group
-from flaskapp.forms import LoginForm, AdminCreateGroup
+from flaskapp.forms import LoginForm, AdminCreateGroup, AdminLoginForm
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 
@@ -21,9 +21,10 @@ def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('home'))
 	form = LoginForm()
-	# form_admin = AdminLoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(login=form.login.data).first()
+		if user and user.is_admin:
+			return redirect(url_for('admin_login'))
 		if user:
 			login_user(user, remember=form.remember.data)
 			next_page = request.args.get('next')
@@ -79,6 +80,17 @@ def admin():
 	return render_template('admin.html', title='Panel administracyjny', form=form)
 
 
-@app.route('/login/admin')
+@app.route('/login/admin', methods=['GET', 'POST'])
 def admin_login():
-	return "zaloguj sie jako admin"
+	if current_user.is_authenticated:
+		return redirect(url_for('home'))
+	form = AdminLoginForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(login=form.login.data).first()
+		if user and bcrypt.check_password_hash(admin_password, form.password.data):
+			login_user(user, remember=form.remember.data)
+			next_page = request.args.get('next')
+			return redirect(next_page) if next_page else redirect(url_for('admin'))
+		else:
+			flash('Logowanie nieudane. Sprawdź poprawność wpisanych danych', 'danger')
+	return render_template('login_admin.html', title='Zaloguj się jako administrator', form=form)

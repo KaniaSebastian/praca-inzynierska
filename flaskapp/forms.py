@@ -10,11 +10,11 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Zaloguj')
 
 
-# class AdminLoginForm(FlaskForm):
-# 	login = StringField('Login', validators=[DataRequired(message='To pole jest wymagane.')])
-# 	password = PasswordField('Hasło', validators=[DataRequired()])
-# 	remember = BooleanField('Pamiętaj mnie')
-# 	submit = SubmitField('Zaloguj')
+class AdminLoginForm(FlaskForm):
+	login = StringField('Login', validators=[DataRequired(message='To pole jest wymagane.')])
+	password = PasswordField('Hasło', validators=[DataRequired(message='To pole jest wymagane.')])
+	remember = BooleanField('Pamiętaj mnie')
+	submit = SubmitField('Zaloguj')
 
 
 class AdminCreateGroup(FlaskForm):
