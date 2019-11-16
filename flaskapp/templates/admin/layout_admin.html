@@ -10,11 +10,7 @@
 
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">    
 
-    {% if title %}
-        <title>{{ title }}</title>
-    {% else %}
-        <title>adres.pl</title>
-    {% endif %}
+	<title></title>
 </head>
 <body>
 	<header>
@@ -73,7 +69,21 @@
 
 	<div class="container p-4">
 		<div class="row">
-			<div class="col-12">
+			<div class="col-md-3">
+				<div class="content-section mr-5 pr-2">
+					<h4>Menu</h4>
+					<!--<p class='text-muted'>You can put any information here you'd like.-->
+						<ul class="list-group">
+							<a href="{{ url_for('panel') }}" class="list-group-item list-group-item-light list-group-item-action">Grupy Studenckie</a>
+							<a href="{{ url_for('create_group') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Grupę</a>
+							<a href="#" class="list-group-item list-group-item-light list-group-item-action">Ustal Terminy</a>
+							<a href="#" class="list-group-item list-group-item-light list-group-item-action">Przegląd Projektów</a>
+						</ul>
+					<!--</p>-->
+				</div>
+			</div>
+
+			<div class="col-8">
 			{% with messages=get_flashed_messages(with_categories=true) %}
 				{% if messages %}
 					{% for category, message in messages %}
