@@ -10,7 +10,11 @@
 
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">    
 
-	<title></title>
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>adres.pl</title>
+    {% endif %}
 </head>
 <body>
 	<header>

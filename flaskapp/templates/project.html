@@ -1,7 +1,57 @@
 {% extends "layout.html" %}
 {% block content %}
-	Project of user with login ''{{ current_user.login }}''
-	{% if current_user.is_admin %}
-		<p> Jesteś adminem </p>
-	{% endif %}
+	<div class="content-section">
+		<form method="POST" action="" novalidate enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			<fieldset>
+
+				<legend class="border-bottom">Dodaj projekt</legend>
+
+				<div class="form-group">
+					{{ form.title.label(class="form-control-label") }}
+
+					{% if form.title.errors %}
+						{{ form.title(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.title.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.title(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					{{ form.image.label() }}
+					{{ form.image(class="form-control-file") }}
+					{% if form.image.errors %}
+						{% for error in form.image.errors %}
+							<span class="text-danger">{{ error }}</span>
+						{% endfor %}
+					{% endif %}
+				</div>
+
+                <div class="form-group">
+					{{ form.description.label(class="form-control-label") }}
+
+					{% if form.description.errors %}
+						{{ form.description(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.description.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.description(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+			</fieldset>
+
+				<div class="form-group mt-3">
+					{{ form.submit(class="btn btn-outline-info") }}
+				</div>
+		</form>
+	</div>
 {% endblock content%}

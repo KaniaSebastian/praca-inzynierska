@@ -1,6 +1,26 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 	<div class="content-section">
-		grupy studenckie
+
+		{% if groups %}
+			<div class="panel panel-default">
+				<div class="panel-heading">Grupy Studenckie</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							{% for group in groups %}
+								<a href="{{ url_for('generate_csv', group_name=group.name) }}" class="list-group-item">{{ group.name }}</a>
+							{% endfor %}
+						</ul>
+					</div>
+			</div>
+		{% else %}
+			<div class="panel panel-default">
+				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+			</div>
+		{% endif %}
+
+
+
+
 	</div>
 {% endblock content%}

@@ -9,3 +9,8 @@ body {
 	height: auto;
 }
 */
+.media-body img
+{
+	width: 300px;
+	height: 300px;
+}

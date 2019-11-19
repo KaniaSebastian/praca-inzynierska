@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, TextAreaField
 from wtforms.validators import DataRequired, NumberRange
 from flaskapp.models import Group
 
@@ -27,3 +28,10 @@ class AdminCreateGroup(FlaskForm):
 		group = Group.query.filter_by(name=name.data).first()
 		if group:
 			raise ValidationError('Ta nazwa jest już używana dla innej grupy.')
+
+
+class CreateProjectForm(FlaskForm):
+	title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.')])
+	image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub png.'), FileRequired(message='Dodanie pliku jest wymagane.')])
+	description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane.')])
+	submit = SubmitField('Dodaj')

@@ -1,7 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-	67a69b6b2f8f609850c14c5330bb79af <br/>
-	{% for x in range(50) %}
-		Home Page <br/>
+	{% for project in projects %}
+	<article class="media content-section">
+		<div class="media-body">
+			<h2><a class="article-title" href="#">{{ project.title }}</a></h2>
+			<img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
+			<p class="article-content">{{ project.description }}</p>
+		</div>
+	</article>
 	{% endfor %}
 {% endblock content%}
