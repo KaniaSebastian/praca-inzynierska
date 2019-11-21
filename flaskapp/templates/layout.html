@@ -3,7 +3,7 @@
 <head>
 	 <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" body="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -18,7 +18,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-dark bg-primary navbar-expand-md fixed-top">
+		<nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
 			<div class="container">
 				<a class="navbar-brand" href="#"><img src="{{url_for('static', filename='logo.png')}}" width="38" height="26" class="d-inline-block align-text-bottom mr-2">adres.pl
 				</a>
@@ -83,7 +83,8 @@
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
-			{% block content %}{% endblock %}
+
+			{% block body %}{% endblock %}
 			</div>
 		</div>
 	</div>

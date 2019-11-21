@@ -1,6 +1,6 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
-	<div class="content-section">
+	<div class="body-section">
 		<form method="POST" action="" novalidate>
 			{{ form.hidden_tag() }}
 			<fieldset>
@@ -34,6 +34,21 @@
 						</div>
 					{% else %}
 						{{ form.number(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					{{ form.group_type.label(class="form-control-label") }}
+
+					{% if form.group_type.errors %}
+						{{ form.group_type(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.group_type.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.group_type(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>
 

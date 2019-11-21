@@ -1,112 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-	 <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">    
-
-    {% if title %}
-        <title>{{ title }}</title>
-    {% else %}
-        <title>adres.pl</title>
-    {% endif %}
-</head>
-<body>
-	<header>
-		<nav class="navbar navbar-dark bg-primary navbar-expand-md fixed-top">
-			<div class="container">
-				<a class="navbar-brand" href="#"><img src="{{url_for('static', filename='logo.png')}}" width="38" height="26" class="d-inline-block align-text-bottom mr-2">adres.pl
-				</a>
-
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="menu toggle">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div id="mainmenu" class="collapse navbar-collapse">
-
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('home') }}">Start</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('about') }}">Informacje</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" href="#">Kontakt</a>
-						</li>
-
-					</ul>
-
-					<ul class="navbar-nav">
-					{% if current_user.is_authenticated %}
-						{% if current_user.is_admin %}
-							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('panel') }}">Panel Administratora</a>
-							</li>
-						{% else %}
-							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('project') }}">Projekt</a>
-							</li>
-						{% endif %}
-
-						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('logout') }}">Wyloguj</a>
-						</li>
-					{% else %}
-						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('login') }}">Zaloguj</a>
-						</li>
-					{% endif %}
-					</ul>
-
-				</div>
-			</div>
-		</nav>
-	</header>
-
-	<div class="container p-4">
-		<div class="row">
-			<div class="col-md-3">
-				<div class="content-section mr-5 pr-2">
-					<h4>Menu</h4>
-					<!--<p class='text-muted'>You can put any information here you'd like.-->
-						<ul class="list-group">
-							<a href="{{ url_for('panel') }}" class="list-group-item list-group-item-light list-group-item-action">Grupy Studenckie</a>
-							<a href="{{ url_for('create_group') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Grupę</a>
-							<a href="#" class="list-group-item list-group-item-light list-group-item-action">Ustal Terminy</a>
-							<a href="#" class="list-group-item list-group-item-light list-group-item-action">Przegląd Projektów</a>
-						</ul>
-					<!--</p>-->
-				</div>
-			</div>
-
-			<div class="col-8">
-			{% with messages=get_flashed_messages(with_categories=true) %}
-				{% if messages %}
-					{% for category, message in messages %}
-						<div class="alert alert-{{ category }}">
-							{{ message }}
-						</div>
-					{% endfor %}
-				{% endif %}
-			{% endwith %}
-			{% block content %}{% endblock %}
-			</div>
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+	<div class="col-md-3">
+		<div class="body-section mr-5 pr-2">
+			<h4>Menu</h4>
+			<!--<p class='text-muted'>You can put any information here you'd like.-->
+				<ul class="list-group">
+					<a href="{{ url_for('panel') }}" class="list-group-item list-group-item-light list-group-item-action">Grupy Studenckie</a>
+					<a href="{{ url_for('create_group') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Grupę</a>
+					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Ustal Terminy</a>
+					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Przegląd Projektów</a>
+				</ul>
+			<!--</p>-->
 		</div>
 	</div>
 
-	<!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-</body>
-</html>
+	<div class="col-md-8">
+		{% block content %}{% endblock %}
+	</div>
+</div>
+{% endblock body%}

@@ -53,7 +53,7 @@ def project():
         if form.validate_on_submit():
             file = save_image(form.image.data)
             new_project = Project(title=form.title.data, description=form.description.data,
-                              image_file=file, author=current_user)
+                                  image_file=file, author=current_user)
             db.session.add(new_project)
             db.session.commit()
             flash('Projekt został dodany', 'success')
@@ -70,6 +70,7 @@ def save_image(image):
     image_path = os.path.join(app.root_path, 'static/projects', image_file_name)
     image.save(image_path)
     return image_file_name
+
 
 @app.route('/panel', methods=['GET', 'POST'])
 @login_required
@@ -95,7 +96,7 @@ def create_group():
 
             x = form.number.data
             while x > 0:
-                random_key = secrets.token_hex(16)
+                random_key = secrets.token_hex(2)
                 if User.query.filter_by(login=random_key).first():
                     continue
                 new_user = User(login=random_key, group=new_group)
@@ -131,19 +132,24 @@ def admin_login(admin_name):
 
 
 @app.route('/generate-csv/<string:group_name>')
+@login_required
 def generate_csv(group_name):
-    # group = Group.query.filter_by(id=group_name).first()
-    def generate():
-        group = Group.query.filter_by(name=group_name).first()
-        header = ("Klucz dostepu", "Imie i nazwisko", "", "Sekcje", "Osoby")
-        yield ",".join(header) + '\n\n'
+    if current_user.is_admin:
+        def generate():
+            group = Group.query.filter_by(name=group_name).first()
+            header = ("Klucz dostepu", "Imie i nazwisko", "", "Sekcje", "Osoby")
+            yield ",".join(header) + '\n\n'
 
-        for n in range(len(group.users)):
-            # group.users[n].login
-            if n < 10:
-                row = (group.users[n].login, "", "", "Sekcja " + str(n+1) + ':')
-                yield ",".join(row) + '\n'
-            else:
-                row = (group.users[n].login)
-                yield row + '\n'
-    return Response(generate(), mimetype='text/csv', headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + ".csv"})
+            for n in range(len(group.users)):
+                # group.users[n].login
+                if n < 10:
+                    row = (group.users[n].login, "", "", "Sekcja " + str(n+1) + ':')
+                    yield ",".join(row) + '\n'
+                else:
+                    row = group.users[n].login
+                    yield row + '\n'
+    else:
+        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('home'))
+    return Response(generate(), mimetype='text/csv',
+                    headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + ".csv"})

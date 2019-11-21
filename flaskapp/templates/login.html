@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
-{% block content %}
-	<div class="content-section">
+{% block body %}
+<div class="row justify-content-md-center">
+	<div class="col-md-8">
 		<form method="POST" action="" novalidate>
 			{{ form.hidden_tag() }}
 			<fieldset>
@@ -35,4 +36,5 @@
 				</div>
 		</form>
 	</div>
-{% endblock content%}
+</div>
+{% endblock body %}

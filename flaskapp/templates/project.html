@@ -1,6 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_project.html" %}
 {% block content %}
-	<div class="content-section">
+
+	<div class="body-section">
 		<form method="POST" action="" novalidate enctype="multipart/form-data">
 			{{ form.hidden_tag() }}
 			<fieldset>
@@ -54,4 +55,4 @@
 				</div>
 		</form>
 	</div>
-{% endblock content%}
+{% endblock content %}

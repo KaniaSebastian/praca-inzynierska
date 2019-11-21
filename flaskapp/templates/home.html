@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
-{% block content %}
-	{% for project in projects %}
-	<article class="media content-section">
-		<div class="media-body">
-			<h2><a class="article-title" href="#">{{ project.title }}</a></h2>
-			<img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
-			<p class="article-content">{{ project.description }}</p>
-		</div>
-	</article>
-	{% endfor %}
-{% endblock content%}
+{% block body %}
+
+    {% if projects %}
+        {% for project in projects %}
+        <article class="media body-section">
+            <div class="media-body">
+                <h2><a class="article-title" href="#">{{ project.title }}</a></h2>
+                <img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
+                <p class="article-body">{{ project.description }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    {% else %}
+        Strona Główna
+    {% endif %}
+{% endblock body%}
