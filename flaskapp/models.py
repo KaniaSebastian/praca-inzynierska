@@ -38,4 +38,4 @@ class Group(db.Model):
     users = db.relationship('User', backref='group', lazy=True)
 
     def __repr__(self):
-        return f"Group ({self.name}, {self.users})"
+        return f"Group ({self.name}, is_section={self.is_section}, {self.users})"

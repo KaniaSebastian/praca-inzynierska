@@ -89,8 +89,10 @@ def create_group():
     if current_user.is_admin:
         form = AdminCreateGroup()
         if form.validate_on_submit():
-
-            new_group = Group(name=form.name.data)
+            if form.group_type.data == 'section':
+                new_group = Group(name=form.name.data, is_section=True)
+            else:
+                new_group = Group(name=form.name.data, is_section=False)
             db.session.add(new_group)
             db.session.commit()
 
