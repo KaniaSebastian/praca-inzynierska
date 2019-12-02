@@ -20,22 +20,17 @@ class AdminLoginForm(FlaskForm):
 
 class AdminCreateGroup(FlaskForm):
     name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.')])
-    number = IntegerField('Ilość kont dla grupy', validators=[DataRequired(message='To pole jest wymagane, a wartość '
-                                                                                  'musi być liczbą całkowitą.'),
-                                                              NumberRange(min=0, max=None, message='Ta wartość nie może '
-                                                                                                  'być ujemna.')])
-    group_type = SelectField('Typ grupy', choices=[('None', '---'), ('section', 'Grupa sekcji'),
-                                                   ('users', 'Grupa użytkowników')])
+    number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość '
+                                                                                    'musi być liczbą całkowitą.'),
+                                                               NumberRange(min=0, max=None,
+                                                                           message='Ta wartość nie może być ujemna.')])
+
     submit = SubmitField('Utwórz')
 
     def validate_name(self, name):
         group = Group.query.filter_by(name=name.data).first()
         if group:
             raise ValidationError('Ta nazwa jest już używana dla innej grupy.')
-
-    def validate_group_type(self, group_type):
-        if group_type.data == 'None':
-            raise ValidationError('Proszę wybrać typ tworzonej grupy')
 
 
 class CreateProjectForm(FlaskForm):
@@ -44,4 +39,7 @@ class CreateProjectForm(FlaskForm):
                                                                                  'png.'),
                                              FileRequired(message='Dodanie pliku jest wymagane.')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane.')])
+    creators_num = IntegerField('Ilość osób pracujących nad projektem',
+                                validators=[DataRequired(message='To pole jest wymagane.'),
+                                            NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
     submit = SubmitField('Dodaj')

@@ -1,0 +1,35 @@
+{% extends "admin/layout_admin.html" %}
+{% block content %}
+
+    <a href="{{ url_for('create_section_keys', group_id=group.id) }}"> <button type="button" class="btn btn-primary btn-lg btn-block">Wygeneruj klucze dla pojedyńczych użytkowników</button> </a>
+    <table class="table text-center align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Sekcja</th>
+                <th scope="col"></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+		<tbody>
+			{% for section in group.users %}
+				<tr>
+					<td> {{ loop.index }} </td>
+					<td> {{ section.login }} </td>
+                    {% if section.project %}
+                        <td> <a href="{{ url_for('single_project', section_id=section.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekt</button> </a> </td>
+                    {% else %}
+                        <td> <a> <button type="button" title="Ta sekcja nie udostępniła jeszcze swojego projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
+                    {% endif %}
+					<!--<td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>-->
+					<td>
+						<button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-success">+</button>
+						<!--<button type="button" class="btn btn-sm btn-danger">-</button>-->
+					</td>
+
+				</tr>
+			{% endfor %}
+		</tbody>
+		</table>
+{% endblock content%}

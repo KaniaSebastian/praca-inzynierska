@@ -1,18 +1,16 @@
-{% extends "layout.html" %}
-{% block body %}
+{% extends "admin/layout_admin.html" %}
+{% block content %}
 
-    {% if projects %}
-        {% for project in projects %}
+    {% if project %}
         <article class="media body-section">
             <div class="media-body">
-                <h2><a class="article-title" href="#">{{ project.title }}</a></h2>
+                <h2 class="article-title">{{ project.title }}</h2>
                 <img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
                 <p class="article-body">{{ project.description }}</p>
             </div>
         </article>
-        {% endfor %}
     {% else %}
-        Strona Główna
+        Projekt nie istnieje.
     {% endif %}
 
-{% endblock body %}
+{% endblock content %}

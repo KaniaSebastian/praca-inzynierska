@@ -1,49 +1,77 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 	<div>
-		<!--{% if groups %}-->
-			<!--<div class="panel panel-default">-->
-				<!--<div class="panel-heading">Grupy Studenckie</div>-->
-					<!--<div class="panel-body">-->
-						<!--<ul class="list-group">-->
-							<!--{% for group in groups %}-->
-								<!--<a href="{{ url_for('generate_csv', group_name=group.name) }}" class="list-group-item">{{ group.name }}</a>-->
-							<!--{% endfor %}-->
-						<!--</ul>-->
-					<!--</div>-->
-			<!--</div>-->
-		<!--{% else %}-->
-			<!--<div class="panel panel-default">-->
-				<!--<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>-->
-			<!--</div>-->
-		<!--{% endif %}-->
+{#		{% if groups %}#}
+{#			<div class="panel panel-default">#}
+{#				<div class="panel-heading">Grupy Studenckie</div>#}
+{#					<div class="panel-body">#}
+{#						<ul class="list-group">#}
+{#							{% for group in groups %}#}
+{#								<a href="{{ url_for('generate_csv', group_name=group.name) }}" class="list-group-item">{{ group.name }}</a>#}
+{#							{% endfor %}#}
+{#						</ul>#}
+{#					</div>#}
+{#			</div>#}
+{#		{% else %}#}
+{#			<div class="panel panel-default">#}
+{#				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>#}
+{#			</div>#}
+{#		{% endif %}#}
 
-		<table class="table text-center align-middle">
-			<thead>
-				<tr>
-					<th scope="col">Nazwa grupy</th>
-					<th scope="col">Typ grupy</th>
-					<th scope="col">Ilość w grupie</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-		<tbody>
-			{% for group in groups %}
-				<tr>
-					<td> {{ group.name }} </td>
-					<td> {% if group.is_section %} Sekcje {% else %} Użytkownicy {% endif %}</td>
-					<td> {{ group.users.__len__() }} </td>
-					<td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>
-					<td>
-						<button type="button" class="btn btn-sm btn-warning">Edytuj</button>
-						<button type="button" class="btn btn-sm btn-danger">Usuń</button>
-					</td>
+        {% if groups %}
+            <table class="table text-center align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Nazwa grupy</th>
+                        <th scope="col">Ilość sekcji</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            <tbody>
+                {% for group in groups %}
+                    {% if group.is_section %}
+                        <tr>
+                            <td> <a href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} </button> </a> </td>
+                            <td> {{ group.users.__len__() }} </td>
+                            <td> <a href="{{ url_for('projects', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekty</button> </a> </td>
+                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#exampleModal">Edytuj</button>
+                                <button type="button" class="btn btn-sm btn-danger">Usuń</button>
+                            </td>
 
-				</tr>
-			{% endfor %}
-		</tbody>
-		</table>
-
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            </table>
+        {% else %}
+            <div class="panel panel-default">
+				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+			</div>
+        {% endif %}
 	</div>
+
+{#    Modal#}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edycja sekcji</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+            <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock content %}
