@@ -2,19 +2,19 @@
 {% block content %}
 
     <a href="{{ url_for('create_section_keys', group_id=group.id) }}"> <button type="button" class="btn btn-primary btn-lg btn-block">Wygeneruj klucze dla pojedyńczych użytkowników</button> </a>
-    <table class="table text-center align-middle">
+    <br>
+
+    <table class="table table-sm text-center align-middle ">
         <thead>
             <tr>
-                <th scope="col">Sekcja</th>
-                <th scope="col"></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th scope="col" class="border-bottom border-thick">Sekcja</th>
+                <th scope="col" class="border-bottom border-thick">Login</th>
+                <th colspan="5" class="border-bottom border-thick"></th>
             </tr>
         </thead>
 		<tbody>
 			{% for section in group.users %}
-				<tr>
+				<tr class="table-secondary border border-thick">
 					<td> {{ loop.index }} </td>
 					<td> {{ section.login }} </td>
                     {% if section.project %}
@@ -23,13 +23,64 @@
                         <td> <a> <button type="button" title="Ta sekcja nie udostępniła jeszcze swojego projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
                     {% endif %}
 					<!--<td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>-->
+                    <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
+                    <td></td>
 					<td>
-						<button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-success">+</button>
-						<!--<button type="button" class="btn btn-sm btn-danger">-</button>-->
+                        <a href="{{ url_for('add_user', section_id=section.id) }}"> <button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-success">+</button> </a>
 					</td>
+                </tr>
 
-				</tr>
+
+                {% if user_groups[loop.index0] %}
+                    {% for user in user_groups[loop.index0].users %}
+                        <tr>
+                            <td class="border-0" colspan="3"></td>
+                            {% if group %}
+                                <td class="border-left border-thick"> {{ user.login }} </td>
+                                <td class="border-up border-thick"> <button type="button" title="Usuń użytkownika" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>-</button> </td>
+                                <td class="border-up border-right border-thick"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+
 			{% endfor %}
 		</tbody>
-		</table>
+    </table>
+
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteUserModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              Czy na pewno chcesz usunąć tego użytkownika ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form action="" method="POST">
+                <input class="btn btn-danger" type="submit" value="Usuń" >
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock content%}
+
+{% block scripts %}
+    <script type=text/javascript>
+        $('#deleteUserModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var userid = button.data('user-id') // Extract info from data-* attributes
+
+          var modal = $(this)
+
+          modal.find('.modal-footer form').attr('action', '/delete_user/' +  userid)
+        })
+    </script>
+{% endblock %}

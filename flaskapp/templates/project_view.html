@@ -1,0 +1,40 @@
+{% if current_user.is_admin %}
+    {% extends "admin/layout_admin.html" %}
+{% elif current_user.group.is_section%}
+    {% extends "layout_section.html" %}
+{% else %}
+    {% extends "layout_user.html" %}
+{% endif %}
+{% block content %}
+
+    {% if current_user.is_admin %}
+        <a href="{{ url_for('sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
+    {% endif %}
+
+    {% if project %}
+
+      <div class="card mb-3 mx-auto" style="max-width: 720px;">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+                <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text">{{ project.description }}</p>
+                <p class="card-text custom-card-footer"><small class="text-muted">Ostatnio edytowano: <b>{{ project.date_posted.strftime('%d-%m-%Y') }}</b> o godzinie <b>{{ project.date_posted.strftime('%H:%M') }}</b></small></p>
+              </div>
+            </div>
+          </div>
+      </div>
+
+    {% else %}
+        {% if current_user.is_admin %}
+            Projekt nie istnieje.
+        {% else %}
+            Nie udostępniono jeszcze projektu. Aby to zrobić kliknij <a href="{{ url_for('project') }}">tutaj</a>.
+        {% endif %}
+    {% endif %}
+
+
+{% endblock content %}

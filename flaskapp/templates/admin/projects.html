@@ -2,19 +2,61 @@
 {% block content %}
 
     {% if projects|length %}
-        Udostępnione projekty: {{ projects|length }}/{{number_of_sections}} </br>
+        <p> Udostępnione projekty: {{ projects|length }}/{{number_of_sections}} </p>
 
         {% for project in projects %}
-            <article class="media body-section">
-                <div class="media-body">
-                    <h2><a class="article-title" href="{{ url_for('single_project', section_id=project.user_id) }}">{{ project.title }}</a></h2>
-                    <img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
-                    <p class="article-body">{{ project.description }}</p>
-                </div>
-            </article>
+              <div class="card mb-3 mx-auto" style="max-width: 720px;">
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+{#                      <img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika" data-toggle="modal" data-target="#viewImage" data-project={{ project.image_file }}>#}
+                        <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                        <p class="card-text custom-card-footer"><small class="text-muted">Ostatnio edytowano: <b>{{ project.date_posted.strftime('%d-%m-%Y') }}</b> o godzinie <b>{{ project.date_posted.strftime('%H:%M') }}</b></small></p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
         {% endfor %}
     {% else %}
         Żadna z sekcji nie udostępniła jeszcze projektu.
     {% endif %}
 
+{#    <!-- Modal -->#}
+{#    <div class="modal fade" id="viewImage" tabindex="-1" role="dialog" aria-labelledby="viewImageTitle" aria-hidden="true">#}
+{#      <div class="modal-dialog modal-lg" role="document">#}
+{#        <div class="modal-content">#}
+{#          <div class="modal-header">#}
+{#            <h5 class="modal-title" id="viewImageTitle">Modal title</h5>#}
+{#            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#              <span aria-hidden="true">&times;</span>#}
+{#            </button>#}
+{#          </div>#}
+{#          <div class="modal-body">#}
+{#            <img src="" alt="Grafika">#}
+{#          </div>#}
+{#          <div class="modal-footer">#}
+{#            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#            <button type="button" class="btn btn-primary">Save changes</button>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+
 {% endblock content %}
+
+{#{% block scripts %}#}
+{#    <script type=text/javascript>#}
+{#        $('#viewImage').on('show.bs.modal', function (event) {#}
+{#          var button = $(event.relatedTarget) // Button that triggered the modal#}
+{#          var file_route = button.data('project') // Extract info from data-* attributes#}
+{##}
+{#          var modal = $(this)#}
+{##}
+{#          modal.find('.modal-body img').attr('src', '/static/projects/' +  file_route)#}
+{#        })#}
+{#    </script>#}
+{#{% endblock %}#}

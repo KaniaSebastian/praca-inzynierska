@@ -1,18 +1,52 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    {% if projects %}
-        {% for project in projects %}
-        <article class="media body-section">
-            <div class="media-body">
-                <h2><a class="article-title" href="#">{{ project.title }}</a></h2>
-                <img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">
-                <p class="article-body">{{ project.description }}</p>
-            </div>
-        </article>
-        {% endfor %}
-    {% else %}
-        Strona Główna
+{#    {% if projects %}#}
+{#        {% for project in projects %}#}
+{#        <article class="media body-section">#}
+{#            <div class="media-body">#}
+{#                <h2><a class="article-title" href="#">{{ project.title }}</a></h2>#}
+{#                <img class="" src="{{ url_for('static', filename='projects/' + project.image_file) }}">#}
+{#                <p class="article-body">{{ project.description }}</p>#}
+{#            </div>#}
+{#        </article>#}
+{#        {% endfor %}#}
+{#    {% else %}#}
+{#        Strona Główna#}
+{#    {% endif %}#}
+
+    {% if current_user.is_anonymous %}
+        <div class="jumbotron">
+          <h1 class="display-4">Witaj!</h1>
+          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <hr class="my-4">
+          <p>Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować.</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Zaloguj się</a>
+        </div>
+    {% elif current_user.is_admin %}
+        <div class="jumbotron">
+          <h1 class="display-4">Jesteś zalogowany jako administrator!</h1>
+          <p class="lead"> Możesz tworzyć grupy projektowe oraz nimi zarządzać. </p>
+          <hr class="my-4">
+          <p>Aby zarządzać systemem przejdź do panelu administracyjnego.</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('panel') }}" role="button">Panel</a>
+        </div>
+    {% elif current_user.group.is_section %}
+        <div class="jumbotron">
+          <h1 class="display-4">Witaj!</h1>
+          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <hr class="my-4">
+          <p> Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('project') }}" role="button">Projekt</a>
+        </div>
+    {% elif not current_user.group.is_section%}
+        <div class="jumbotron">
+          <h1 class="display-4">Witaj!</h1>
+          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <hr class="my-4">
+          <p> Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych studentów lub zobaczyć wyniki końcowe.</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('rating') }}" role="button">Ocenianie</a>
+        </div>
     {% endif %}
 
 {% endblock body %}

@@ -6,7 +6,7 @@ from flaskapp.models import Group
 
 
 class LoginForm(FlaskForm):
-    login = StringField('Login', validators=[DataRequired(message='To pole jest wymagane.')])
+    login = PasswordField('Login', validators=[DataRequired(message='To pole jest wymagane.')])
     remember = BooleanField('Pamiętaj mnie')
     submit = SubmitField('Zaloguj')
 
@@ -43,3 +43,14 @@ class CreateProjectForm(FlaskForm):
                                 validators=[DataRequired(message='To pole jest wymagane.'),
                                             NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
     submit = SubmitField('Dodaj')
+
+
+class UpdateProjectForm(FlaskForm):
+    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.')])
+    image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub '
+                                                                                 'png.')])
+    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane.')])
+    creators_num = IntegerField('Ilość osób pracujących nad projektem',
+                                validators=[DataRequired(message='To pole jest wymagane.'),
+                                            NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
+    submit = SubmitField('Edytuj')

@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    project = db.relationship('Project', backref='author', lazy=True)
+    project = db.relationship('Project', backref='author', lazy=True, cascade="all, delete")
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
 
     def __repr__(self):
@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     image_file = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
     creators_num = db.Column(db.Integer, nullable=False)
@@ -36,7 +36,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     is_section = db.Column(db.Boolean, nullable=False, default=False)
-    users = db.relationship('User', backref='group', lazy=True)
+    users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
 
     def __repr__(self):
         return f"Group ({self.name}, is_section={self.is_section}, {self.users})"

@@ -6,8 +6,12 @@
 			<h4>Menu</h4>
 			<!--<p class='text-muted'>You can put any information here you'd like.-->
 				<ul class="list-group">
-					<a href="{{ url_for('project') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Projekt</a>
-					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Edytuj Projekt</a>
+                    {% if not current_user.project %}
+					    <a href="{{ url_for('project') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Projekt</a>
+                    {% else %}
+                        <a href="{{ url_for('project_view') }}" class="list-group-item list-group-item-light list-group-item-action">Podgląd projektu</a>
+					    <a href="{{ url_for('update_project') }}" class="list-group-item list-group-item-light list-group-item-action">Edytuj Projekt</a>
+                    {% endif %}
 					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Ocenianie</a>
 					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Wyniki</a>
 				</ul>

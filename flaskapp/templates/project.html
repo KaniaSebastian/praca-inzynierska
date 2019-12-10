@@ -1,4 +1,4 @@
-{% extends "layout_project.html" %}
+{% extends "layout_section.html" %}
 {% block content %}
 
 	<div class="body-section">
@@ -6,7 +6,7 @@
 			{{ form.hidden_tag() }}
 			<fieldset>
 
-				<legend class="border-bottom">Dodaj projekt</legend>
+				<legend class="border-bottom">{{ legend }}</legend>
 
 				<div class="form-group">
 					{{ form.title.label(class="form-control-label") }}

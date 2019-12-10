@@ -1,22 +1,6 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 	<div>
-{#		{% if groups %}#}
-{#			<div class="panel panel-default">#}
-{#				<div class="panel-heading">Grupy Studenckie</div>#}
-{#					<div class="panel-body">#}
-{#						<ul class="list-group">#}
-{#							{% for group in groups %}#}
-{#								<a href="{{ url_for('generate_csv', group_name=group.name) }}" class="list-group-item">{{ group.name }}</a>#}
-{#							{% endfor %}#}
-{#						</ul>#}
-{#					</div>#}
-{#			</div>#}
-{#		{% else %}#}
-{#			<div class="panel panel-default">#}
-{#				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>#}
-{#			</div>#}
-{#		{% endif %}#}
 
         {% if groups %}
             <table class="table text-center align-middle">
@@ -36,10 +20,10 @@
                             <td> <a href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} </button> </a> </td>
                             <td> {{ group.users.__len__() }} </td>
                             <td> <a href="{{ url_for('projects', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekty</button> </a> </td>
-                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>
+                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">Pobierz CSV</button> </a> </td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#exampleModal">Edytuj</button>
-                                <button type="button" class="btn btn-sm btn-danger">Usuń</button>
+                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Edytuj</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>Usuń</button>
                             </td>
 
                         </tr>
@@ -54,12 +38,12 @@
         {% endif %}
 	</div>
 
-{#    Modal#}
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{#    Modals#}
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edycja sekcji</h5>
+            <h5 class="modal-title" id="editModalLabel">Edycja sekcji</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -74,4 +58,41 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              Czy na pewno chcesz usunąć tę grupę ? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje !
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form action="" method="POST">
+                <input class="btn btn-danger" type="submit" value="Usuń" >
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
 {% endblock content %}
+
+{% block scripts %}
+    <script type=text/javascript>
+        $('#deleteModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var groupid = button.data('group-id') // Extract info from data-* attributes
+
+          var modal = $(this)
+
+          modal.find('.modal-footer form').attr('action', '/delete_group/' +  groupid)
+        })
+    </script>
+{% endblock %}

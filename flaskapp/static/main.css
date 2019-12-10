@@ -18,3 +18,31 @@ body {
 .table > tbody > tr > td {
      vertical-align: middle;
 }
+
+.border-thick
+{
+    border-width: 2px !important;
+    border-color: #30799B !important;
+}
+
+.table th
+{
+    border: none;
+}
+
+@media(min-width: 575px)
+{
+    .custom-card-footer
+    {
+        position:absolute;
+        right:10px;
+        bottom:10px;
+    }
+}
+/*#card-footer*/
+/*{*/
+/*    position: absolute;*/
+/*    bottom: 0;*/
+/*    margin-bottom: 10px;*/
+/*    right: 10px;*/
+/*}*/
