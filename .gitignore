@@ -2,4 +2,3 @@ venv/
 .idea
 flaskapp/__pycache__/
 seed.py
-flaskapp/static/projects/*
