@@ -6,6 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 import secrets, string, os
 from datetime import datetime
 
+
 @app.route('/')
 def home():
     # projects = Project.query.all()
@@ -294,7 +295,12 @@ def project():
 
 def save_image(image):
     _, extension = os.path.splitext(image.filename)
-    image_file_name = current_user.login + extension
+    image_file_name = secrets.token_hex(5) + extension
+    while True:
+        if Project.query.filter_by(image_file=image_file_name).first():
+            continue
+        else:
+            break
     image_path = os.path.join(app.root_path, 'static/projects', image_file_name)
     image.save(image_path)
     return image_file_name
@@ -315,9 +321,9 @@ def update_project():
             user_project.date_posted = datetime.now()
             if form.image.data:
                 old_file = user_project.image_file
-                os.remove(os.path.join(app.root_path, 'static/projects', old_file))
                 file = save_image(form.image.data)
                 user_project.image_file = file
+                os.remove(os.path.join(app.root_path, 'static/projects', old_file))
             db.session.commit()
             flash('Projekt został edytowany', 'success')
             return redirect(url_for('project_view'))
