@@ -1,0 +1,285 @@
+{% extends "admin/layout_admin.html" %}
+{% block content %}
+	<div>
+        {% if groups %}
+            <table class="table text-center align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Nazwa grupy</th>
+                        <th scope="col">Ilość sekcji</th>
+                        <th scope="col">Czas przesyłania prac</th>
+                        <th scope="col">Ocenianie</th>
+                        <th>Usuń</th>
+                    </tr>
+                </thead>
+            <tbody>
+                {% for group in groups %}
+                    {% if group.is_section %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
+                                <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }}>
+                                    <i class="fa fa-edit fa-lg"></i>
+                                </button>
+                            </td>
+                            <td> {{ group.users.__len__() }} </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#dateTimeModal" data-group-id={{ group.id }} data-time={{ group.upload_time.strftime('%Y-%m-%dT%H:%M') if group.upload_time else pass}}>
+                                    <i class="fa fa-clock-o fa-lg"></i>
+                                </button>
+                            </td>
+                            <td>
+                                {% if group.is_rating_enabled %}
+                                    <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
+                                {% else %}
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Wyłączone</button>
+                                {% endif %}
+
+                            </td>
+{#                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">Pobierz CSV</button> </a> </td>#}
+                            <td>
+{#                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Edytuj</button>#}
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>
+                                    <i class="fa fa-trash-o fa-lg"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+{#                        Rating Modal#}
+                        <div class="modal fade" id="ratingOptionsModal-{{ group.id }}" tabindex="-1" role="dialog" aria-labelledby="ratingOptionsModalLabel-{{ group.id }}" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form name="ratingOptionsForm" method="POST" action="" novalidate>
+                                  {{ set_rating_form.csrf_token() }}
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="ratingOptionsModalLabel-{{ group.id }}">Włącz możliwość oceny projektów przez studentów</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+
+                                  <div class="modal-body">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            {{ set_rating_form.is_rating_enabled.label(class="form-control-label") }}
+
+                                            {% if set_rating_form.is_rating_enabled.errors %}
+                                                {{ set_rating_form.is_rating_enabled(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in set_rating_form.is_rating_enabled.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {% if group.is_rating_enabled %}
+                                                    {{ set_rating_form.is_rating_enabled.process_data('True') }}
+                                                    {{ set_rating_form.is_rating_enabled(class="form-control form-control-lg") }}
+                                                {% else %}
+                                                    {{ set_rating_form.is_rating_enabled.process_data('False') }}
+                                                    {{ set_rating_form.is_rating_enabled(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group">
+                                            {{ set_rating_form.points.label(class="form-control-label") }}
+
+                                            {% if set_rating_form.points.errors %}
+                                                {{ set_rating_form.points(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in set_rating_form.points.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="input-group">
+                                                    {{ set_rating_form.points(class="form-control form-control-lg", value=group.points_per_user, id='points-'+group.id|string()) }}
+                                                    <button type="button" class="btn btn-outline-dark generate-button" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        {{ set_rating_form.selected_group_id(value = group.id) }}
+
+                                    </fieldset>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                    {{ set_rating_form.submitRating(class="btn btn-primary") }}
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            </table>
+        {% else %}
+            <div class="panel panel-default">
+				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+			</div>
+        {% endif %}
+	</div>
+
+{#    Modals#}
+
+    <div class="modal fade" id="dateTimeModal" tabindex="-1" role="dialog" aria-labelledby="dateTimeModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="" novalidate>
+              {{ set_upload_time_form.csrf_token() }}
+              <div class="modal-header">
+                <h5 class="modal-title" id="dateTimeModalLabel">Ustaw czas na udostępnianie prac</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <fieldset>
+                    <div class="form-group">
+                        {{ set_upload_time_form.upload_time.label(class="form-control-label") }}
+
+                        {% if set_upload_time_form.upload_time.errors %}
+                            {{ set_upload_time_form.upload_time(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in set_upload_time_form.upload_time.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="group-time-wrapper">
+                                {{ set_upload_time_form.upload_time(class="form-control form-control-lg") }}
+                            </div>
+                        {% endif %}
+
+                        <div class="group-id-wrapper">
+                            {{ set_upload_time_form.selected_group_id }}
+                        </div>
+                    </div>
+                </fieldset>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                {{ set_upload_time_form.submitTime(class="btn btn-primary") }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="" novalidate>
+              {{ set_upload_time_form.csrf_token() }}
+              <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Zmień nazwę grupy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <fieldset>
+                        <div class="form-group">
+                            {{ group_name_form.name.label(class="form-control-label") }}
+
+                            {% if group_name_form.name.errors %}
+                                {{ group_name_form.name(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in group_name_form.name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="group-name-wrapper">
+                                    {{ group_name_form.name(class="form-control form-control-lg", value='') }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="group-id-wrapper">
+                            {{ group_name_form.selected_group_id }}
+                        </div>
+
+                  </fieldset>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                {{ group_name_form.submitName(class="btn btn-primary") }}
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              Czy na pewno chcesz usunąć tę grupę ? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje !
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+              <form action="" method="POST">
+                <input class="btn btn-danger" type="submit" value="Usuń" >
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type=text/javascript>
+
+        $('#deleteModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var groupid = button.data('group-id') // Extract info from data-* attributes
+          var modal = $(this)
+          modal.find('.modal-footer form').attr('action', '/delete_group/' +  groupid)
+        })
+
+        $('#dateTimeModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var groupid = button.data('group-id') // Extract info from data-* attributes
+          var time = button.data('time')
+          var modal = $(this)
+            {#alert(time)#}
+          modal.find('.group-id-wrapper input').val(groupid)
+          {#modal.find('.group-time-wrapper input').val(time)#}
+          document.getElementById("upload_time").value = time
+        })
+
+        $('#editModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var groupid = button.data('group-id') // Extract info from data-* attributes
+          var groupname = button.data('group-name')
+          var modal = $(this)
+          modal.find('.group-id-wrapper input').val(groupid)
+          modal.find('.group-name-wrapper input').val(groupname)
+          {#modal.find('.group-name-wrapper input').attr('value', groupname)#}
+        })
+
+
+        function generatePoints(number_of_sections, group_id) {
+            {#alert(group_id)#}
+            var points_to_set = number_of_sections-1
+            document.getElementById("points-"+group_id).value = points_to_set;
+            {#var inputID = document.querySelector("#points-1 input").id;#}
+            {#document.getElementById(inputID).value=99#}
+        }
+
+    </script>
+
+{% endblock scripts%}

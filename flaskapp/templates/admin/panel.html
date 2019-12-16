@@ -8,9 +8,10 @@
                     <tr>
                         <th scope="col">Nazwa grupy</th>
                         <th scope="col">Ilość sekcji</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>Termin oddania projektu</th>
+                        <th>Ocenianie</th>
+                        <th>Projekty</th>
+                        <th>Pobierz CSV</th>
                     </tr>
                 </thead>
             <tbody>
@@ -19,13 +20,29 @@
                         <tr>
                             <td> <a href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} </button> </a> </td>
                             <td> {{ group.users.__len__() }} </td>
-                            <td> <a href="{{ url_for('projects', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekty</button> </a> </td>
-                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">Pobierz CSV</button> </a> </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal">Edytuj</button>
-                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>Usuń</button>
+                            <td>{% if group.upload_time %}
+                                    {{ group.upload_time.strftime('%d-%m-%Y, %H:%M') }}
+                                {% else %}
+                                    -----
+                                {% endif %}
                             </td>
-
+                            <td>
+                                {% if group.is_rating_enabled %}
+                                    <span class="text-success"> Włączone </span>
+                                {% else %}
+                                    <span class="text-danger"> Wyłączone </span>
+                                {% endif %}
+                            </td>
+                            <td> <a href="{{ url_for('projects', group_id=group.id) }}">
+                                <button type="button" class="btn btn-sm btn-info">
+                                    <i class="fa fa-image fa-lg"></i>
+                                </button> </a>
+                            </td>
+                            <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}">
+                                <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">
+                                    <i class="fa fa-download fa-lg"></i>
+                                </button> </a>
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -39,60 +56,60 @@
 	</div>
 
 {#    Modals#}
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel">Edycja sekcji</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
-            <button type="button" class="btn btn-primary">Zapisz zmiany</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              Czy na pewno chcesz usunąć tę grupę ? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje !
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <form action="" method="POST">
-                <input class="btn btn-danger" type="submit" value="Usuń" >
-              </form>
-          </div>
-        </div>
-      </div>
-    </div>
+{#    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">#}
+{#      <div class="modal-dialog" role="document">#}
+{#        <div class="modal-content">#}
+{#          <div class="modal-header">#}
+{#            <h5 class="modal-title" id="editModalLabel">Edycja sekcji</h5>#}
+{#            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#              <span aria-hidden="true">&times;</span>#}
+{#            </button>#}
+{#          </div>#}
+{#          <div class="modal-body">#}
+{#            ...#}
+{#          </div>#}
+{#          <div class="modal-footer">#}
+{#            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>#}
+{#            <button type="button" class="btn btn-primary">Zapisz zmiany</button>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{##}
+{##}
+{#    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">#}
+{#      <div class="modal-dialog" role="document">#}
+{#        <div class="modal-content">#}
+{#          <div class="modal-header">#}
+{#            <h5 class="modal-title" id="deleteModalLabel">Modal title</h5>#}
+{#            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#              <span aria-hidden="true">&times;</span>#}
+{#            </button>#}
+{#          </div>#}
+{#          <div class="modal-body">#}
+{#              Czy na pewno chcesz usunąć tę grupę ? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje !#}
+{#          </div>#}
+{#          <div class="modal-footer">#}
+{#            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#              <form action="" method="POST">#}
+{#                <input class="btn btn-danger" type="submit" value="Usuń" >#}
+{#              </form>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
 
 {% endblock content %}
 
-{% block scripts %}
-    <script type=text/javascript>
-        $('#deleteModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget) // Button that triggered the modal
-          var groupid = button.data('group-id') // Extract info from data-* attributes
-
-          var modal = $(this)
-
-          modal.find('.modal-footer form').attr('action', '/delete_group/' +  groupid)
-        })
-    </script>
-{% endblock %}
+{#{% block scripts %}#}
+{#    <script type=text/javascript>#}
+{#        $('#deleteModal').on('show.bs.modal', function (event) {#}
+{#          var button = $(event.relatedTarget) // Button that triggered the modal#}
+{#          var groupid = button.data('group-id') // Extract info from data-* attributes#}
+{##}
+{#          var modal = $(this)#}
+{##}
+{#          modal.find('.modal-footer form').attr('action', '/delete_group/' +  groupid)#}
+{#        })#}
+{#    </script>#}
+{#{% endblock %}#}

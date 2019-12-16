@@ -25,8 +25,10 @@ class Project(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     image_file = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    optional_link = db.Column(db.String)
     creators_num = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    score = db.Column(db.Integer)
 
     def __repr__(self):
         return f"Project('{self.title}', '{self.date_posted}')"
@@ -37,6 +39,10 @@ class Group(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     is_section = db.Column(db.Boolean, nullable=False, default=False)
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
+
+    upload_time = db.Column(db.DateTime)
+    is_rating_enabled = db.Column(db.Boolean, default=False)
+    points_per_user = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"Group ({self.name}, is_section={self.is_section}, {self.users})"

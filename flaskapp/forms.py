@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, TextAreaField, SelectField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, TextAreaField, SelectField, HiddenField
+from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired, NumberRange
 from flaskapp.models import Group
 
@@ -50,7 +51,27 @@ class UpdateProjectForm(FlaskForm):
     image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub '
                                                                                  'png.')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane.')])
-    creators_num = IntegerField('Ilość osób pracujących nad projektem',
-                                validators=[DataRequired(message='To pole jest wymagane.'),
-                                            NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
+    # creators_num = IntegerField('Ilość osób pracujących nad projektem',
+    #                             validators=[DataRequired(message='To pole jest wymagane.'),
+    #                                         NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
     submit = SubmitField('Edytuj')
+
+
+class SetUploadTimeForm(FlaskForm):
+    upload_time = DateTimeLocalField('Czas', format='%Y-%m-%dT%H:%M', validators=[DataRequired(message='Formularz nie został uzupełniony poprawnie')])
+    selected_group_id = HiddenField('Id', validators=[DataRequired()])
+    submitTime = SubmitField('Zatwierdź')
+
+
+class SetRatingForm(FlaskForm):
+    is_rating_enabled = SelectField('Ocenianie', choices=[('False', 'Wyłączone'), ('True', 'Włączone')])
+    points = IntegerField('Punkty na użytkownika', validators=[DataRequired(message='Nieprawidłowa ilość punktów'),
+                                                               NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
+    selected_group_id = HiddenField('Id', validators=[DataRequired()])
+    submitRating = SubmitField('Zatwierdź')
+
+
+class EditGroupName(FlaskForm):
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.')])
+    selected_group_id = HiddenField('Id', validators=[DataRequired()])
+    submitName = SubmitField('Zatwierdź')

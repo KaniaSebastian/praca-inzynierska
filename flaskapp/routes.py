@@ -1,10 +1,11 @@
 from flask import render_template, url_for, flash, redirect, request, Response, abort
 from flaskapp import app, db, bcrypt,admin_password
 from flaskapp.models import User, Project, Group
-from flaskapp.forms import LoginForm, AdminCreateGroup, AdminLoginForm, CreateProjectForm, UpdateProjectForm
+from flaskapp.forms import LoginForm, AdminCreateGroup, AdminLoginForm, CreateProjectForm, UpdateProjectForm, SetUploadTimeForm, SetRatingForm, EditGroupName
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets, string, os
 from datetime import datetime
+from distutils.util import strtobool
 
 
 @app.route('/')
@@ -152,7 +153,7 @@ def create_section_keys(group_id):
         if is_any_project:
             flash('Klucze zostały wygenerowane', 'success')
         else:
-            flash('Nowe klucze mogą być wygenerowane tylko dla sekcji które oddały projekt', 'warning')
+            flash('Nowe klucze mogą być wygenerowane tylko dla sekcji które przesłały już projekt lub nie posiadają jeszcze użytkowników', 'warning')
     else:
         flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -272,6 +273,69 @@ def projects(group_id):
     return render_template('admin/projects.html', title='Pojekt', projects=projects, number_of_sections=number_of_sections)
 
 
+@app.route('/manage-groups', methods=['GET', 'POST'])
+@login_required
+def manage_groups():
+    if current_user.is_admin:
+        set_upload_time_form = SetUploadTimeForm()
+        set_rating_form = SetRatingForm()
+        group_name_form = EditGroupName()
+        groups = Group.query.all()
+
+        if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
+            import sys
+            print('czas submited', file=sys.stderr)
+            group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
+            group.upload_time = set_upload_time_form.upload_time.data
+            db.session.commit()
+            flash('Czas na udostępnienie projektu został zaaktualizowany', 'success')
+            return redirect(url_for('manage_groups'))
+        else:
+            for error in set_upload_time_form.upload_time.errors:
+                flash(error, 'danger')
+
+        if set_rating_form.submitRating.data and set_rating_form.validate():
+            import sys
+            print(set_rating_form.is_rating_enabled.data, file=sys.stderr)
+            group = Group.query.get_or_404(set_rating_form.selected_group_id.data)
+            group.is_rating_enabled = strtobool(set_rating_form.is_rating_enabled.data)
+            group.points_per_user = set_rating_form.points.data
+            db.session.commit()
+            flash('Ocenianie zostało włączone', 'success') if strtobool(set_rating_form.is_rating_enabled.data) else flash('Ocenianie zostało wyłączone', 'success')
+            return redirect(url_for('manage_groups'))
+        else:
+            for error in set_rating_form.points.errors:
+                flash(error, 'danger')
+
+        if group_name_form.submitName.data and group_name_form.validate():
+            group = Group.query.get_or_404(group_name_form.selected_group_id.data)
+            group.name = group_name_form.name.data
+            db.session.commit()
+            flash('Nazwa grupy zostałą zmieniona', 'success')
+            return redirect(url_for('manage_groups'))
+        else:
+            for error in group_name_form.name.errors:
+                flash(error, 'danger')
+
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('home'))
+    return render_template('admin/manage_groups.html', title='Zarządzanie grupami', groups=groups,
+                           set_upload_time_form=set_upload_time_form, set_rating_form=set_rating_form, group_name_form=group_name_form)
+
+
+# @app.route('/set-upload-time', methods=['GET', 'POST'])
+# @login_required
+# def manage_groups():
+#     if current_user.is_admin:
+#         form = ManageGroupForm()
+#         groups = Group.query.all()
+#     else:
+#         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+#         return redirect(url_for('home'))
+#     return render_template('admin/manage_groups.html', title='Zarządzanie grupami', groups=groups, form=form)
+
+
 @app.route('/project', methods=['GET', 'POST'])
 @login_required
 def project():
@@ -317,7 +381,7 @@ def update_project():
         if form.validate_on_submit():
             user_project.title = form.title.data
             user_project.description = form.description.data
-            user_project.creators_num = form.creators_num.data
+            # user_project.creators_num = form.creators_num.data
             user_project.date_posted = datetime.now()
             if form.image.data:
                 old_file = user_project.image_file
@@ -330,7 +394,7 @@ def update_project():
         elif request.method == 'GET':
             form.title.data = user_project.title
             form.description.data = user_project.description
-            form.creators_num.data = user_project.creators_num
+            # form.creators_num.data = user_project.creators_num
     else:
         flash('Dostęp do tej strony posiada tylko zwykły użytkownik', 'warning')
         return redirect(url_for('panel'))
