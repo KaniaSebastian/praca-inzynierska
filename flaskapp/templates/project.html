@@ -63,6 +63,21 @@
                         {% endif %}
                     </div>
                 {% endif %}
+
+                <div class="form-group">
+					{{ form.url.label(class="form-control-label") }}
+
+					{% if form.url.errors %}
+						{{ form.url(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.url.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.url(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
 			</fieldset>
 
 				<div class="form-group mt-3">

@@ -69,7 +69,7 @@ def logout():
 @login_required
 def panel():
     if current_user.is_admin:
-        groups = Group.query.all()
+        groups = Group.query.filter_by(is_section=True)
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -212,14 +212,27 @@ def generate_csv(group_name):
     if current_user.is_admin:
         def generate():
             group = Group.query.filter_by(name=group_name).first()
+            header = ('Grupa:', group_name)
+            yield ",".join(header) + '\n'
             header = ("Sekcja", "Klucz dostepu")
             yield ",".join(header) + '\n\n'
 
             for n in range(len(group.users)):
                 # group.users[n].login
-                section = 'Sekcja ' + str(n+1)
-                row = (section, group.users[n].login)
+                group_users = Group.query.filter_by(name=group.users[n].login).first()
+                section = '\n' + 'Sekcja ' + str(n+1)
+                if group_users:
+                    row = (section, group.users[n].login, 'Uzytkownicy:')
+                else:
+                    row = (section, group.users[n].login)
                 yield ','.join(row) + '\n'
+
+                if group_users:
+                    for user in group_users.users:
+                        row = ('', '', user.login)
+                        yield ','.join(row) + '\n'
+
+
     else:
         flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -280,7 +293,7 @@ def manage_groups():
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupName()
-        groups = Group.query.all()
+        groups = Group.query.filter_by(is_section=True)
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
             import sys
@@ -311,7 +324,7 @@ def manage_groups():
             group = Group.query.get_or_404(group_name_form.selected_group_id.data)
             group.name = group_name_form.name.data
             db.session.commit()
-            flash('Nazwa grupy zostałą zmieniona', 'success')
+            flash('Nazwa grupy została zmieniona', 'success')
             return redirect(url_for('manage_groups'))
         else:
             for error in group_name_form.name.errors:
@@ -324,18 +337,6 @@ def manage_groups():
                            set_upload_time_form=set_upload_time_form, set_rating_form=set_rating_form, group_name_form=group_name_form)
 
 
-# @app.route('/set-upload-time', methods=['GET', 'POST'])
-# @login_required
-# def manage_groups():
-#     if current_user.is_admin:
-#         form = ManageGroupForm()
-#         groups = Group.query.all()
-#     else:
-#         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
-#         return redirect(url_for('home'))
-#     return render_template('admin/manage_groups.html', title='Zarządzanie grupami', groups=groups, form=form)
-
-
 @app.route('/project', methods=['GET', 'POST'])
 @login_required
 def project():
@@ -346,7 +347,8 @@ def project():
         if form.validate_on_submit():
             file = save_image(form.image.data)
             new_project = Project(title=form.title.data, description=form.description.data,
-                                  image_file=file, creators_num=form.creators_num.data, author=current_user)
+                                  image_file=file, creators_num=form.creators_num.data,
+                                  author=current_user, optional_link=form.url.data)
             db.session.add(new_project)
             db.session.commit()
             flash('Projekt został dodany', 'success')
@@ -382,6 +384,7 @@ def update_project():
             user_project.title = form.title.data
             user_project.description = form.description.data
             # user_project.creators_num = form.creators_num.data
+            user_project.optional_link = form.url.data
             user_project.date_posted = datetime.now()
             if form.image.data:
                 old_file = user_project.image_file
@@ -394,6 +397,7 @@ def update_project():
         elif request.method == 'GET':
             form.title.data = user_project.title
             form.description.data = user_project.description
+            form.url.data = user_project.optional_link
             # form.creators_num.data = user_project.creators_num
     else:
         flash('Dostęp do tej strony posiada tylko zwykły użytkownik', 'warning')
@@ -406,13 +410,16 @@ def update_project():
 def project_view():
     if current_user.group.is_section:
         project = current_user.project[0]
+        time = current_user.group.upload_time
     elif not current_user.group.is_section:
         # SPRAWDZIĆ !!!!!!!!
-        project = User.query.filter_by(login=current_user.group.name).first().project[0]
+        user = User.query.filter_by(login=current_user.group.name).first()
+        project = user.project[0]
+        time = user.group.upload_time
     else:
         flash('Dostęp do tej strony posiada tylko zwykły użytkownik', 'warning')
         return redirect(url_for('panel'))
-    return render_template('project_view.html', title='Projekt', project=project)
+    return render_template('project_view.html', title='Projekt', project=project, time=time)
 
 
 @app.route('/rating', methods=['GET', 'POST'])

@@ -23,6 +23,21 @@
 				</div>
 
                 <div class="form-group">
+					{{ form.subject.label(class="form-control-label") }}
+
+					{% if form.subject.errors %}
+						{{ form.subject(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.subject.errors %}
+							<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.subject(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+                <div class="form-group">
 					{{ form.number.label(class="form-control-label") }}
 
 					{% if form.number.errors %}

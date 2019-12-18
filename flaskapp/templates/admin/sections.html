@@ -26,7 +26,7 @@
                     <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
                     <td></td>
 					<td>
-                        <a href="{{ url_for('add_user', section_id=section.id) }}"> <button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-success">+</button> </a>
+                        <a href="{{ url_for('add_user', section_id=section.id) }}"> <button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-outline-success"> <i class="fa fa-plus"></i> </button> </a>
 					</td>
                 </tr>
 
@@ -37,7 +37,11 @@
                             <td class="border-0" colspan="3"></td>
                             {% if group %}
                                 <td class="border-left border-thick"> {{ user.login }} </td>
-                                <td class="border-up border-thick"> <button type="button" title="Usuń użytkownika" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>-</button> </td>
+                                <td class="border-up border-thick">
+                                    <button type="button" title="Usuń użytkownika" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </td>
                                 <td class="border-up border-right border-thick"></td>
                             {% endif %}
                         </tr>

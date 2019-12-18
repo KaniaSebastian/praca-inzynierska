@@ -29,6 +29,7 @@ class Project(db.Model):
     creators_num = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     score = db.Column(db.Integer)
+    # last_editor = db.Column()
 
     def __repr__(self):
         return f"Project('{self.title}', '{self.date_posted}')"
@@ -39,7 +40,7 @@ class Group(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     is_section = db.Column(db.Boolean, nullable=False, default=False)
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
-
+    # subject = db.Column(db.String)
     upload_time = db.Column(db.DateTime)
     is_rating_enabled = db.Column(db.Boolean, default=False)
     points_per_user = db.Column(db.Integer, default=0)
