@@ -22,7 +22,6 @@
                     {% else %}
                         <td> <a> <button type="button" title="Ta sekcja nie udostępniła jeszcze swojego projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
                     {% endif %}
-					<!--<td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <button type="button" class="btn btn-sm btn-success">Pobierz CSV</button> </a> </td>-->
                     <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
                     <td></td>
 					<td>

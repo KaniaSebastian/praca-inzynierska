@@ -254,9 +254,7 @@
           var groupid = button.data('group-id') // Extract info from data-* attributes
           var time = button.data('time')
           var modal = $(this)
-            {#alert(time)#}
           modal.find('.group-id-wrapper input').val(groupid)
-          {#modal.find('.group-time-wrapper input').val(time)#}
           document.getElementById("upload_time").value = time
         })
 
@@ -267,16 +265,12 @@
           var modal = $(this)
           modal.find('.group-id-wrapper input').val(groupid)
           modal.find('.group-name-wrapper input').val(groupname)
-          {#modal.find('.group-name-wrapper input').attr('value', groupname)#}
         })
 
 
         function generatePoints(number_of_sections, group_id) {
-            {#alert(group_id)#}
             var points_to_set = number_of_sections-1
             document.getElementById("points-"+group_id).value = points_to_set;
-            {#var inputID = document.querySelector("#points-1 input").id;#}
-            {#document.getElementById(inputID).value=99#}
         }
 
     </script>

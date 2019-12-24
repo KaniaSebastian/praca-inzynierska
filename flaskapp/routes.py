@@ -10,7 +10,6 @@ from distutils.util import strtobool
 
 @app.route('/')
 def home():
-    # projects = Project.query.all()
     return render_template('home.html', title='Strona główna')
 
 
@@ -97,7 +96,6 @@ def create_group():
                 new_user = User(login=random_key, group=new_group)
                 db.session.add(new_user)
                 users_number = users_number - 1
-            # group = Group.query.filter_by(name=form.name.data).first()
             db.session.commit()
             flash('Grupa została utworzona', 'success')
             return redirect(url_for('panel'))
@@ -255,17 +253,6 @@ def sections(group_id):
         return redirect(url_for('home'))
     return render_template('admin/sections.html', title='Sekcje', group=group, user_groups=user_groups)
 
-# ????v
-@app.route('/project/<int:section_id>')
-@login_required
-def single_project(section_id):
-    if current_user.is_admin:
-        project_section = Project.query.filter_by(user_id=section_id).first()
-    else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
-        return redirect(url_for('home'))
-    return render_template('project_view.html', title='Pojekt', project=project_section)
-
 
 @app.route('/projects/<int:group_id>')
 @login_required
@@ -383,7 +370,6 @@ def update_project():
         if form.validate_on_submit():
             user_project.title = form.title.data
             user_project.description = form.description.data
-            # user_project.creators_num = form.creators_num.data
             user_project.optional_link = form.url.data
             user_project.date_posted = datetime.now()
             if form.image.data:
@@ -398,27 +384,25 @@ def update_project():
             form.title.data = user_project.title
             form.description.data = user_project.description
             form.url.data = user_project.optional_link
-            # form.creators_num.data = user_project.creators_num
     else:
         flash('Dostęp do tej strony posiada tylko zwykły użytkownik', 'warning')
         return redirect(url_for('panel'))
     return render_template('project.html', title='Edytuj projekt', form=form, legend='Edytuj projekt')
 
 
-@app.route('/project/view', methods=['GET', 'POST'])
+@app.route('/project/view', defaults={'section: None'})
+@app.route('/project/view/<int:section_id>')
 @login_required
-def project_view():
+def project_view(section_id):
     if current_user.group.is_section:
         project = current_user.project[0]
         time = current_user.group.upload_time
     elif not current_user.group.is_section:
-        # SPRAWDZIĆ !!!!!!!!
         user = User.query.filter_by(login=current_user.group.name).first()
         project = user.project[0]
         time = user.group.upload_time
     else:
-        flash('Dostęp do tej strony posiada tylko zwykły użytkownik', 'warning')
-        return redirect(url_for('panel'))
+        project = Project.query.filter_by(user_id=section_id)
     return render_template('project_view.html', title='Projekt', project=project, time=time)
 
 
