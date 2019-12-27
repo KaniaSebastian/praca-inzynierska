@@ -10,8 +10,8 @@
     {% if current_user.is_admin %}
         <a href="{{ url_for('sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
     {% else %}
-        {% if time %}
-            <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ time }}</b> </h6>
+        {% if project.author.group.upload_time %}
+            <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time }}</b> </h6>
         {% else %}
             <h6 class="mb-3">Termin na udostępnienie projektu: nie wyznaczono</h6>
         {% endif %}
@@ -31,7 +31,13 @@
                 {% if project.optional_link %}
                     <p class="blockquote-footer mt-5">Dodatkowy załącznik <a class="text-info" href="{{ project.optional_link }}" target="_blank"><i class="fa fa-external-link fa-lg" title="{{ project.optional_link }}"></i></a> </p>
                 {% endif %}
-                <p class="card-text custom-card-footer"><small class="text-muted">Ostatnio edytowano: <b>{{ project.date_posted.strftime('%d-%m-%Y') }}</b> o godzinie <b>{{ project.date_posted.strftime('%H:%M') }}</b></small></p>
+                <p class="card-text custom-card-footer">
+                    {% if project.date_posted < project.author.group.upload_time %}
+                        <small class="text-muted">Ostatnio edytowano: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                    {% else %}
+                        <small class="text-muted">Ostatnio edytowano: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                    {% endif %}
+                </p>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@
 					<td> {{ loop.index }} </td>
 					<td> {{ section.login }} </td>
                     {% if section.project %}
-                        <td> <a href="{{ url_for('single_project', section_id=section.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekt</button> </a> </td>
+                        <td> <a href="{{ url_for('project_view', section_id=section.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekt</button> </a> </td>
                     {% else %}
                         <td> <a> <button type="button" title="Ta sekcja nie udostępniła jeszcze swojego projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
                     {% endif %}

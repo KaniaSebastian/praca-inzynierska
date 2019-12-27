@@ -390,19 +390,20 @@ def update_project():
     return render_template('project.html', title='Edytuj projekt', form=form, legend='Edytuj projekt')
 
 
-@app.route('/project/view', defaults={'section: None'})
+@app.route('/project/view', defaults={'section_id': None})
 @app.route('/project/view/<int:section_id>')
 @login_required
 def project_view(section_id):
-    if current_user.group.is_section:
+    if not current_user.is_admin and current_user.group.is_section:
         project = current_user.project[0]
         time = current_user.group.upload_time
-    elif not current_user.group.is_section:
+    elif not current_user.is_admin and not current_user.group.is_section:
         user = User.query.filter_by(login=current_user.group.name).first()
         project = user.project[0]
         time = user.group.upload_time
-    else:
-        project = Project.query.filter_by(user_id=section_id)
+    elif current_user.is_admin:
+        project = Project.query.filter_by(user_id=section_id).first()
+        time = project.author.group.upload_time
     return render_template('project_view.html', title='Projekt', project=project, time=time)
 
 
