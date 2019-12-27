@@ -68,7 +68,7 @@ def logout():
 @login_required
 def panel():
     if current_user.is_admin:
-        groups = Group.query.filter_by(is_section=True)
+        groups = Group.query.filter_by(is_section=True).all()
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -229,8 +229,6 @@ def generate_csv(group_name):
                     for user in group_users.users:
                         row = ('', '', user.login)
                         yield ','.join(row) + '\n'
-
-
     else:
         flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -280,11 +278,9 @@ def manage_groups():
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupName()
-        groups = Group.query.filter_by(is_section=True)
+        groups = Group.query.filter_by(is_section=True).all()
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
-            import sys
-            print('czas submited', file=sys.stderr)
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
             group.upload_time = set_upload_time_form.upload_time.data
             db.session.commit()
@@ -295,13 +291,16 @@ def manage_groups():
                 flash(error, 'danger')
 
         if set_rating_form.submitRating.data and set_rating_form.validate():
-            import sys
-            print(set_rating_form.is_rating_enabled.data, file=sys.stderr)
             group = Group.query.get_or_404(set_rating_form.selected_group_id.data)
-            group.is_rating_enabled = strtobool(set_rating_form.is_rating_enabled.data)
+            group.rating_status = set_rating_form.rating_status.data
             group.points_per_user = set_rating_form.points.data
             db.session.commit()
-            flash('Ocenianie zostało włączone', 'success') if strtobool(set_rating_form.is_rating_enabled.data) else flash('Ocenianie zostało wyłączone', 'success')
+            if set_rating_form.rating_status == 'enabled':
+                flash('Ocenianie zostało włączone', 'success')
+            elif set_rating_form.rating_status == 'disabled':
+                flash('Ocenianie zostało wyłączone', 'success')
+            else:
+                flash('Ocenianie zostało zakończone', 'success')
             return redirect(url_for('manage_groups'))
         else:
             for error in set_rating_form.points.errors:
@@ -396,15 +395,12 @@ def update_project():
 def project_view(section_id):
     if not current_user.is_admin and current_user.group.is_section:
         project = current_user.project[0]
-        time = current_user.group.upload_time
     elif not current_user.is_admin and not current_user.group.is_section:
         user = User.query.filter_by(login=current_user.group.name).first()
         project = user.project[0]
-        time = user.group.upload_time
     elif current_user.is_admin:
         project = Project.query.filter_by(user_id=section_id).first()
-        time = project.author.group.upload_time
-    return render_template('project_view.html', title='Projekt', project=project, time=time)
+    return render_template('project_view.html', title='Projekt', project=project)
 
 
 @app.route('/rating', methods=['GET', 'POST'])

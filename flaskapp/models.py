@@ -42,7 +42,7 @@ class Group(db.Model):
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
     # subject = db.Column(db.String)
     upload_time = db.Column(db.DateTime)
-    is_rating_enabled = db.Column(db.Boolean, default=False)
+    rating_status = db.Column(db.String, default='disabled')
     points_per_user = db.Column(db.Integer, default=0)
 
     def __repr__(self):

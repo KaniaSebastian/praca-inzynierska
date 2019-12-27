@@ -29,10 +29,12 @@
                             </button>
                         </td>
                         <td>
-                            {% if group.is_rating_enabled %}
-                                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
-                            {% else %}
+                            {% if group.rating_status == 'enabled' %}
+                                <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
+                            {% elif group.rating_status == 'disabled' %}
                                 <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Wyłączone</button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Zakończone</button>
                             {% endif %}
 
                         </td>
@@ -59,24 +61,26 @@
                               <div class="modal-body">
                                 <fieldset>
                                     <div class="form-group">
-                                        {{ set_rating_form.is_rating_enabled.label(class="form-control-label") }}
+                                        {{ set_rating_form.rating_status.label(class="form-control-label") }}
 
-                                        {% if set_rating_form.is_rating_enabled.errors %}
-                                            {{ set_rating_form.is_rating_enabled(class="form-control form-control-lg is-invalid") }}
+                                        {% if set_rating_form.rating_status.errors %}
+                                            {{ set_rating_form.rating_status(class="form-control form-control-lg is-invalid") }}
                                             <div class="invalid-feedback">
-                                                {% for error in set_rating_form.is_rating_enabled.errors %}
+                                                {% for error in set_rating_form.rating_status.errors %}
                                                     <span>{{ error }}</span>
                                                 {% endfor %}
                                             </div>
                                         {% else %}
 
-                                            {% if group.is_rating_enabled %}
-                                                {%  set _ = set_rating_form.is_rating_enabled.process_data('True') %}
+                                            {% if group.rating_status == 'enabled' %}
+                                                {%  set _ = set_rating_form.rating_status.process_data('enabled') %}
+                                            {% elif group.rating_status == 'disabled' %}
+                                                {% set _ = set_rating_form.rating_status.process_data('disabled') %}
                                             {% else %}
-                                                {% set _ = set_rating_form.is_rating_enabled.process_data('False') %}
+                                                {% set _ = set_rating_form.rating_status.process_data('ended') %}
                                             {% endif %}
 
-                                            {{ set_rating_form.is_rating_enabled(class="form-control form-control-lg") }}
+                                            {{ set_rating_form.rating_status(class="form-control form-control-lg") }}
 
 
                                         {% endif %}

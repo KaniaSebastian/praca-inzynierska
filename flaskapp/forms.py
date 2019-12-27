@@ -64,7 +64,7 @@ class SetUploadTimeForm(FlaskForm):
 
 
 class SetRatingForm(FlaskForm):
-    is_rating_enabled = SelectField('Ocenianie', choices=[('False', 'Wyłączone'), ('True', 'Włączone')])
+    rating_status = SelectField('Ocenianie', choices=[('disabled', 'Wyłączone'), ('enabled', 'Włączone'), ('endec', 'Zakończone')])
     points = IntegerField('Punkty na użytkownika', validators=[DataRequired(message='Nieprawidłowa ilość punktów'),
                                                                NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
     selected_group_id = HiddenField('Id', validators=[DataRequired()])

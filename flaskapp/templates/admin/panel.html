@@ -26,10 +26,12 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if group.is_rating_enabled %}
-                                <span class="text-success"> Włączone </span>
-                            {% else %}
+                            {% if group.rating_status == 'enabled' %}
+                                <span class="text-info"> Włączone </span>
+                            {% elif group.rating_status == 'disabled'%}
                                 <span class="text-danger"> Wyłączone </span>
+                            {% else %}
+                                <span class="text-success"> Zakończone </span>
                             {% endif %}
                         </td>
                         <td> <a href="{{ url_for('projects', group_id=group.id) }}">
