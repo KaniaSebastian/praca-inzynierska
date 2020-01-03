@@ -1,11 +1,18 @@
 from flask import render_template, url_for, flash, redirect, request, Response, abort
-from flaskapp import app, db, bcrypt,admin_password
+from flaskapp import app, db, bcrypt, admin_password
 from flaskapp.models import User, Project, Group
-from flaskapp.forms import LoginForm, AdminCreateGroup, AdminLoginForm, CreateProjectForm, UpdateProjectForm, SetUploadTimeForm, SetRatingForm, EditGroupName
+from flaskapp.forms import LoginForm, AdminCreateGroup, AdminLoginForm, CreateProjectForm, UpdateProjectForm,\
+     SetUploadTimeForm, SetRatingForm, EditGroupNameForm, PointsForm
 from flask_login import login_user, logout_user, current_user, login_required
-import secrets, string, os
+import secrets
+import string
+import os
 from datetime import datetime
-from distutils.util import strtobool
+import sys
+
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, FieldList, FormField,SubmitField, ValidationError
+from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 
 @app.route('/')
@@ -59,7 +66,7 @@ def admin_login(admin_name):
 
 @app.route('/logout')
 def logout():
-    logout_user();
+    logout_user()
     flash('Wylogowałeś się', 'success')
     return redirect(url_for('home'))
 
@@ -100,7 +107,7 @@ def create_group():
             flash('Grupa została utworzona', 'success')
             return redirect(url_for('panel'))
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return render_template('admin/create_group.html', title='Panel administracyjny', form=form)
 
@@ -121,7 +128,7 @@ def delete_group(group_id):
         flash('Grupa została usunięta', 'success')
         return redirect(url_for('panel'))
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
 
 
@@ -151,9 +158,10 @@ def create_section_keys(group_id):
         if is_any_project:
             flash('Klucze zostały wygenerowane', 'success')
         else:
-            flash('Nowe klucze mogą być wygenerowane tylko dla sekcji które przesłały już projekt lub nie posiadają jeszcze użytkowników', 'warning')
+            flash('Nowe klucze mogą być wygenerowane tylko dla sekcji które przesłały już projekt lub nie posiadają '
+                  'jeszcze użytkowników', 'warning')
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return redirect(url_for('sections', group_id=group_id))
 
@@ -179,7 +187,7 @@ def add_user(section_id):
         else:
             flash('Nowy użytkownik może zostać dodany tylko jeśli sekcja udostępniła już projekt', 'warning')
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return redirect(url_for('sections', group_id=section.group_id))
 
@@ -199,7 +207,7 @@ def delete_user(user_id):
         db.session.commit()
         flash('Użytkownik został usunięty', 'success')
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return redirect(url_for('sections', group_id=user_section.group_id))
 
@@ -230,7 +238,7 @@ def generate_csv(group_name):
                         row = ('', '', user.login)
                         yield ','.join(row) + '\n'
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return Response(generate(), mimetype='text/csv',
                     headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + ".csv"})
@@ -247,7 +255,7 @@ def sections(group_id):
         if not group.is_section:
             return redirect((url_for('panel')))
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
     return render_template('admin/sections.html', title='Sekcje', group=group, user_groups=user_groups)
 
@@ -266,9 +274,9 @@ def projects(group_id):
             if project:
                 projects.append(project)
     else:
-        flash('Musisz mieć uprawnienia aministratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
-    return render_template('admin/projects.html', title='Pojekt', projects=projects, number_of_sections=number_of_sections)
+    return render_template('admin/projects.html', title='Projekt', projects=projects, number_of_sections=number_of_sections)
 
 
 @app.route('/manage-groups', methods=['GET', 'POST'])
@@ -277,14 +285,14 @@ def manage_groups():
     if current_user.is_admin:
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
-        group_name_form = EditGroupName()
+        group_name_form = EditGroupNameForm()
         groups = Group.query.filter_by(is_section=True).all()
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
             group.upload_time = set_upload_time_form.upload_time.data
             db.session.commit()
-            flash('Czas na udostępnienie projektu został zaaktualizowany', 'success')
+            flash('Czas na udostępnienie projektu został zaktualizowany', 'success')
             return redirect(url_for('manage_groups'))
         else:
             for error in set_upload_time_form.upload_time.errors:
@@ -295,9 +303,9 @@ def manage_groups():
             group.rating_status = set_rating_form.rating_status.data
             group.points_per_user = set_rating_form.points.data
             db.session.commit()
-            if set_rating_form.rating_status == 'enabled':
+            if set_rating_form.rating_status.data == 'enabled':
                 flash('Ocenianie zostało włączone', 'success')
-            elif set_rating_form.rating_status == 'disabled':
+            elif set_rating_form.rating_status.data == 'disabled':
                 flash('Ocenianie zostało wyłączone', 'success')
             else:
                 flash('Ocenianie zostało zakończone', 'success')
@@ -407,8 +415,45 @@ def project_view(section_id):
 @login_required
 def rating():
     if not current_user.group.is_section:
+        section = User.query.filter_by(login=current_user.group.name).first()
+        group = Group.query.get_or_404(section.group.id)
+
+        group_projects = list()
+        for section in group.users:
+            section_project = Project.query.filter_by(author=section).first()
+            if section_project and section_project.author.login != current_user.group.name:
+                group_projects.append(section_project)
+
+        user_ratings = [{'points': None} for item in range(len(group_projects))]
+        form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
+
+        if form.validate_on_submit():
+            for i, single_project in enumerate(group_projects):
+                single_project.score = single_project.score + form.all_points[i].data.get('points')
+            current_user.did_rate = True
+            db.session.commit()
+            flash('Punkty zostały przydzielone. Tutaj pojawią się wyniki kiedy zakończy się ocenianie', 'success')
+            return redirect(url_for('results'))
+    else:
+        flash('Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji', 'warning')
+        return redirect(url_for('home'))
+    return render_template('rating.html', title='Ocenianie prac', group=group, group_projects=group_projects, form=form)
+
+
+@app.route('/results')
+@login_required
+def results():
+    if current_user.is_admin:
         pass
     else:
-        flash('Dostęp do tej strony posiada tylko pojedyńczy użytkownik sekcji', 'warning')
-        return redirect(url_for('home'))
-    return render_template('rating.html', title='Ocenianie prac')
+        if current_user.group.is_section:
+            group = current_user.group
+        else:
+            group = User.query.filter_by(login=current_user.group.name).first().group
+
+        group_projects = list()
+        for section in group.users:
+            section_project = Project.query.filter_by(author=section).first()
+            if section_project and section_project.author.login != current_user.group.name:
+                group_projects.append(section_project)
+    return render_template('results.html', title='Wyniki', group=group, group_projects=group_projects)

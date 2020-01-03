@@ -11,8 +11,7 @@
                         <a href="{{ url_for('project_view') }}" class="list-group-item list-group-item-light list-group-item-action">Podgląd projektu</a>
 					    <a href="{{ url_for('update_project') }}" class="list-group-item list-group-item-light list-group-item-action">Edytuj Projekt</a>
                     {% endif %}
-					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Ocenianie</a>
-					<a href="#" class="list-group-item list-group-item-light list-group-item-action">Wyniki</a>
+					<a href="{{ url_for('results') }}" class="list-group-item list-group-item-light list-group-item-action">Wyniki</a>
 				</ul>
 		</div>
 	</div>

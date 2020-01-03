@@ -16,7 +16,7 @@
                 {% for group in groups %}
                     <tr>
                         <td>
-                            <a href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
+                            <a class="text-decoration-none" href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
                             <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }}>
                                 <i class="fa fa-edit fa-lg"></i>
                             </button>
@@ -73,7 +73,7 @@
                                         {% else %}
 
                                             {% if group.rating_status == 'enabled' %}
-                                                {%  set _ = set_rating_form.rating_status.process_data('enabled') %}
+                                                {% set _ = set_rating_form.rating_status.process_data('enabled') %}
                                             {% elif group.rating_status == 'disabled' %}
                                                 {% set _ = set_rating_form.rating_status.process_data('disabled') %}
                                             {% else %}
@@ -90,7 +90,10 @@
                                         {{ set_rating_form.points.label(class="form-control-label") }}
 
                                         {% if set_rating_form.points.errors %}
-                                            {{ set_rating_form.points(class="form-control form-control-lg is-invalid") }}
+                                            <div class="input-group">
+                                                {{ set_rating_form.points(class="form-control form-control-lg is-invalid", value=group.points_per_user, id='points-'+group.id|string()) }}
+                                                <button type="button" class="btn btn-outline-dark generate-button" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                            </div>
                                             <div class="invalid-feedback">
                                                 {% for error in set_rating_form.points.errors %}
                                                     <span>{{ error }}</span>
@@ -273,7 +276,7 @@
 
 
         function generatePoints(number_of_sections, group_id) {
-            var points_to_set = number_of_sections-1
+            var points_to_set = number_of_sections-5
             document.getElementById("points-"+group_id).value = points_to_set;
         }
 

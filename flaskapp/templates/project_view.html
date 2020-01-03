@@ -11,7 +11,7 @@
         <a href="{{ url_for('sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
     {% else %}
         {% if project.author.group.upload_time %}
-            <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time }}</b> </h6>
+            <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
         {% else %}
             <h6 class="mb-3">Termin na udostępnienie projektu: nie wyznaczono</h6>
         {% endif %}
@@ -32,8 +32,10 @@
                     <p class="blockquote-footer mt-5">Dodatkowy załącznik <a class="text-info" href="{{ project.optional_link }}" target="_blank"><i class="fa fa-external-link fa-lg" title="{{ project.optional_link }}"></i></a> </p>
                 {% endif %}
                 <p class="card-text custom-card-footer">
-                    {% if project.date_posted < project.author.group.upload_time %}
+                    {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
                         <small class="text-muted">Ostatnio edytowano: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                    {% elif not project.author.group.upload_time %}
+                        <small class="text-muted">Ostatnio edytowano: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                     {% else %}
                         <small class="text-muted">Ostatnio edytowano: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                     {% endif %}

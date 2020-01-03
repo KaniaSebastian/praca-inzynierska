@@ -1,4 +1,69 @@
 {% extends "layout_user.html" %}
 {% block content %}
-    hello
+    {% if group.rating_status == 'disabled' %}
+        Możliwość oceniania jest w tym momencie wyłączona.
+    {% elif group.rating_status == 'ended' %}
+        Ocenianie zostało zakończone. Możesz zobaczyć wyniki.
+    {% elif group.rating_status == 'enabled' and current_user.did_rate %}
+        Projekty zostały już przez ciebie ocenione.
+    {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
+        <p> Całkowita ilość punktów do rozdania wynosi <b>{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie. </p>
+        <form method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            {% for project in group_projects %}
+                <div class="card mb-3 mx-auto" style="max-width: 720px;">
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                        {% if project.optional_link %}
+                            <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                        {% endif %}
+
+                        {{ form.all_points[loop.index0].hidden_tag() }}
+
+                        <div class="form-group custom-card-footer-points">
+
+                            {% if form.all_points[loop.index0].points.errors %}
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend input-group-sm">
+                                        {{ form.all_points[loop.index0].points.label(class="input-group-text") }}
+                                        {{ form.all_points[loop.index0].points(class="form-control form-control-lg is-invalid") }}
+                                    </div>
+                                </div>
+
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.all_points[loop.index0].points.errors %}
+                                        <span class="d-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+
+                            {% else %}
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend input-group-sm">
+                                        {{ form.all_points[loop.index0].points.label(class="input-group-text") }}
+                                        {{ form.all_points[loop.index0].points(class="form-control") }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            {% endfor %}
+{#            {{ form.submit(class="btn btn-outline-info") }}#}
+            {{ form.submit(class="btn btn-info btn-block") }}
+
+        </form>
+
+    {% endif %}
+
 {% endblock content %}

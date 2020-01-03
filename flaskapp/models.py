@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     project = db.relationship('Project', backref='author', lazy=True, cascade="all, delete")
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
+    did_rate = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"User('{self.login}', admin={self.is_admin})"
@@ -28,7 +29,7 @@ class Project(db.Model):
     optional_link = db.Column(db.String)
     creators_num = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    score = db.Column(db.Integer)
+    score = db.Column(db.Integer, default=0)
     # last_editor = db.Column()
 
     def __repr__(self):

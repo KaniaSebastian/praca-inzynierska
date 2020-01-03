@@ -1,0 +1,19 @@
+{% extends "layout_user.html" %}
+{% block content %}
+    {% if current_user.is_admin %}
+        Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami"
+    {% else %}
+        {% if group.rating_status != 'ended' %}
+            Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.
+            {{ group.rating_status }}
+        {% else %}
+        {% endif %}
+
+    {% endif %}
+
+    {% for project in group_projects %}
+        {{ project.title }}
+    {% endfor %}
+
+
+{% endblock content %}

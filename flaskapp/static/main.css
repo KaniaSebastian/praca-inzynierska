@@ -39,7 +39,19 @@ body {
         right:10px;
         bottom:10px;
     }
+
+    .custom-card-footer-points
+    {
+        position:absolute;
+        left:20px;
+        bottom:10px;
+    }
 }
+
+.input-group.is-invalid invalid-feedback {
+    display: block;
+  }
+
 /*#card-footer*/
 /*{*/
 /*    position: absolute;*/

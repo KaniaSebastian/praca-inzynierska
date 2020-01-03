@@ -5,9 +5,9 @@
 		<div class="body-section mr-5 pr-2">
 			<h4>Menu</h4>
 				<ul class="list-group">
-                    <a href="{{ url_for('rating') }}" class="list-group-item list-group-item-light list-group-item-action">Oceń projekty</a>
                     <a href="{{ url_for('project_view') }}" class="list-group-item list-group-item-light list-group-item-action">Podgląd projektu</a>
-                    <a href="#" class="list-group-item list-group-item-light list-group-item-action">Wyniki końcowe</a>
+                    <a href="{{ url_for('rating') }}" class="list-group-item list-group-item-light list-group-item-action">Oceń projekty</a>
+                    <a href="{{ url_for('results') }} " class="list-group-item list-group-item-light list-group-item-action">Wyniki końcowe</a>
 				</ul>
 		</div>
 	</div>
