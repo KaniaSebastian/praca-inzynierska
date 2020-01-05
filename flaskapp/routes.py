@@ -126,7 +126,7 @@ def delete_group(group_id):
         db.session.delete(group)
         db.session.commit()
         flash('Grupa została usunięta', 'success')
-        return redirect(url_for('panel'))
+        return redirect(url_for('manage_groups'))
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('home'))
@@ -242,6 +242,29 @@ def generate_csv(group_name):
         return redirect(url_for('home'))
     return Response(generate(), mimetype='text/csv',
                     headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + ".csv"})
+
+
+@app.route('/results-csv/<string:group_name>')
+@login_required
+def results_csv(group_name):
+    if current_user.is_admin:
+        def generate():
+            group = Group.query.filter_by(name=group_name).first()
+            header = ('Grupa:', group_name)
+            yield ",".join(header) + '\n'
+            header = ("Sekcja", "Wynik")
+            yield ",".join(header) + '\n\n'
+
+            for n, section in enumerate(group.users, 1):
+                section_name = '\n' + 'Sekcja ' + str(n)
+                section_score = str(section.project[0].score)
+                row = (section_name, section_score)
+                yield ','.join(row) + '\n'
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('home'))
+    return Response(generate(), mimetype='text/csv',
+                    headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + '-wyniki' + ".csv"})
 
 
 @app.route('/sections/<int:group_id>')
@@ -440,20 +463,35 @@ def rating():
     return render_template('rating.html', title='Ocenianie prac', group=group, group_projects=group_projects, form=form)
 
 
-@app.route('/results')
+@app.route('/results', defaults={'group_id': None})
+@app.route('/results/<int:group_id>')
 @login_required
-def results():
+def results(group_id):
     if current_user.is_admin:
-        pass
+        group = Group.query.get_or_404(group_id)
+        user_project = None
     else:
         if current_user.group.is_section:
             group = current_user.group
+            user_project = current_user.project[0]
         else:
-            group = User.query.filter_by(login=current_user.group.name).first().group
+            section = User.query.filter_by(login=current_user.group.name).first()
+            group = section.group
+            user_project = section.project[0]
 
-        group_projects = list()
-        for section in group.users:
-            section_project = Project.query.filter_by(author=section).first()
-            if section_project and section_project.author.login != current_user.group.name:
-                group_projects.append(section_project)
-    return render_template('results.html', title='Wyniki', group=group, group_projects=group_projects)
+    group_projects = dict()
+    for counter, section in enumerate(group.users, 1):
+        section_project = Project.query.filter_by(author=section).first()
+        if section_project:
+            group_projects[counter] = section_project
+    group_projects_sorted = {k: v for k, v in sorted(group_projects.items(), key=lambda item: item[1].score, reverse=True)}  # sorting by score
+
+    users_that_rated_num = 0
+    for section in group.users:
+        for user in Group.query.filter_by(name=section.login).first().users:
+            if user.did_rate:
+                users_that_rated_num = users_that_rated_num + 1
+
+    return render_template('results.html', title='Wyniki', group=group, group_projects=group_projects,
+                           group_projects_sorted=group_projects_sorted, user_project=user_project,
+                           users_that_rated_num=users_that_rated_num)

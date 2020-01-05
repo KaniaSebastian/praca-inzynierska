@@ -2,13 +2,6 @@ body {
     padding-top: 70px; /* from fixed-top nav bar */
 }
 
-/*
-.container img
-{
-	width: 100%;
-	height: auto;
-}
-*/
 .media-body img
 {
 	width: 300px;
@@ -48,14 +41,33 @@ body {
     }
 }
 
-.input-group.is-invalid invalid-feedback {
-    display: block;
-  }
+.table-row-hover:hover
+{
+    cursor: pointer;
+}
 
-/*#card-footer*/
-/*{*/
-/*    position: absolute;*/
-/*    bottom: 0;*/
-/*    margin-bottom: 10px;*/
-/*    right: 10px;*/
-/*}*/
+.hover-pointer
+{
+    cursor: pointer;
+}
+
+.fa
+{
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.fa:hover
+{
+    opacity: 0.7;
+}
+
+.fa-xlg
+{
+    font-size: 1.6em;
+}
+
+.fa-xlg:hover
+{
+    font-size: 1.8em;
+}

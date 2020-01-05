@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, TextAreaField, SelectField, HiddenField, FieldList, FormField, Field
 from wtforms.fields.html5 import DateTimeLocalField, URLField
-from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired
+from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired, Length
 from wtforms.utils import unset_value
 from flaskapp.models import Group
 from flask import flash
@@ -43,7 +43,7 @@ class AdminLoginForm(FlaskForm):
 
 
 class AdminCreateGroup(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
     number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
                                                                NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
     subject = StringField('Przedmiot - prefix', validators=[DataRequired()])
@@ -95,7 +95,7 @@ class SetRatingForm(FlaskForm):
 
 
 class EditGroupNameForm(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
     selected_group_id = HiddenField('Id', validators=[DataRequired()])
     submitName = SubmitField('Zatwierdź')
 
@@ -107,9 +107,12 @@ class EditGroupNameForm(FlaskForm):
 
 class PointsEntryForm(FlaskForm):
     points = CustomIntegerField('Punkty: ', validators=[InputRequired(message='Nieprawidłowa wartość'),
-                                                  NumberRange(min=0, max=None,
-                                                              message='Ta wartość musi być liczbą nieujemną')])
+                                                        NumberRange(min=0, max=None,
+                                                                    message='Ta wartość musi być liczbą nieujemną')])
 
+    def validate_points(self, points):
+        if points.data < 0 or not isinstance(points.data, int):
+            flash('Formularz nie został uzupełniony poprawnie','danger')
 
 class PointsForm(FlaskForm):
 

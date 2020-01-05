@@ -1,19 +1,126 @@
-{% extends "layout_user.html" %}
+{% if current_user.is_admin %}
+    {% extends "admin/layout_admin.html" %}
+{% elif current_user.group.is_section%}
+    {% extends "layout_section.html" %}
+{% else %}
+    {% extends "layout_user.html" %}
+{% endif %}
+
+
 {% block content %}
-    {% if current_user.is_admin %}
-        Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami"
-    {% else %}
-        {% if group.rating_status != 'ended' %}
-            Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.
-            {{ group.rating_status }}
+
+    {% if group.rating_status != 'ended' %}
+        {% if current_user.is_admin %}
+            Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami"
         {% else %}
+            Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.
         {% endif %}
+    {% else %}
+
+        {% if not current_user.is_admin %}
+            <h4><p>Twój <a href="{{ url_for('project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
+        {% endif %}
+
+        <h6><p>W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
+
+        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">Podgląd</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Tabela</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="view" role="tabpanel" aria-labelledby="home-tab">
+              {% for section_num, project in group_projects_sorted.items() %}
+                {% if user_project and project == user_project %}
+                    <div class="card mb-3 mx-auto border border-info bg-light" style="max-width: 720px;">
+                {% else %}
+                    <div class="card mb-3 mx-auto" style="max-width: 720px;">
+                {% endif %}
+                  <div class="card-header">
+                      Sekcja nr. {{ section_num }} zdobyła <b> {{ project.score }} pkt</b>.
+                  </div>
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                        {% if project.optional_link %}
+                            <p class="blockquote-footer mt-5">Dodatkowy załącznik <a class="text-info" href="{{ project.optional_link }}" target="_blank"><i class="fa fa-external-link fa-lg" title="{{ project.optional_link }}"></i></a> </p>
+                        {% endif %}
+                        <p class="card-text custom-card-footer">
+                            {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                                <small class="text-muted">Ostatnio edytowano: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                            {% elif not project.author.group.upload_time %}
+                                <small class="text-muted">Ostatnio edytowano: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                            {% else %}
+                                <small class="text-muted">Ostatnio edytowano: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                            {% endif %}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+            {% endfor %}
+          </div>
+
+          <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table table-hover text-center table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Sekcja</th>
+                  <th scope="col">Zdobyte punkty</th>
+                  {% if current_user.is_admin %}
+                      <th scope="col">Ostatnia edycja</th>
+                  {% endif %}
+                </tr>
+              </thead>
+
+              <tbody>
+              {% for project in group_projects.values() %}
+                {% if not current_user.is_admin and project == user_project %}
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.image_file) }} ">
+                {% else %}
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.image_file) }} ">
+                {% endif %}
+                  <td>Sekcja {{ loop.index }}</td>
+                  <td>{{ project.score }}</td>
+                  {% if current_user.is_admin %}
+                      <td>
+                        {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% elif not project.author.group.upload_time %}
+                            <span><b> w terminie</b></span>
+                        {% else %}
+                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% endif %}
+                      </td>
+                  {% else %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
     {% endif %}
 
-    {% for project in group_projects %}
-        {{ project.title }}
-    {% endfor %}
-
-
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type=text/javascript>
+        $(document).ready(function($) {
+            $(".table-row-hover").click(function() {
+                window.open($(this).data("href"), '_blank');
+            });
+        });
+    </script>
+{% endblock scripts %}

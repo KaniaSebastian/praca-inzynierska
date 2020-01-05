@@ -7,7 +7,7 @@
                     <tr>
                         <th scope="col">Nazwa grupy</th>
                         <th scope="col">Ilość sekcji</th>
-                        <th scope="col">Termin oddania projektów</th>
+                        <th scope="col">Termin oddania prac</th>
                         <th scope="col">Ocenianie</th>
                         <th>Usuń</th>
                     </tr>
@@ -23,7 +23,7 @@
                         </td>
                         <td> {{ group.users.__len__() }} </td>
                         <td>
-                            <span>{{ group.upload_time.strftime('%d-%m-%Y, %H:%M') if group.upload_time else '-----' }}</span>
+                            <span>{{ group.upload_time.strftime('%d-%m-%Y, %H:%M') if group.upload_time else '--------------------' }}</span>
                             <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#dateTimeModal" data-group-id={{ group.id }} data-time={{ group.upload_time.strftime('%Y-%m-%dT%H:%M') if group.upload_time else pass}}>
                                 <i class="fa fa-clock-o fa-lg"></i>
                             </button>
@@ -39,9 +39,10 @@
 
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>
-                                <i class="fa fa-trash-o fa-lg"></i>
-                            </button>
+{#                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>#}
+{#                                <i class="fa fa-trash-o fa-lg"></i>#}
+{#                            </button>#}
+                            <i class="fa fa-trash-o fa-xlg text-danger hover-pointer" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}></i>
                         </td>
                     </tr>
 

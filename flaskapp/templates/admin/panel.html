@@ -8,10 +8,11 @@
                     <tr>
                         <th scope="col">Nazwa grupy</th>
                         <th scope="col">Ilość sekcji</th>
-                        <th>Termin oddania projektów</th>
+                        <th>Termin oddania prac</th>
                         <th>Ocenianie</th>
                         <th>Projekty</th>
-                        <th>Pobierz CSV</th>
+                        <th>Loginy</th>
+                        <th>&nbsp Wyniki &nbsp</th>
                     </tr>
                 </thead>
             <tbody>
@@ -22,7 +23,7 @@
                         <td>{% if group.upload_time %}
                                 {{ group.upload_time.strftime('%d-%m-%Y, %H:%M') }}
                             {% else %}
-                                -----
+                                --------------------
                             {% endif %}
                         </td>
                         <td>
@@ -34,16 +35,30 @@
                                 <span class="text-success"> Zakończone </span>
                             {% endif %}
                         </td>
-                        <td> <a href="{{ url_for('projects', group_id=group.id) }}">
-                            <button type="button" class="btn btn-sm btn-info">
-                                <i class="fa fa-copy fa-lg"></i>
-                            </button> </a>
+{#                        <td> <a href="{{ url_for('projects', group_id=group.id) }}">#}
+{#                            <button type="button" class="btn btn-sm btn-info">#}
+{#                                <i class="fa fa-copy fa-lg"></i>#}
+{#                            </button> </a>#}
+{#                        </td>#}
+{#                        <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}">#}
+{#                            <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">#}
+{#                                <i class="fa fa-download fa-lg"></i>#}
+{#                            </button> </a>#}
+{#                        </td>#}
+{#                        <td> <a href="{{ url_for('results', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info"> <i class="fa fa-poll fa-lg"></i> </button> </a> </td>#}
+
+                        <td> <a href="{{ url_for('projects', group_id=group.id) }}"> <i class="fa fa-copy fa-xlg text-info"></i> </a></td>
+                        <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}"> <i class="fa fa-download fa-xlg text-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych"></i></a> </td>
+                        <td>
+                            {% if group.rating_status == 'ended' %}
+                                <a href="{{ url_for('results', group_id=group.id) }}" class="text-decoration-none"> <i class="fa fa-poll fa-xlg text-info mr-2"></i> </a>
+                                <a href="{{ url_for('results_csv', group_name=group.name) }}"> <i class="fa fa-arrow-down fa-xlg text-success"></i> </a>
+                            {% else %}
+                                <i class="fa fa-poll fa-xlg text-secondary mr-2" title="Opcja ta zostanie odblokowana po zakończeniu oceniania"></i>
+                                <i class="fa fa-arrow-down fa-xlg text-secondary" title="Opcja ta zostanie odblokowana po zakończeniu oceniania"></i>
+                            {% endif %}
                         </td>
-                        <td> <a href="{{ url_for('generate_csv', group_name=group.name) }}">
-                            <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">
-                                <i class="fa fa-download fa-lg"></i>
-                            </button> </a>
-                        </td>
+
                     </tr>
                 {% endfor %}
             </tbody>

@@ -3,7 +3,7 @@
     {% if group.rating_status == 'disabled' %}
         Możliwość oceniania jest w tym momencie wyłączona.
     {% elif group.rating_status == 'ended' %}
-        Ocenianie zostało zakończone. Możesz zobaczyć wyniki.
+        Ocenianie zostało zakończone. Możesz zobaczyć <a href="{{ url_for('results') }}">wyniki</a>.
     {% elif group.rating_status == 'enabled' and current_user.did_rate %}
         Projekty zostały już przez ciebie ocenione.
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
@@ -59,7 +59,7 @@
                 </div>
 
             {% endfor %}
-{#            {{ form.submit(class="btn btn-outline-info") }}#}
+
             {{ form.submit(class="btn btn-info btn-block") }}
 
         </form>
