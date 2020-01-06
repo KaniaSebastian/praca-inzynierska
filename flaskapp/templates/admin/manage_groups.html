@@ -16,7 +16,7 @@
                 {% for group in groups %}
                     <tr>
                         <td>
-                            <a class="text-decoration-none" href="{{ url_for('sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
+                            <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
                             <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }}>
                                 <i class="fa fa-edit fa-lg"></i>
                             </button>
@@ -125,7 +125,7 @@
             </table>
         {% else %}
             <div class="panel panel-default">
-				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
 			</div>
         {% endif %}
 	</div>

@@ -1,10 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, TextAreaField, SelectField, HiddenField, FieldList, FormField, Field
-from wtforms.fields.html5 import DateTimeLocalField, URLField
-from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired, Length
+from wtforms import StringField, SubmitField, IntegerField, ValidationError, TextAreaField, FieldList, FormField
+from wtforms.fields.html5 import URLField
+from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired
 from wtforms.utils import unset_value
-from flaskapp.models import Group
 from flask import flash
 
 
@@ -27,32 +26,6 @@ class CustomIntegerField(IntegerField):
             except ValueError:
                 self.data = None
                 raise ValueError(self.gettext("Podana wartość nie jest liczbą"))
-
-
-class LoginForm(FlaskForm):
-    login = PasswordField('Login', validators=[DataRequired(message='To pole jest wymagane')])
-    remember = BooleanField('Pamiętaj mnie')
-    submit = SubmitField('Zaloguj')
-
-
-class AdminLoginForm(FlaskForm):
-    login = StringField('Login', validators=[DataRequired(message='To pole jest wymagane')])
-    password = PasswordField('Hasło', validators=[DataRequired(message='To pole jest wymagane')])
-    remember = BooleanField('Pamiętaj mnie')
-    submit = SubmitField('Zaloguj')
-
-
-class AdminCreateGroup(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
-    number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
-                                                               NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
-    subject = StringField('Przedmiot - prefix', validators=[DataRequired()])
-    submit = SubmitField('Utwórz')
-
-    def validate_name(self, name):
-        group = Group.query.filter_by(name=name.data).first()
-        if group:
-            raise ValidationError('Ta nazwa jest już używana dla innej grupy')
 
 
 class CreateProjectForm(FlaskForm):
@@ -80,39 +53,15 @@ class UpdateProjectForm(FlaskForm):
     submit = SubmitField('Edytuj')
 
 
-class SetUploadTimeForm(FlaskForm):
-    upload_time = DateTimeLocalField('Czas', format='%Y-%m-%dT%H:%M', validators=[DataRequired(message='Formularz nie został uzupełniony poprawnie')])
-    selected_group_id = HiddenField('Id', validators=[DataRequired()])
-    submitTime = SubmitField('Zatwierdź')
-
-
-class SetRatingForm(FlaskForm):
-    rating_status = SelectField('Ocenianie', choices=[('disabled', 'Wyłączone'), ('enabled', 'Włączone'), ('ended', 'Zakończone')])
-    points = IntegerField('Punkty na użytkownika', validators=[DataRequired(message='Nieprawidłowa ilość punktów'),
-                                                               NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
-    selected_group_id = HiddenField('Id', validators=[DataRequired()])
-    submitRating = SubmitField('Zatwierdź')
-
-
-class EditGroupNameForm(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
-    selected_group_id = HiddenField('Id', validators=[DataRequired()])
-    submitName = SubmitField('Zatwierdź')
-
-    def validate_name(self, name):
-        group = Group.query.filter_by(name=name.data).first()
-        if group:
-            raise ValidationError('Ta nazwa jest już używana dla innej grupy.')
-
-
 class PointsEntryForm(FlaskForm):
     points = CustomIntegerField('Punkty: ', validators=[InputRequired(message='Nieprawidłowa wartość'),
                                                         NumberRange(min=0, max=None,
                                                                     message='Ta wartość musi być liczbą nieujemną')])
 
     def validate_points(self, points):
-        if points.data < 0 or not isinstance(points.data, int):
-            flash('Formularz nie został uzupełniony poprawnie','danger')
+        if not isinstance(points.data, int) or points.data < 0:
+            flash('Formularz nie został uzupełniony poprawnie', 'danger')
+
 
 class PointsForm(FlaskForm):
 
@@ -132,5 +81,6 @@ class PointsForm(FlaskForm):
             flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' punktów za dużo', 'danger')
             raise ValidationError()
         elif points_sum < self.points_per_user:
-            flash('Przydzielono o ' + str(self.points_per_user - points_sum) + ' punktów za mało', 'danger')
+            if points_sum >= 0:
+                flash('Przydzielono o ' + str(self.points_per_user - points_sum) + ' punktów za mało', 'danger')
             raise ValidationError()

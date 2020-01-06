@@ -33,11 +33,11 @@
 
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('home') }}">Start</a>
+							<a class="nav-link" href="{{ url_for('main.home') }}">Start</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('about') }}">Informacje</a>
+							<a class="nav-link" href="{{ url_for('main.about') }}">Informacje</a>
 						</li>
 
 						<li class="nav-item">
@@ -50,24 +50,24 @@
 					{% if current_user.is_authenticated %}
 						{% if current_user.is_admin %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('panel') }}">Panel Administratora</a>
+								<a class="nav-item nav-link" href="{{ url_for('admin.panel') }}">Panel Administratora</a>
 							</li>
 						{% elif current_user.group.is_section %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('project') }}">Projekt</a>
+								<a class="nav-item nav-link" href="{{ url_for('users.project') }}">Projekt</a>
 							</li>
                         {% else %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('rating') }}">Ocenianie</a>
+								<a class="nav-item nav-link" href="{{ url_for('users.rating') }}">Ocenianie</a>
 							</li>
 						{% endif %}
 
 						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('logout') }}">Wyloguj</a>
+							<a class="nav-item nav-link" href="{{ url_for('main.logout') }}">Wyloguj</a>
 						</li>
 					{% else %}
 						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('login') }}">Zaloguj</a>
+							<a class="nav-item nav-link" href="{{ url_for('main.login') }}">Zaloguj</a>
 						</li>
 					{% endif %}
 					</ul>

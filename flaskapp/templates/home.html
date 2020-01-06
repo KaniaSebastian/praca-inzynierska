@@ -7,7 +7,7 @@
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
           <hr class="my-4">
           <p>Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Zaloguj się</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button">Zaloguj się</a>
         </div>
     {% elif current_user.is_admin %}
         <div class="jumbotron">
@@ -15,7 +15,7 @@
           <p class="lead"> Możesz tworzyć grupy projektowe oraz nimi zarządzać. </p>
           <hr class="my-4">
           <p>Aby zarządzać systemem przejdź do panelu administracyjnego.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('panel') }}" role="button">Panel</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('admin.panel') }}" role="button">Panel</a>
         </div>
     {% elif current_user.group.is_section %}
         <div class="jumbotron">
@@ -23,7 +23,7 @@
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
           <hr class="my-4">
           <p> Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('project') }}" role="button">Projekt</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">Projekt</a>
         </div>
     {% elif not current_user.group.is_section%}
         <div class="jumbotron">
@@ -31,7 +31,7 @@
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
           <hr class="my-4">
           <p> Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych studentów lub zobaczyć wyniki końcowe.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('rating') }}" role="button">Ocenianie</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('users.rating') }}" role="button">Ocenianie</a>
         </div>
     {% endif %}
 

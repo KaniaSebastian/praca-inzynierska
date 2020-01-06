@@ -18,7 +18,7 @@
     {% else %}
 
         {% if not current_user.is_admin %}
-            <h4><p>Twój <a href="{{ url_for('project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
+            <h4><p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
         {% endif %}
 
         <h6><p>W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
@@ -46,7 +46,7 @@
                     <div class="col-md-4">
                         <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 border-left">
                       <div class="card-body">
                         <h5 class="card-title">{{ project.title }}</h5>
                         <p class="card-text">{{ project.description }}</p>

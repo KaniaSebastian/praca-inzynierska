@@ -8,7 +8,7 @@
 {% block content %}
 
     {% if current_user.is_admin %}
-        <a href="{{ url_for('sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
+        <a href="{{ url_for('admin.sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
     {% else %}
         {% if project.author.group.upload_time %}
             <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
@@ -24,7 +24,7 @@
             <div class="col-md-4">
                 <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 border-left">
               <div class="card-body">
                 <h5 class="card-title">{{ project.title }}</h5>
                 <p class="card-text">{{ project.description }}</p>
@@ -49,7 +49,7 @@
         {% if current_user.is_admin %}
             Projekt nie istnieje.
         {% else %}
-            Nie udostępniono jeszcze projektu. Aby to zrobić kliknij <a href="{{ url_for('project') }}">tutaj</a>.
+            Nie udostępniono jeszcze projektu. Aby to zrobić kliknij <a href="{{ url_for('users.project') }}">tutaj</a>.
         {% endif %}
     {% endif %}
 

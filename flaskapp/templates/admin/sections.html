@@ -1,7 +1,7 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 
-    <a href="{{ url_for('create_section_keys', group_id=group.id) }}"> <button type="button" class="btn btn-primary btn-lg btn-block">Wygeneruj klucze dla pojedynczych użytkowników</button> </a>
+    <a href="{{ url_for('admin.create_section_keys', group_id=group.id) }}"> <button type="button" class="btn btn-primary btn-lg btn-block">Wygeneruj klucze dla pojedynczych użytkowników</button> </a>
     <br>
 
     <table class="table table-sm text-center align-middle ">
@@ -18,14 +18,14 @@
 					<td> {{ loop.index }} </td>
 					<td> {{ section.login }} </td>
                     {% if section.project %}
-                        <td> <a href="{{ url_for('project_view', section_id=section.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekt</button> </a> </td>
+                        <td> <a href="{{ url_for('main.project_view', section_id=section.id) }}"> <button type="button" class="btn btn-sm btn-info">Projekt</button> </a> </td>
                     {% else %}
                         <td> <a> <button type="button" title="Ta sekcja nie udostępniła jeszcze swojego projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
                     {% endif %}
                     <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
                     <td></td>
 					<td>
-                        <a href="{{ url_for('add_user', section_id=section.id) }}"> <button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-outline-success"> <i class="fa fa-plus"></i> </button> </a>
+                        <a href="{{ url_for('admin.add_user', section_id=section.id) }}"> <button type="button" title="Dodaj użytkownika do sekcji" class="btn btn-sm btn-outline-success"> <i class="fa fa-plus"></i> </button> </a>
 					</td>
                 </tr>
 

@@ -35,10 +35,18 @@ body {
 
     .custom-card-footer-points
     {
-        position:absolute;
+        /*position:absolute;*/
         left:20px;
         bottom:10px;
     }
+
+    /*.custom-card-footer-points-error*/
+    /*{*/
+    /*    position:absolute;*/
+    /*    left:20px;*/
+    /*    top:10px;*/
+    /*    bottom:10px;*/
+    /*}*/
 }
 
 .table-row-hover:hover
