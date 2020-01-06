@@ -5,5 +5,4 @@ flaskapp/admin/__pycache__/
 flaskapp/users/__pycache__/
 flaskapp/main/__pycache__/
 flaskapp/errors/__pycache__/
-seed.py
 flaskapp/site.db
