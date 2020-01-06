@@ -18,7 +18,9 @@ admin_password = '$2b$12$V4dBXyIe9Iu9IfkZyntMtuPfW8DP7X2DQtGGLuG6gmbv3WMgqSG.K'
 from flaskapp.admin.routes import admin
 from flaskapp.users.routes import users
 from flaskapp.main.routes import main
+from flaskapp.errors.handlers import errors
 
 app.register_blueprint(admin)
 app.register_blueprint(users)
 app.register_blueprint(main)
+app.register_blueprint(errors)
