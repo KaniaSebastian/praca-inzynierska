@@ -67,11 +67,17 @@ def results(group_id):
     else:
         if current_user.group.is_section:
             group = current_user.group
-            user_project = current_user.project[0]
+            if current_user.project:
+                user_project = current_user.project[0]
+            else:
+                user_project = None
         else:
             section = User.query.filter_by(login=current_user.group.name).first()
             group = section.group
-            user_project = section.project[0]
+            if section.project:
+                user_project = section.project[0]
+            else:
+                user_project = None
 
     group_projects = dict()
     for counter, section in enumerate(group.users, 1):

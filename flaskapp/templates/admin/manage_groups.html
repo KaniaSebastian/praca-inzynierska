@@ -16,8 +16,8 @@
                 {% for group in groups %}
                     <tr>
                         <td>
-                            <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }}  </button> </a>
-                            <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }}>
+                            <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} ({{ group.subject }}) </button> </a>
+                            <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }} data-group-subject="{{ group.subject }}">
                                 <i class="fa fa-edit fa-lg"></i>
                             </button>
                         </td>
@@ -207,6 +207,23 @@
                             {% endif %}
                         </div>
 
+                        <div class="form-group">
+                            {{ group_name_form.subject.label(class="form-control-label") }}
+
+                            {% if group_name_form.subject.errors %}
+                                {{ group_name_form.subject(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in group_name_form.subject.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="group-subject-wrapper">
+                                    {{ group_name_form.subject(class="form-control form-control-lg", value='') }}
+                                </div>
+                            {% endif %}
+                        </div>
+
                         <div class="group-id-wrapper">
                             {{ group_name_form.selected_group_id }}
                         </div>
@@ -270,9 +287,11 @@
           var button = $(event.relatedTarget) // Button that triggered the modal
           var groupid = button.data('group-id') // Extract info from data-* attributes
           var groupname = button.data('group-name')
+          var groupsubject = button.data('group-subject')
           var modal = $(this)
           modal.find('.group-id-wrapper input').val(groupid)
           modal.find('.group-name-wrapper input').val(groupname)
+          modal.find('.group-subject-wrapper input').val(groupsubject)
         })
 
 

@@ -12,18 +12,26 @@
                     </div>
                     <div class="col-md-8 border-left">
                       <div class="card-body">
-                        <h5 class="card-title">{{ project.title }}</h5>
+                        <h5 class="card-title">{{ project.title }} <br/><br/></h5>
                         <p class="card-text">{{ project.description }}</p>
                         {% if project.optional_link %}
-                            <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                            <p class="blockquote-footer"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
                         {% endif %}
                         <p class="card-text custom-card-footer">
                             {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnio edytowano: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">Ostatnia edycja: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% elif not project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnio edytowano: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">Ostatnia edycja: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% else %}
-                                <small class="text-muted">Ostatnio edytowano: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">Ostatnia edycja: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                            {% endif %}
+                        </p>
+
+                        <p class="card-text custom-card-footer">
+                            {% if project.last_editor %}
+                                <small class="text-muted">z ip: {{ project.last_editor }} </small>
+                            {% else %}
+                                <small class="text-muted"> z ip: (nieznane) </small>
                             {% endif %}
                         </p>
                       </div>

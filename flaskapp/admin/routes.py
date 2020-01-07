@@ -47,7 +47,7 @@ def create_group():
         form = AdminCreateGroup()
         if form.validate_on_submit():
 
-            new_group = Group(name=form.name.data, is_section=True)
+            new_group = Group(name=form.name.data, is_section=True, subject=form.subject.data)
             db.session.add(new_group)
             db.session.commit()
 
@@ -243,11 +243,14 @@ def manage_groups():
         if group_name_form.submitName.data and group_name_form.validate():
             group = Group.query.get_or_404(group_name_form.selected_group_id.data)
             group.name = group_name_form.name.data
+            group.subject = group_name_form.subject.data
             db.session.commit()
             flash('Nazwa grupy została zmieniona', 'success')
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in group_name_form.name.errors:
+                flash(error, 'danger')
+            for error in group_name_form.subject.errors:
                 flash(error, 'danger')
 
     else:
@@ -257,19 +260,19 @@ def manage_groups():
                            set_upload_time_form=set_upload_time_form, set_rating_form=set_rating_form, group_name_form=group_name_form)
 
 
-@admin.route('/generate-csv/<string:group_name>')
+@admin.route('/generate-csv/<string:group_name>/<string:subject>')
 @login_required
-def generate_csv(group_name):
+def generate_csv(group_name, subject):
     if current_user.is_admin:
         def generate():
             group = Group.query.filter_by(name=group_name).first()
-            header = ('Grupa:', group_name)
+            group_name_with_subject = group_name + ' (' + subject + ')'
+            header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Klucz dostepu")
             yield ",".join(header) + '\n\n'
 
             for n in range(len(group.users)):
-                # group.users[n].login
                 group_users = Group.query.filter_by(name=group.users[n].login).first()
                 section = '\n' + 'Sekcja ' + str(n+1)
                 if group_users:
@@ -286,16 +289,17 @@ def generate_csv(group_name):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + subject + '-' + group_name.replace(" ", "_") + ".csv"})
 
 
-@admin.route('/results-csv/<string:group_name>')
+@admin.route('/results-csv/<string:group_name>/<string:subject>')
 @login_required
-def results_csv(group_name):
+def results_csv(group_name, subject):
     if current_user.is_admin:
         def generate():
             group = Group.query.filter_by(name=group_name).first()
-            header = ('Grupa:', group_name)
+            group_name_with_subject = group_name + ' (' + subject + ')'
+            header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Wynik")
             yield ",".join(header) + '\n\n'
@@ -309,4 +313,4 @@ def results_csv(group_name):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + group_name.replace(" ", "_") + '-wyniki' + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + subject + '-' + group_name.replace(" ", "_") + '-wyniki' + ".csv"})

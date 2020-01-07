@@ -20,9 +20,14 @@ def project():
         form = CreateProjectForm()
         if form.validate_on_submit():
             file = save_image(form.image.data)
+            ip = request.remote_addr
+            if ip:
+                user_ip = ip
+            else:
+                user_ip = None
             new_project = Project(title=form.title.data, description=form.description.data,
                                   image_file=file, creators_num=form.creators_num.data,
-                                  author=current_user, optional_link=form.url.data)
+                                  author=current_user, optional_link=form.url.data, last_editor=user_ip)
             db.session.add(new_project)
             db.session.commit()
             flash('Projekt został dodany', 'success')
@@ -46,6 +51,15 @@ def update_project():
             user_project.description = form.description.data
             user_project.optional_link = form.url.data
             user_project.date_posted = datetime.now()
+
+            ip = request.remote_addr
+            if ip:
+                user_ip = ip
+            else:
+                user_ip = None
+
+            user_project.last_editor = user_ip
+
             if form.image.data:
                 old_file = user_project.image_file
                 file = save_image(form.image.data)

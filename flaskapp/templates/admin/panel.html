@@ -18,7 +18,7 @@
             <tbody>
                 {% for group in groups %}
                     <tr>
-                        <td> <a href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} </button> </a> </td>
+                        <td> <a href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} ({{ group.subject }}) </button> </a> </td>
                         <td> {{ group.users.__len__() }} </td>
                         <td>{% if group.upload_time %}
                                 {{ group.upload_time.strftime('%d-%m-%Y, %H:%M') }}
@@ -48,11 +48,11 @@
 {#                        <td> <a href="{{ url_for('main.results', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info"> <i class="fa fa-poll fa-lg"></i> </button> </a> </td>#}
 
                         <td> <a href="{{ url_for('admin.projects', group_id=group.id) }}"> <i class="fa fa-copy fa-xlg text-info"></i> </a></td>
-                        <td> <a href="{{ url_for('admin.generate_csv', group_name=group.name) }}"> <i class="fa fa-download fa-xlg text-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych"></i></a> </td>
+                        <td> <a href="{{ url_for('admin.generate_csv', group_name=group.name, subject=group.subject) }}"> <i class="fa fa-download fa-xlg text-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych"></i></a> </td>
                         <td>
                             {% if group.rating_status == 'ended' %}
                                 <a href="{{ url_for('main.results', group_id=group.id) }}" class="text-decoration-none"> <i class="fa fa-poll fa-xlg text-info mr-2"></i> </a>
-                                <a href="{{ url_for('admin.results_csv', group_name=group.name) }}"> <i class="fa fa-arrow-down fa-xlg text-success"></i> </a>
+                                <a href="{{ url_for('admin.results_csv', group_name=group.name, subject=group.subject) }}"> <i class="fa fa-arrow-down fa-xlg text-success"></i> </a>
                             {% else %}
                                 <i class="fa fa-poll fa-xlg text-secondary mr-2" title="Opcja ta zostanie odblokowana po zakończeniu oceniania"></i>
                                 <i class="fa fa-arrow-down fa-xlg text-secondary" title="Opcja ta zostanie odblokowana po zakończeniu oceniania"></i>

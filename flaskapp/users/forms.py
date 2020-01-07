@@ -36,7 +36,7 @@ class CreateProjectForm(FlaskForm):
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
     creators_num = IntegerField('Ilość osób pracujących nad projektem',
                                 validators=[DataRequired(message='To pole jest wymagane'),
-                                            NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
+                                            NumberRange(min=0, max=10, message='Ta wartość nie może być ujemna i nie większa niż 10')])
     url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
     submit = SubmitField('Dodaj')
 
@@ -46,9 +46,6 @@ class UpdateProjectForm(FlaskForm):
     image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub '
                                                                                  'png.')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
-    # creators_num = IntegerField('Ilość osób pracujących nad projektem',
-    #                             validators=[DataRequired(message='To pole jest wymagane.'),
-    #                                         NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna.')])
     url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
     submit = SubmitField('Edytuj')
 

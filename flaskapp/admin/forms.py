@@ -13,10 +13,10 @@ class AdminLoginForm(FlaskForm):
 
 
 class AdminCreateGroup(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=15, message='Nazwa grupy musi zawierać od 1 do 15 znaków')])
     number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
                                                                NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
-    subject = StringField('Przedmiot - prefix', validators=[DataRequired()])
+    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków.')])
     submit = SubmitField('Utwórz')
 
     def validate_name(self, name):
@@ -40,11 +40,13 @@ class SetRatingForm(FlaskForm):
 
 
 class EditGroupNameForm(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=15, message='Nazwa grupy musi zawierać od 1 do 15 znaków')])
+    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków.')])
     selected_group_id = HiddenField('Id', validators=[DataRequired()])
     submitName = SubmitField('Zatwierdź')
 
     def validate_name(self, name):
         group = Group.query.filter_by(name=name.data).first()
-        if group:
+        group_for_validation = Group.query.get(self.selected_group_id.data)
+        if group and group.id != group_for_validation.id:
             raise ValidationError('Ta nazwa jest już używana dla innej grupy.')

@@ -1,15 +1,25 @@
-from flaskapp import db, app
-from flaskapp.models import User, Project
+from flaskapp import db
+from flaskapp.models import User
 import os
+import shutil
 
-for project in Project.query.all():
-    old_file = project.image_file
-    os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+
+folder = 'flaskapp/static/projects'
+for filename in os.listdir(folder):
+    if filename == '.gitignore':
+        continue
+    file_path = os.path.join(folder, filename)
+    try:
+        if os.path.isfile(file_path) or os.path.islink(file_path):
+            os.unlink(file_path)
+        elif os.path.isdir(file_path):
+            shutil.rmtree(file_path)
+    except Exception as e:
+        print('Failed to delete %s. Reason: %s' % (file_path, e))
+
 db.drop_all()
 db.create_all()
 
-# admin_group = Group(name='admin_group')
-# admin = User(login='admin', is_admin=True, group=admin_group)
 admin = User(login='admin', is_admin=True)
 db.session.add(admin)
 
