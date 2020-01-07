@@ -30,9 +30,7 @@ class CustomIntegerField(IntegerField):
 
 class CreateProjectForm(FlaskForm):
     title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane')])
-    image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub '
-                                                                                 'png'),
-                                             FileRequired(message='Dodanie pliku jest wymagane')])
+    file = FileField('Projekt', validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf'), FileRequired(message='Dodanie pliku jest wymagane')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
     creators_num = IntegerField('Ilość osób pracujących nad projektem',
                                 validators=[DataRequired(message='To pole jest wymagane'),
@@ -43,8 +41,8 @@ class CreateProjectForm(FlaskForm):
 
 class UpdateProjectForm(FlaskForm):
     title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.')])
-    image = FileField('Projekt', validators=[FileAllowed(['jpg', 'png'], message='Plik musi mieć rozszerzenie jpg lub '
-                                                                                 'png.')])
+    file = FileField('Projekt',
+                      validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf.')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
     url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
     submit = SubmitField('Edytuj')

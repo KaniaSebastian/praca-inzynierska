@@ -35,17 +35,6 @@
                                 <span class="text-success"> Zakończone </span>
                             {% endif %}
                         </td>
-{#                        <td> <a href="{{ url_for('admin.projects', group_id=group.id) }}">#}
-{#                            <button type="button" class="btn btn-sm btn-info">#}
-{#                                <i class="fa fa-copy fa-lg"></i>#}
-{#                            </button> </a>#}
-{#                        </td>#}
-{#                        <td> <a href="{{ url_for('admin.generate_csv', group_name=group.name) }}">#}
-{#                            <button type="button" class="btn btn-sm btn-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych">#}
-{#                                <i class="fa fa-download fa-lg"></i>#}
-{#                            </button> </a>#}
-{#                        </td>#}
-{#                        <td> <a href="{{ url_for('main.results', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-info"> <i class="fa fa-poll fa-lg"></i> </button> </a> </td>#}
 
                         <td> <a href="{{ url_for('admin.projects', group_id=group.id) }}"> <i class="fa fa-copy fa-xlg text-info"></i> </a></td>
                         <td> <a href="{{ url_for('admin.generate_csv', group_name=group.name, subject=group.subject) }}"> <i class="fa fa-download fa-xlg text-success" title="Pobierz plik CSV z kluczami dostępu dla grup projektowych"></i></a> </td>
@@ -65,7 +54,11 @@
             </table>
         {% else %}
             <div class="panel panel-default">
-				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+                <div class="jumbotron">
+                  <h4>Aktualnie w bazie nie ma żadnych grup.</h4>
+                  <hr class="my-4">
+                  <p class="lead">Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</p>
+                </div>
 			</div>
         {% endif %}
 	</div>

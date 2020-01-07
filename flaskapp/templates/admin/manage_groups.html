@@ -125,7 +125,11 @@
             </table>
         {% else %}
             <div class="panel panel-default">
-				<div class="panel-heading">Aktualnie w bazie nie ma żadnych grup. Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</div>
+                <div class="jumbotron">
+                  <h4>Aktualnie w bazie nie ma żadnych grup.</h4>
+                  <hr class="my-4">
+                  <p class="lead">Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</p>
+                </div>
 			</div>
         {% endif %}
 	</div>

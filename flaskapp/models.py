@@ -24,7 +24,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    image_file = db.Column(db.String(20), nullable=False)
+    upload_file = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
     optional_link = db.Column(db.String)
     creators_num = db.Column(db.Integer, nullable=False)

@@ -5,7 +5,7 @@ from flaskapp.users.forms import CreateProjectForm, UpdateProjectForm, PointsFor
 from flask_login import current_user, login_required
 import os
 from datetime import datetime
-from flaskapp.users.utils import save_image
+from flaskapp.users.utils import save_file
 import sys
 
 users = Blueprint('users', __name__)
@@ -19,14 +19,14 @@ def project():
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
         if form.validate_on_submit():
-            file = save_image(form.image.data)
+            new_file = save_file(form.file.data)
             ip = request.remote_addr
             if ip:
                 user_ip = ip
             else:
                 user_ip = None
             new_project = Project(title=form.title.data, description=form.description.data,
-                                  image_file=file, creators_num=form.creators_num.data,
+                                  upload_file=new_file, creators_num=form.creators_num.data,
                                   author=current_user, optional_link=form.url.data, last_editor=user_ip)
             db.session.add(new_project)
             db.session.commit()
@@ -60,10 +60,10 @@ def update_project():
 
             user_project.last_editor = user_ip
 
-            if form.image.data:
-                old_file = user_project.image_file
-                file = save_image(form.image.data)
-                user_project.image_file = file
+            if form.file.data:
+                old_file = user_project.upload_file
+                new_file = save_file(form.file.data)
+                user_project.upload_file = new_file
                 os.remove(os.path.join(app.root_path, 'static/projects', old_file))
             db.session.commit()
             flash('Projekt został edytowany', 'success')
@@ -95,7 +95,7 @@ def rating():
             return redirect(url_for('main.project_view'))
         user_ratings = [{'points': None} for item in range(len(group_projects))]
         form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
-        print(str(group.users), file=sys.stdout)
+
         if form.validate_on_submit():
             for i, single_project in enumerate(group_projects):
                 single_project.score = single_project.score + form.all_points[i].data.get('points')

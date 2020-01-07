@@ -13,7 +13,9 @@
         {% if current_user.is_admin %}
             Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami"
         {% else %}
-            Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.
+            <div class="jumbotron">
+              <p class="lead">Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.</p>
+            </div>
         {% endif %}
     {% else %}
 
@@ -43,8 +45,15 @@
                       Sekcja nr. {{ section_num }} zdobyła <b> {{ project.score }} pkt</b>.
                   </div>
                   <div class="row no-gutters">
-                    <div class="col-md-4">
-                        <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+                    <div class="col-md-4 border-bottom">
+                        <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
+                            {% set extension = project.upload_file.split('.') %}
+                            {% if extension[1] == 'pdf' %}
+                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="col-md-8 border-left">
                       <div class="card-body">
@@ -85,9 +94,9 @@
               <tbody>
               {% for project in group_projects.values() %}
                 {% if not current_user.is_admin and project == user_project %}
-                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.image_file) }} ">
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% else %}
-                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.image_file) }} ">
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>Sekcja {{ loop.index }}</td>
                   <td>{{ project.score }}</td>

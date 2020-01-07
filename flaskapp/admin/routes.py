@@ -78,7 +78,7 @@ def delete_group(group_id):
         for section in group.users:
             if section.project:
                 section_project = Project.query.filter_by(author=section).first()
-                old_file = section_project.image_file
+                old_file = section_project.upload_file
                 os.remove(os.path.join(app.root_path, 'static/projects', old_file))
                 db.session.delete(Group.query.filter_by(name=section.login).first())
         db.session.delete(group)

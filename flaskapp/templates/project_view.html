@@ -21,15 +21,22 @@
 
       <div class="card mb-3 mx-auto" style="max-width: 720px;">
           <div class="row no-gutters">
-            <div class="col-md-4">
-                <a href="{{ url_for('static', filename='projects/' + project.image_file) }} " target="_blank"><img src="{{ url_for('static', filename='projects/' + project.image_file) }}" class="card-img" alt="Grafika"></a>
+            <div class="col-md-4 border-bottom">
+                <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
+                    {% set extension = project.upload_file.split('.') %}
+                    {% if extension[1] == 'pdf' %}
+                        <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
+                    {% endif %}
+                </a>
             </div>
             <div class="col-md-8 border-left">
               <div class="card-body">
                 <h5 class="card-title">{{ project.title }}</h5>
                   <p class="card-text">{{ project.description }} <br/><br/> </p>
                 {% if project.optional_link %}
-                    <p class="blockquote-footer">Dodatkowy załącznik <a class="text-info" href="{{ project.optional_link }}" target="_blank"><i class="fa fa-external-link fa-lg" title="{{ project.optional_link }}"></i></a> </p> <br/><br/>
+                    <p class="blockquote-footer"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
                 {% endif %}
                 <p class="card-text custom-card-footer">
                     {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
