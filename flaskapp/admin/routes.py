@@ -35,6 +35,9 @@ def admin_login(admin_name, remember):
 def panel():
     if current_user.is_admin:
         groups = Group.query.filter_by(is_section=True).all()
+        browser = request.user_agent.browser
+        if browser != 'chrome' and browser != 'edge':
+            flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
@@ -209,6 +212,9 @@ def projects(group_id):
 @login_required
 def manage_groups():
     if current_user.is_admin:
+        browser = request.user_agent.browser
+        if browser != 'chrome' and browser != 'edge':
+            flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupNameForm()

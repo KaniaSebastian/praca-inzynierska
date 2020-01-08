@@ -16,33 +16,39 @@
                 {% for group in groups %}
                     <tr>
                         <td>
-                            <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}"> <button type="button" class="btn btn-sm btn-outline-dark"> {{ group.name }} ({{ group.subject }}) </button> </a>
-                            <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }} data-group-subject="{{ group.subject }}">
-                                <i class="fa fa-edit fa-lg"></i>
-                            </button>
+                            <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}">
+                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="Sekcje i użytkownicy"> {{ group.name }} ({{ group.subject }}) </button>
+                            </a>
+                            <span data-toggle="tooltip" data-placement="top" title="Edytuj nazwę">
+                                <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name={{ group.name }} data-group-subject="{{ group.subject }}">
+                                    <i class="fa fa-edit fa-lg"></i>
+                                </button>
+                            </span>
                         </td>
                         <td> {{ group.users.__len__() }} </td>
                         <td>
                             <span>{{ group.upload_time.strftime('%d-%m-%Y, %H:%M') if group.upload_time else '--------------------' }}</span>
-                            <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#dateTimeModal" data-group-id={{ group.id }} data-time={{ group.upload_time.strftime('%Y-%m-%dT%H:%M') if group.upload_time else pass}}>
-                                <i class="fa fa-clock-o fa-lg"></i>
-                            </button>
+                            <span data-toggle="tooltip" data-placement="top" title="Ustaw termin">
+                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#dateTimeModal" data-group-id={{ group.id }} data-time={{ group.upload_time.strftime('%Y-%m-%dT%H:%M') if group.upload_time else pass}}>
+                                    <i class="fa fa-clock-o fa-lg"></i>
+                                </button>
+                            </span>
                         </td>
                         <td>
-                            {% if group.rating_status == 'enabled' %}
-                                <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
-                            {% elif group.rating_status == 'disabled' %}
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Wyłączone</button>
-                            {% else %}
-                                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Zakończone</button>
-                            {% endif %}
-
+                            <span data-toggle="tooltip" data-placement="top" title="Ustaw ocenianie/punkty">
+                                {% if group.rating_status == 'enabled' %}
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
+                                {% elif group.rating_status == 'disabled' %}
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Wyłączone</button>
+                                {% else %}
+                                    <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Zakończone</button>
+                                {% endif %}
+                            </span>
                         </td>
                         <td>
-{#                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}>#}
-{#                                <i class="fa fa-trash-o fa-lg"></i>#}
-{#                            </button>#}
-                            <i class="fa fa-trash-o fa-xlg text-danger hover-pointer" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}></i>
+                            <span data-toggle="tooltip" data-placement="top" title="Usuń grupę">
+                                <i class="fa fa-trash-o fa-xlg text-danger hover-pointer" data-toggle="modal" data-target="#deleteModal" data-group-id={{ group.id }}></i>
+                            </span>
                         </td>
                     </tr>
 
@@ -93,7 +99,7 @@
                                         {% if set_rating_form.points.errors %}
                                             <div class="input-group">
                                                 {{ set_rating_form.points(class="form-control form-control-lg is-invalid", value=group.points_per_user, id='points-'+group.id|string()) }}
-                                                <button type="button" class="btn btn-outline-dark generate-button" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="<liczba-sekcji> - 5" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
                                             </div>
                                             <div class="invalid-feedback">
                                                 {% for error in set_rating_form.points.errors %}
@@ -103,7 +109,7 @@
                                         {% else %}
                                             <div class="input-group">
                                                 {{ set_rating_form.points(class="form-control form-control-lg", value=group.points_per_user, id='points-'+group.id|string()) }}
-                                                <button type="button" class="btn btn-outline-dark generate-button" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="<liczba-sekcji> - 5" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
                                             </div>
                                         {% endif %}
                                     </div>

@@ -33,7 +33,7 @@ class Project(db.Model):
     last_editor = db.Column(db.String)
 
     def __repr__(self):
-        return f"Project('{self.title}', '{self.date_posted}')"
+        return f"Project('{self.title}', 'author_id={self.user_id}', score={self.score})"
 
 
 class Group(db.Model):
@@ -47,4 +47,4 @@ class Group(db.Model):
     points_per_user = db.Column(db.Integer, default=0)
 
     def __repr__(self):
-        return f"Group ({self.name}, is_section={self.is_section}, {self.users})"
+        return f"Group ({self.name}, is_section={self.is_section}, users({len(self.users)}):{self.users})"
