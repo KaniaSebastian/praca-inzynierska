@@ -17,7 +17,7 @@
           <p>Aby zarządzać systemem przejdź do panelu administracyjnego.</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('admin.panel') }}" role="button">Panel</a>
         </div>
-    {% elif current_user.group.is_section %}
+    {% elif current_user.group.is_containing_sections %}
         <div class="jumbotron">
           <h1 class="display-4">Witaj!</h1>
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
@@ -25,7 +25,7 @@
           <p> Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">Projekt</a>
         </div>
-    {% elif not current_user.group.is_section%}
+    {% elif not current_user.group.is_containing_sections %}
         <div class="jumbotron">
           <h1 class="display-4">Witaj!</h1>
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>

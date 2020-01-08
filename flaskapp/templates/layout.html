@@ -52,7 +52,7 @@
 							<li class="nav-item">
 								<a class="nav-item nav-link" href="{{ url_for('admin.panel') }}">Panel Administratora</a>
 							</li>
-						{% elif current_user.group.is_section %}
+						{% elif current_user.group.is_containing_sections %}
 							<li class="nav-item">
 								<a class="nav-item nav-link" href="{{ url_for('users.project') }}">Projekt</a>
 							</li>

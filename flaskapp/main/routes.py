@@ -48,9 +48,9 @@ def logout():
 @main.route('/project/view/<int:section_id>')
 @login_required
 def project_view(section_id):
-    if not current_user.is_admin and current_user.group.is_section:
+    if not current_user.is_admin and current_user.group.is_containing_sections:
         project = current_user.project[0]
-    elif not current_user.is_admin and not current_user.group.is_section:
+    elif not current_user.is_admin and not current_user.group.is_containing_sections:
         user = User.query.filter_by(login=current_user.group.name).first()
         project = user.project[0]
     elif current_user.is_admin:
@@ -66,7 +66,7 @@ def results(group_id):
         group = Group.query.get_or_404(group_id)
         user_project = None
     else:
-        if current_user.group.is_section:
+        if current_user.group.is_containing_sections:
             group = current_user.group
             if current_user.project:
                 user_project = current_user.project[0]

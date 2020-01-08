@@ -34,7 +34,7 @@ def admin_login(admin_name, remember):
 @login_required
 def panel():
     if current_user.is_admin:
-        groups = Group.query.filter_by(is_section=True).all()
+        groups = Group.query.filter_by(is_containing_sections=True).all()
         browser = request.user_agent.browser
         if browser != 'chrome' and browser != 'edge':
             flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
@@ -51,7 +51,7 @@ def create_group():
         form = AdminCreateGroup()
         if form.validate_on_submit():
 
-            new_group = Group(name=form.name.data, is_section=True, subject=form.subject.data)
+            new_group = Group(name=form.name.data, is_containing_sections=True, subject=form.subject.data)
             db.session.add(new_group)
             db.session.commit()
 
@@ -103,7 +103,7 @@ def create_section_keys(group_id):
             if section.project and not Group.query.filter_by(name=section.login).first():
                 is_any_project = True
                 users_num = section.project[0].creators_num
-                new_group = Group(name=section.login, is_section=False)
+                new_group = Group(name=section.login, is_containing_sections=False)
                 db.session.add(new_group)
                 db.session.commit()
 
@@ -181,7 +181,7 @@ def sections(group_id):
         user_groups = list()
         for section in group.users:
             user_groups.append(Group.query.filter_by(name=section.login).first())
-        if not group.is_section:
+        if not group.is_containing_sections:
             return redirect((url_for('admin.panel')))
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
@@ -194,7 +194,7 @@ def sections(group_id):
 def projects(group_id):
     if current_user.is_admin:
         group = Group.query.get_or_404(group_id)
-        if not group.is_section:
+        if not group.is_containing_sections:
             abort(404)
         number_of_sections = len(group.users)
         projects = list()
@@ -218,7 +218,7 @@ def manage_groups():
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupNameForm()
-        groups = Group.query.filter_by(is_section=True).all()
+        groups = Group.query.filter_by(is_containing_sections=True).all()
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)

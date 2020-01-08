@@ -39,7 +39,7 @@ class Project(db.Model):
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
-    is_section = db.Column(db.Boolean, nullable=False, default=False)
+    is_containing_sections = db.Column(db.Boolean, nullable=False, default=False)
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
     subject = db.Column(db.String)
     upload_time = db.Column(db.DateTime)
@@ -47,4 +47,4 @@ class Group(db.Model):
     points_per_user = db.Column(db.Integer, default=0)
 
     def __repr__(self):
-        return f"Group ({self.name}, is_section={self.is_section}, users({len(self.users)}):{self.users})"
+        return f"Group ({self.name}, is_containing_sections={self.is_containing_sections}, users({len(self.users)}):{self.users})"

@@ -14,7 +14,7 @@ users = Blueprint('users', __name__)
 @users.route('/project', methods=['GET', 'POST'])
 @login_required
 def project():
-    if not current_user.is_admin and current_user.group.is_section:
+    if not current_user.is_admin and current_user.group.is_containing_sections:
         if current_user.project:
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
@@ -81,7 +81,7 @@ def update_project():
 @users.route('/rating', methods=['GET', 'POST'])
 @login_required
 def rating():
-    if not current_user.is_admin and not current_user.group.is_section:
+    if not current_user.is_admin and not current_user.group.is_containing_sections:
         section = User.query.filter_by(login=current_user.group.name).first()
         group = Group.query.get_or_404(section.group.id)
 

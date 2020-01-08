@@ -1,6 +1,6 @@
 {% if current_user.is_admin %}
     {% extends "admin/layout_admin.html" %}
-{% elif current_user.group.is_section%}
+{% elif current_user.group.is_containing_sections%}
     {% extends "layout_section.html" %}
 {% else %}
     {% extends "layout_user.html" %}
