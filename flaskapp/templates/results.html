@@ -11,7 +11,9 @@
 
     {% if group.rating_status != 'ended' %}
         {% if current_user.is_admin %}
-            Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami"
+            <div class="jumbotron">
+              <p class="lead">Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami".</p>
+            </div>
         {% else %}
             <div class="jumbotron">
               <p class="lead">Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.</p>

@@ -24,7 +24,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(login=form.login.data).first()
         if user and user.is_admin:
-            return redirect(url_for('admin.admin_login', admin_name=form.login.data))
+            remember_me_value = int(form.remember.data == True)
+            return redirect(url_for('admin.admin_login', admin_name=form.login.data, remember=remember_me_value))
         if user:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')

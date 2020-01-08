@@ -3,9 +3,13 @@
     {% if group.rating_status == 'disabled' %}
         Możliwość oceniania jest w tym momencie wyłączona.
     {% elif group.rating_status == 'ended' %}
-        Ocenianie zostało zakończone. Możesz zobaczyć <a href="{{ url_for('main.results') }}">wyniki</a>.
+        <div class="jumbotron">
+              <p class="lead">Ocenianie zostało zakończone. Możesz zobaczyć <a href="{{ url_for('main.results') }}">wyniki</a>.</p>
+        </div>
     {% elif group.rating_status == 'enabled' and current_user.did_rate %}
-        Projekty zostały już przez ciebie ocenione.
+        <div class="jumbotron">
+              <p class="lead">Projekty zostały już przez ciebie ocenione.</p>
+        </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
         <p> Całkowita ilość punktów do rozdania wynosi <b>{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie. </p>
         <form method="POST" action="" novalidate>

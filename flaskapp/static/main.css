@@ -1,5 +1,6 @@
 body {
     padding-top: 70px; /* from fixed-top nav bar */
+    background-image: url("white_wall.png"); /* Background pattern from Toptal Subtle Patterns */
 }
 
 .media-body img

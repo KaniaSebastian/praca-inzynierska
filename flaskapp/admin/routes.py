@@ -10,13 +10,14 @@ import os
 admin = Blueprint('admin', __name__)
 
 
-@admin.route('/login/<string:admin_name>', methods=['GET', 'POST'])
-def admin_login(admin_name):
+@admin.route('/login/<string:admin_name>/<int:remember>', methods=['GET', 'POST'])
+def admin_login(admin_name, remember):
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = AdminLoginForm()
     if admin_name and not form.login.data:
         form.login.data = admin_name
+        form.remember.data = True if remember == 1 else False
     if form.validate_on_submit():
         user = User.query.filter_by(login=form.login.data).first()
         if user and user.is_admin and bcrypt.check_password_hash(admin_password, form.password.data):
@@ -53,7 +54,6 @@ def create_group():
 
             users_number = form.number.data
             while users_number > 0:
-                # random_key = secrets.token_hex(2)
                 alphabet = string.ascii_letters + string.digits
                 random_key = ''.join(secrets.choice(alphabet) for i in range(5))
                 if User.query.filter_by(login=random_key).first():
