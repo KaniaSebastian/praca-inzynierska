@@ -13,7 +13,7 @@ class AdminLoginForm(FlaskForm):
 
 
 class AdminCreateGroup(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=15, message='Nazwa grupy musi zawierać od 1 do 15 znaków')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=14, message='Nazwa grupy musi zawierać od 1 do 14 znaków')])
     number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
                                                                NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
     subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków.')])
@@ -40,7 +40,7 @@ class SetRatingForm(FlaskForm):
 
 
 class EditGroupNameForm(FlaskForm):
-    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=15, message='Nazwa grupy musi zawierać od 1 do 15 znaków')])
+    name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=14, message='Nazwa grupy musi zawierać od 1 do 14 znaków')])
     subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków.')])
     selected_group_id = HiddenField('Id', validators=[DataRequired()])
     submitName = SubmitField('Zatwierdź')
