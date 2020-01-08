@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, SubmitField, IntegerField, ValidationError, TextAreaField, FieldList, FormField
 from wtforms.fields.html5 import URLField
-from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired
+from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired, Length
 from wtforms.utils import unset_value
 from flask import flash
 
@@ -29,9 +29,9 @@ class CustomIntegerField(IntegerField):
 
 
 class CreateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane')])
+    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane'), Length(max=100, message='Tytuł może się składać z maksymalnie 100 znaków.')])
     file = FileField('Projekt', validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf'), FileRequired(message='Dodanie pliku jest wymagane')])
-    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
+    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
     creators_num = IntegerField('Ilość osób pracujących nad projektem',
                                 validators=[DataRequired(message='To pole jest wymagane'),
                                             NumberRange(min=0, max=10, message='Ta wartość nie może być ujemna i nie większa niż 10')])
@@ -40,10 +40,10 @@ class CreateProjectForm(FlaskForm):
 
 
 class UpdateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.')])
+    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=100, message='Tytuł może się składać z maksymalnie 100 znaków.')])
     file = FileField('Projekt',
                       validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf.')])
-    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane')])
+    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
     url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
     submit = SubmitField('Edytuj')
 
@@ -56,6 +56,8 @@ class PointsEntryForm(FlaskForm):
     def validate_points(self, points):
         if not isinstance(points.data, int) or points.data < 0:
             flash('Formularz nie został uzupełniony poprawnie', 'danger')
+        if points.data > 500:
+            flash('Podano za dużą ilość punktów', 'danger')
 
 
 class PointsForm(FlaskForm):
