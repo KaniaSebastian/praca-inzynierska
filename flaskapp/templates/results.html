@@ -105,11 +105,11 @@
                   {% if current_user.is_admin %}
                       <td>
                         {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% elif not project.author.group.upload_time %}
                             <span><b> w terminie</b></span>
                         {% else %}
-                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% endif %}
                       </td>
                   {% else %}

@@ -2,10 +2,12 @@ from flask import render_template, url_for, flash, redirect, request, abort, Blu
 from flaskapp import app, db, bcrypt, admin_password
 from flaskapp.models import User, Project, Group
 from flaskapp.admin.forms import AdminCreateGroup, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
+from flaskapp.admin.utils import remove_accents
 from flask_login import login_user, current_user, login_required
 import secrets
 import string
 import os
+from werkzeug.urls import url_quote
 
 admin = Blueprint('admin', __name__)
 
@@ -272,7 +274,7 @@ def generate_csv(group_name, subject):
     if current_user.is_admin:
         def generate():
             group = Group.query.filter_by(name=group_name).first()
-            group_name_with_subject = group_name + ' (' + subject + ')'
+            group_name_with_subject = remove_accents(group_name) + ' (' + remove_accents(subject) + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Klucz dostepu")
@@ -295,7 +297,7 @@ def generate_csv(group_name, subject):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + subject + '-' + group_name.replace(" ", "_") + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(subject) + '-' + remove_accents(group_name.replace(" ", "_")) + ".csv"})
 
 
 @admin.route('/results-csv/<string:group_name>/<string:subject>')
@@ -304,7 +306,7 @@ def results_csv(group_name, subject):
     if current_user.is_admin:
         def generate():
             group = Group.query.filter_by(name=group_name).first()
-            group_name_with_subject = group_name + ' (' + subject + ')'
+            group_name_with_subject = remove_accents(group_name) + ' (' + remove_accents(subject) + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Wynik")
@@ -319,4 +321,4 @@ def results_csv(group_name, subject):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + subject + '-' + group_name.replace(" ", "_") + '-wyniki' + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(subject) + '-' + remove_accents(group_name.replace(" ", "_")) + '-wyniki' + ".csv"})
