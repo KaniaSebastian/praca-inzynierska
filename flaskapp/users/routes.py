@@ -20,11 +20,16 @@ def project():
         form = CreateProjectForm()
         if form.validate_on_submit():
             new_file = save_file(form.file.data)
-            ip = request.remote_addr
+
+            ip = request.environ.get('HTTP_X_FORWARDED_FOR')
+            if ip is None:
+                ip = request.remote_addr
+
             if ip:
                 user_ip = ip
             else:
                 user_ip = None
+
             new_project = Project(title=form.title.data, description=form.description.data,
                                   upload_file=new_file, creators_num=form.creators_num.data,
                                   author=current_user, optional_link=form.url.data, last_editor=user_ip)
@@ -52,7 +57,10 @@ def update_project():
             user_project.optional_link = form.url.data
             user_project.date_posted = datetime.now()
 
-            ip = request.remote_addr
+            ip = request.environ.get('HTTP_X_FORWARDED_FOR')
+            if ip is None:
+                ip = request.remote_addr
+
             if ip:
                 user_ip = ip
             else:

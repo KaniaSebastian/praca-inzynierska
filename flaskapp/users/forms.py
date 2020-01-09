@@ -56,8 +56,6 @@ class PointsEntryForm(FlaskForm):
     def validate_points(self, points):
         if not isinstance(points.data, int) or points.data < 0:
             flash('Formularz nie został uzupełniony poprawnie', 'danger')
-        if points.data > 500:
-            flash('Podano za dużą ilość punktów', 'danger')
 
 
 class PointsForm(FlaskForm):
@@ -75,6 +73,9 @@ class PointsForm(FlaskForm):
             if field.data.get('points'):
                 points_sum = points_sum + field.data.get('points')
         if points_sum > self.points_per_user:
+            if points_sum > 1000:
+                flash('Podane wartości są za duże', 'danger')
+                raise ValidationError()
             flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' punktów za dużo', 'danger')
             raise ValidationError()
         elif points_sum < self.points_per_user:
