@@ -49,10 +49,10 @@ def logout():
 @login_required
 def project_view(section_id):
     if not current_user.is_admin and current_user.group.is_containing_sections:
-        project = current_user.project[0]
+        project = current_user.project
     elif not current_user.is_admin and not current_user.group.is_containing_sections:
         user = User.query.filter_by(login=current_user.group.name).first()
-        project = user.project[0]
+        project = user.project
     elif current_user.is_admin:
         project = Project.query.filter_by(user_id=section_id).first()
     return render_template('project_view.html', title='Projekt', project=project)
@@ -69,14 +69,14 @@ def results(group_id):
         if current_user.group.is_containing_sections:
             group = current_user.group
             if current_user.project:
-                user_project = current_user.project[0]
+                user_project = current_user.project
             else:
                 user_project = None
         else:
             section = User.query.filter_by(login=current_user.group.name).first()
             group = section.group
             if section.project:
-                user_project = section.project[0]
+                user_project = section.project
             else:
                 user_project = None
 

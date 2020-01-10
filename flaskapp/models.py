@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    project = db.relationship('Project', backref='author', lazy=True, cascade="all, delete")
+    project = db.relationship('Project', backref='author', uselist=False, lazy=True, cascade="all, delete")
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
     did_rate = db.Column(db.Boolean, default=False)
 

@@ -57,13 +57,37 @@
                                     {% endif %}
                                 </td>
                                 <td class="border-up border-bottom border-thick">
-                                    <span data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>
+                                    <span data-toggle="modal" data-target="#deleteUserModal-{{ user.id }}">
                                         <i class="fa fa-user-minus fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="Usuń użytkownika sekcji"></i>
                                     </span>
                                 </td>
                                 <td class="border-up border-bottom border-right border-thick"></td>
                             {% endif %}
                         </tr>
+
+    {#                    delete user Modal#}
+                        <div class="modal fade" id="deleteUserModal-{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel-{{ user.id }}" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="deleteUserModalLabel-{{ user.id }}">Uwaga!</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                  Czy na pewno chcesz usunąć tego użytkownika ?
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="POST">
+                                    <input class="btn btn-danger" type="submit" value="Usuń" >
+                                  </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                     {% endfor %}
                 {% endif %}
 
@@ -94,39 +118,4 @@
 		</tbody>
     </table>
 
-    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteUserModalLabel">Uwaga!</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              Czy na pewno chcesz usunąć tego użytkownika ?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <form action="" method="POST">
-                <input class="btn btn-danger" type="submit" value="Usuń" >
-              </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
 {% endblock content%}
-
-{% block scripts %}
-    <script type=text/javascript>
-        $('#deleteUserModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget) // Button that triggered the modal
-          var userid = button.data('user-id') // Extract info from data-* attributes
-
-          var modal = $(this)
-
-          modal.find('.modal-footer form').attr('action', '/delete_user/' +  userid)
-        })
-    </script>
-{% endblock %}

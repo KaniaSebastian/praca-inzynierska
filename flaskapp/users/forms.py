@@ -15,7 +15,7 @@ class CustomIntegerField(IntegerField):
                 self.data = int(value)
             except (ValueError, TypeError):
                 self.data = None
-                raise ValueError(self.gettext("Podana wartość nie jest liczbą"))
+                raise ValueError(self.gettext("Podana wartość nie jest liczbą całkowitą"))
         else:
             self.data = None
 
@@ -25,7 +25,7 @@ class CustomIntegerField(IntegerField):
                 self.data = int(valuelist[0])
             except ValueError:
                 self.data = None
-                raise ValueError(self.gettext("Podana wartość nie jest liczbą"))
+                raise ValueError(self.gettext("Podana wartość nie jest liczbą całkowitą"))
 
 
 class CreateProjectForm(FlaskForm):
@@ -76,9 +76,9 @@ class PointsForm(FlaskForm):
             if points_sum > 1000:
                 flash('Podane wartości są za duże', 'danger')
                 raise ValidationError()
-            flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' punktów za dużo', 'danger')
+            flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' pkt. za dużo', 'danger')
             raise ValidationError()
         elif points_sum < self.points_per_user:
             if points_sum >= 0:
-                flash('Przydzielono o ' + str(self.points_per_user - points_sum) + ' punktów za mało', 'danger')
+                flash('Przydzielono o ' + str(self.points_per_user - points_sum) + ' pkt. za mało', 'danger')
             raise ValidationError()

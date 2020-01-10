@@ -103,7 +103,7 @@ def create_section_keys(group_id):
         for section in group.users:
             if section.project and not Group.query.filter_by(name=section.login).first():
                 is_any_project = True
-                users_num = section.project[0].creators_num
+                users_num = section.project.creators_num
                 new_group = Group(name=section.login, is_containing_sections=False)
                 db.session.add(new_group)
                 db.session.commit()
@@ -133,7 +133,6 @@ def add_user(section_id):
 
             flash('Użytkownik został dodany', 'success')
         else:
-            # flash('Nowy użytkownik może zostać dodany tylko jeśli sekcja udostępniła już projekt', 'warning')
             new_group = Group(name=section.login, is_containing_sections=False)
             db.session.add(new_group)
             db.session.commit()
@@ -149,7 +148,6 @@ def add_user(section_id):
     return redirect(url_for('admin.sections', group_id=section.group_id))
 
 
-# change url in sections.html if route changed
 @admin.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(user_id):
@@ -350,7 +348,7 @@ def results_csv(group_name, subject):
 
             for n, section in enumerate(group.users, 1):
                 section_name = '\n' + 'Sekcja ' + str(n)
-                section_score = (str(section.project[0].score) if section.project else '---')
+                section_score = (str(section.project.score) if section.project else '---')
                 row = (section_name, section_score)
                 yield ','.join(row) + '\n'
     else:
