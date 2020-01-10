@@ -109,8 +109,8 @@ def rating():
                 single_project.score = single_project.score + form.all_points[i].data.get('points')
             current_user.did_rate = True
             db.session.commit()
-            flash('Punkty zostały przydzielone. Tutaj pojawią się wyniki kiedy zakończy się ocenianie', 'success')
-            return redirect(url_for('main.results'))
+            flash('Punkty zostały przydzielone', 'success')
+            return redirect(url_for('users.rating'))
     else:
         flash('Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji', 'warning')
         return redirect(url_for('main.home'))

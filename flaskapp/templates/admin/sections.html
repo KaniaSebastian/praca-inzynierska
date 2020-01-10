@@ -11,7 +11,12 @@
             <tr>
                 <th scope="col" class="border-bottom border-thick">Sekcja</th>
                 <th scope="col" class="border-bottom border-thick">Login</th>
-                <th colspan="5" class="border-bottom border-thick"></th>
+                <th colspan="3" class="border-bottom border-thick"></th>
+                <th scope="col" class="border-bottom border-thick">
+                    <a href="{{ url_for('admin.add_section', group_id=group.id) }}">
+                        <i class="fa fa-plus fa-lg text-success" data-toggle="tooltip" data-placement="top" title="Dodaj sekcję"></i>
+                    </a>
+                </th>
             </tr>
         </thead>
 		<tbody>
@@ -28,10 +33,14 @@
                         <td> <a> <button type="button" data-toggle="tooltip" data-placement="top" title="Ta sekcja nie udostępniła projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
                     {% endif %}
                     <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
-                    <td></td>
-					<td>
-                        <a href="{{ url_for('admin.add_user', section_id=section.id) }}"> <button type="button" data-toggle="tooltip" data-placement="top" title="Dodaj użytkownika sekcji" class="btn btn-sm btn-outline-success"> <i class="fa fa-plus"></i> </button> </a>
-					</td>
+                    <td><a href="{{ url_for('admin.add_user', section_id=section.id) }}">
+                        <i class="fa fa-user-plus fa-xlg-static text-success" data-toggle="tooltip" data-placement="top" title="Dodaj użytkownika sekcji"></i> </a>
+                    </td>
+					<td class="border-right border-thick">
+                        <span data-toggle="modal" data-target="#deleteSectionModal-{{ section.id }}">
+                                <i class="fa fa-trash-o fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="Usuń sekcję"></i>
+                        </span>
+                    </td>
                 </tr>
 
 
@@ -40,18 +49,46 @@
                         <tr>
                             <td class="border-0" colspan="3"></td>
                             {% if group %}
-                                <td class="border-left border-thick"> {{ user.login }} </td>
-                                <td class="border-up border-thick">
-                                    <button type="button" data-toggle="tooltip" data-placement="top" title="Usuń użytkownika" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>
-                                        <i class="fa fa-minus"></i>
-                                    </button>
+                                <td class="border-left border-bottom border-thick">
+                                    {% if user.did_rate %}
+                                        {{ user.login }} <i class="fa fa-check-circle-o fa-sm text-primary" data-toggle="tooltip" data-placement="top" title="Ten użytkownik zakończył ocenianie"></i>
+                                    {% else %}
+                                        {{ user.login }}
+                                    {% endif %}
                                 </td>
-                                <td class="border-up border-right border-thick"></td>
+                                <td class="border-up border-bottom border-thick">
+                                    <span data-toggle="modal" data-target="#deleteUserModal" data-user-id={{ user.id }}>
+                                        <i class="fa fa-user-minus fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="Usuń użytkownika sekcji"></i>
+                                    </span>
+                                </td>
+                                <td class="border-up border-bottom border-right border-thick"></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
 
+{#                delete section Modal#}
+                <div class="modal fade" id="deleteSectionModal-{{ section.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteSectionModalLabel-{{ section.id }}" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteSectionModalLabel-{{ section.id }}">Uwaga!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          Czy na pewno chcesz usunąć tę sekcję ? Spowoduje to także usunięcie udostępnionego przez nią projektu!
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                          <form action="{{ url_for('admin.delete_section', section_id=section.id) }}" method="POST">
+                            <input class="btn btn-danger" type="submit" value="Usuń" >
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 			{% endfor %}
 		</tbody>
@@ -61,7 +98,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="deleteUserModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="deleteUserModalLabel">Uwaga!</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -78,6 +115,7 @@
         </div>
       </div>
     </div>
+
 {% endblock content%}
 
 {% block scripts %}

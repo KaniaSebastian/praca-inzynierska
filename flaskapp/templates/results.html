@@ -22,7 +22,9 @@
     {% else %}
 
         {% if not current_user.is_admin %}
-            <h4><p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
+            {% if user_project %}
+                <h4><p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
+            {% endif %}
         {% endif %}
 
         <h6><p>W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
@@ -94,13 +96,14 @@
               </thead>
 
               <tbody>
-              {% for project in group_projects.values() %}
+
+              {% for section_num, project in group_projects.items() %}
                 {% if not current_user.is_admin and project == user_project %}
                     <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% else %}
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
-                  <td>Sekcja {{ loop.index }}</td>
+                  <td>Sekcja {{ section_num }}</td>
                   <td>{{ project.score }}</td>
                   {% if current_user.is_admin %}
                       <td>

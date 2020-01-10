@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, abort, Blu
 from flaskapp import app, db, bcrypt, admin_password
 from flaskapp.models import User, Project, Group
 from flaskapp.admin.forms import AdminCreateGroup, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
-from flaskapp.admin.utils import remove_accents
+from flaskapp.admin.utils import remove_accents, add_users
 from flask_login import login_user, current_user, login_required
 import secrets
 import string
@@ -58,15 +58,8 @@ def create_group():
             db.session.commit()
 
             users_number = form.number.data
-            while users_number > 0:
-                alphabet = string.ascii_letters + string.digits
-                random_key = ''.join(secrets.choice(alphabet) for i in range(5))
-                if User.query.filter_by(login=random_key).first():
-                    continue
-                new_user = User(login=random_key, group=new_group)
-                db.session.add(new_user)
-                users_number = users_number - 1
-            db.session.commit()
+            add_users(users_number, new_group)
+
             flash('Grupa została utworzona', 'success')
             return redirect(url_for('admin.panel'))
     else:
@@ -74,7 +67,7 @@ def create_group():
         return redirect(url_for('main.home'))
     return render_template('admin/create_group.html', title='Panel administracyjny', form=form)
 
-# change url in panel.html if route changed
+# change url in manage_group.html if route changed
 @admin.route('/delete_group/<int:group_id>', methods=['POST'])
 @login_required
 def delete_group(group_id):
@@ -85,14 +78,20 @@ def delete_group(group_id):
                 section_project = Project.query.filter_by(author=section).first()
                 old_file = section_project.upload_file
                 os.remove(os.path.join(app.root_path, 'static/projects', old_file))
-                db.session.delete(Group.query.filter_by(name=section.login).first())
+
+            section_users_group = Group.query.filter_by(name=section.login).first()
+            if section_users_group:
+                for user in section_users_group.users:
+                    db.session.delete(user)
+                db.session.delete(section_users_group)
+
         db.session.delete(group)
         db.session.commit()
         flash('Grupa została usunięta', 'success')
         return redirect(url_for('admin.manage_groups'))
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
-        return redirect(url_for('mani.home'))
+        return redirect(url_for('main.home'))
 
 
 @admin.route('/create_section_keys/<int:group_id>', methods=['GET', 'POST'])
@@ -109,15 +108,8 @@ def create_section_keys(group_id):
                 db.session.add(new_group)
                 db.session.commit()
 
-                while users_num > 0:
-                    alphabet = string.ascii_letters + string.digits
-                    random_key = ''.join(secrets.choice(alphabet) for i in range(5))
-                    if User.query.filter_by(login=random_key).first():
-                        continue
-                    new_user = User(login=random_key, group=new_group)
-                    db.session.add(new_user)
-                    users_num = users_num - 1
-        db.session.commit()
+                add_users(users_num, new_group)
+
         if is_any_project:
             flash('Klucze zostały wygenerowane', 'success')
         else:
@@ -134,27 +126,30 @@ def create_section_keys(group_id):
 def add_user(section_id):
     if current_user.is_admin:
         section = User.query.get_or_404(section_id)
-        group = Group.query.filter_by(name=section.login).first()
-        if group:
+        users_group = Group.query.filter_by(name=section.login).first()
+        if users_group:
             users_num = 1
-            while users_num > 0:
-                alphabet = string.ascii_letters + string.digits
-                random_key = ''.join(secrets.choice(alphabet) for i in range(5))
-                if User.query.filter_by(login=random_key).first():
-                    continue
-                new_user = User(login=random_key, group=group)
-                db.session.add(new_user)
-                users_num = users_num - 1
-            db.session.commit()
+            add_users(users_num, users_group)
+
             flash('Użytkownik został dodany', 'success')
         else:
-            flash('Nowy użytkownik może zostać dodany tylko jeśli sekcja udostępniła już projekt', 'warning')
+            # flash('Nowy użytkownik może zostać dodany tylko jeśli sekcja udostępniła już projekt', 'warning')
+            new_group = Group(name=section.login, is_containing_sections=False)
+            db.session.add(new_group)
+            db.session.commit()
+
+            users_num = 1
+            add_users(users_num, new_group)
+
+            flash('Użytkownik został dodany', 'success')
+
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=section.group_id))
 
 
+# change url in sections.html if route changed
 @admin.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(user_id):
@@ -173,6 +168,47 @@ def delete_user(user_id):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=user_section.group_id))
+
+
+@admin.route('/add-section/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+def add_section(group_id):
+    if current_user.is_admin:
+        group = Group.query.get_or_404(group_id)
+        users_num = 1
+        add_users(users_num, group)
+        flash('Sekcja została dodana', 'success')
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('main.home'))
+    return redirect(url_for('admin.sections', group_id=group_id))
+
+
+@admin.route('/delete-section/<int:section_id>', methods=['GET', 'POST'])
+@login_required
+def delete_section(section_id):
+    if current_user.is_admin:
+        section_to_delete = User.query.get_or_404(section_id)
+        section_id = section_to_delete.group.id
+
+        section_users_group = Group.query.filter_by(name=section_to_delete.login).first()
+        if section_users_group:
+            for user in section_users_group.users:
+                db.session.delete(user)
+            db.session.delete(section_users_group)
+
+        if section_to_delete.project:
+            section_project = Project.query.filter_by(author=section_to_delete).first()
+            old_file = section_project.upload_file
+            os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+
+        db.session.delete(section_to_delete)
+        db.session.commit()
+        flash('Sekcja została usunięta', 'success')
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('main.home'))
+    return redirect(url_for('admin.sections', group_id=section_id))
 
 
 @admin.route('/sections/<int:group_id>')
@@ -314,7 +350,7 @@ def results_csv(group_name, subject):
 
             for n, section in enumerate(group.users, 1):
                 section_name = '\n' + 'Sekcja ' + str(n)
-                section_score = str(section.project[0].score)
+                section_score = (str(section.project[0].score) if section.project else '---')
                 row = (section_name, section_score)
                 yield ','.join(row) + '\n'
     else:
