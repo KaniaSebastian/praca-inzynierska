@@ -4,10 +4,7 @@ from flaskapp.models import User, Project, Group
 from flaskapp.admin.forms import AdminCreateGroup, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
 from flaskapp.admin.utils import remove_accents, add_users
 from flask_login import login_user, current_user, login_required
-import secrets
-import string
 import os
-from werkzeug.urls import url_quote
 
 admin = Blueprint('admin', __name__)
 
@@ -113,8 +110,8 @@ def create_section_keys(group_id):
         if is_any_project:
             flash('Klucze zostały wygenerowane', 'success')
         else:
-            flash('Nowe klucze mogą być wygenerowane tylko dla sekcji które przesłały już projekt lub nie posiadają '
-                  'jeszcze użytkowników', 'warning')
+            flash('Nowe klucze mogą być wygenerowane (automatycznie) tylko dla sekcji które przesłały już projekt lub'
+                  ' nie posiadają jeszcze użytkowników', 'warning')
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))

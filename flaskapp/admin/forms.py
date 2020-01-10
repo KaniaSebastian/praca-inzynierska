@@ -16,7 +16,7 @@ class AdminCreateGroup(FlaskForm):
     name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=14, message='Nazwa grupy musi zawierać od 1 do 14 znaków')])
     number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
                                                                NumberRange(min=0, max=100, message='Ta wartość nie może być ujemna, ani wększa niż 100')])
-    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków')])
+    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków')])
     submit = SubmitField('Utwórz')
 
     def validate_name(self, name):

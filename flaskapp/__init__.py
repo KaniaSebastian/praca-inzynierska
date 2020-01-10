@@ -19,7 +19,7 @@ login_manager.refresh_view = 'main.home'
 login_manager.needs_refresh_message = 'Sesja wygasła. Musisz się zalogować ponownie.'
 login_manager.needs_refresh_message_category = 'info'
 
-admin_password = '$2b$12$V4dBXyIe9Iu9IfkZyntMtuPfW8DP7X2DQtGGLuG6gmbv3WMgqSG.K'
+admin_password = '$2b$12$KD6gapvzV3Ng/YHyIfGtQebmh2cezDureto6t2mPk2JUM3WCZ5t3u'
 
 from flaskapp.admin.routes import admin
 from flaskapp.users.routes import users

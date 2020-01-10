@@ -27,14 +27,9 @@ db.session.commit()
 
 print(User.query.all())
 
-'''
-from flaskapp import db
-from flaskapp.models import User
-User.query.all()
-'''
 
 '''
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
-bcrypt.generate_password_hash('').decode('utf-8')
+print(bcrypt.generate_password_hash('').decode('utf-8'))
 '''
