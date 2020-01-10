@@ -1,4 +1,3 @@
-from datetime import datetime
 from flaskapp import db, login_manager
 from flask_login import UserMixin
 
@@ -23,7 +22,7 @@ class User(db.Model, UserMixin):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    date_posted = db.Column(db.DateTime)
     upload_file = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text(1500), nullable=False)
     optional_link = db.Column(db.String)

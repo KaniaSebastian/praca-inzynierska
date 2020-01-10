@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 import os
 from datetime import datetime
 from flaskapp.users.utils import save_file
-import sys
+import pytz
 
 users = Blueprint('users', __name__)
 
@@ -32,7 +32,8 @@ def project():
 
             new_project = Project(title=form.title.data, description=form.description.data,
                                   upload_file=new_file, creators_num=form.creators_num.data,
-                                  author=current_user, optional_link=form.url.data, last_editor=user_ip)
+                                  author=current_user, optional_link=form.url.data, last_editor=user_ip,
+                                  date_posted=datetime.now(pytz.timezone('Poland')))
             db.session.add(new_project)
             db.session.commit()
             flash('Projekt został dodany', 'success')
@@ -55,7 +56,7 @@ def update_project():
             user_project.title = form.title.data
             user_project.description = form.description.data
             user_project.optional_link = form.url.data
-            user_project.date_posted = datetime.now()
+            user_project.date_posted = datetime.now(pytz.timezone('Poland'))
 
             ip = request.environ.get('HTTP_X_FORWARDED_FOR')
             if ip is None:
