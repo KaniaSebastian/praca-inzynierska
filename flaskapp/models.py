@@ -8,6 +8,7 @@ def load_user(user_id):
 
 
 class User(db.Model, UserMixin):
+    __table_args__ = {'sqlite_autoincrement': True}
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)

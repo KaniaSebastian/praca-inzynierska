@@ -15,9 +15,6 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'main.login'
 login_manager.login_message = 'Musisz się zalogować, aby zobaczyć tę stronę.'
 login_manager.login_message_category = 'info'
-login_manager.refresh_view = 'main.home'
-login_manager.needs_refresh_message = 'Sesja wygasła. Musisz się zalogować ponownie.'
-login_manager.needs_refresh_message_category = 'info'
 
 admin_password = '$2b$12$KD6gapvzV3Ng/YHyIfGtQebmh2cezDureto6t2mPk2JUM3WCZ5t3u'
 

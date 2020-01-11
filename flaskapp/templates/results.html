@@ -64,7 +64,7 @@
                         <h5 class="card-title">{{ project.title }}</h5>
                         <p class="card-text">{{ project.description }}</p>
                         {% if project.optional_link %}
-                            <p class="blockquote-footer mt-5">Dodatkowy załącznik <a class="text-info" href="{{ project.optional_link }}" target="_blank"><i class="fa fa-external-link fa-lg" title="{{ project.optional_link }}"></i></a> </p>
+                            <p class="blockquote-footer mt-5"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
                         {% endif %}
                         <p class="card-text custom-card-footer">
                             {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
