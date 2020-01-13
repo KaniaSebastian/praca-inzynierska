@@ -1,6 +1,12 @@
 {% extends "layout_section.html" %}
 {% block content %}
     {% if current_user.group.rating_status == 'disabled' %}
+        {% if current_user.group.upload_time %}
+            <h6 class="mb-3 lead">Termin na udostępnienie projektu: <b>{{ current_user.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
+        {% else %}
+            <h6 class="mb-3 lead">Termin na udostępnienie projektu: <b> nie wyznaczono </b></h6>
+        {% endif %}
+
         <div class="body-section">
             <form method="POST" action="" novalidate enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
@@ -90,7 +96,7 @@
         <div class="jumbotron">
           <h4>Ocenianie zostało rozpoczęte. Nie można już dodać/edytować projektu.</h4>
           <hr class="my-4">
-          <p class="lead">Aby wziąć udział w głosowaniu zaloguj się jako pojedynczy użytkownik innym loginem otrzymanym od prowadzącego.</p>
+          <p class="lead">Aby wziąć udział w głosowaniu zaloguj się za pomocą klucza do oceniania dostępnym <a href="{{ url_for('users.access_keys') }}">tutaj</a> </p>
         </div>
 
     {% endif %}

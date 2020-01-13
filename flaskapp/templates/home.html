@@ -21,6 +21,11 @@
         <div class="jumbotron">
           <h1 class="display-4">Witaj!</h1>
           <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          {% if current_user.group.upload_time %}
+              <p class="lead"> Termin na udostępnienie projektu: <b> {{ current_user.group.upload_time.strftime('%d-%m-%Y, %H:%M') }} </b> </p>
+          {% else %}
+              <p class="lead"> Termin na udostępnienie projektu: <b> nie wyznaczono </b> </p>
+          {% endif %}
           <hr class="my-4">
           <p> Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">Projekt</a>

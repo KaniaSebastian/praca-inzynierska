@@ -1,10 +1,7 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 
-    <h4 class="border-bottom mb-3 lead">Grupa: {{ group.name }} ({{ group.subject }})</h4>
-
-    <a href="{{ url_for('admin.create_section_keys', group_id=group.id) }}"> <button type="button" class="btn btn-primary btn-lg btn-block">Wygeneruj klucze dla pojedynczych użytkowników</button> </a>
-    <br>
+    <h4 class="border-bottom mb-4 lead">Grupa: {{ group.name }} ({{ group.subject }})</h4>
 
     <table class="table table-sm text-center align-middle ">
         <thead>

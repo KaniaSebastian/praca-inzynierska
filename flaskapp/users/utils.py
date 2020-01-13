@@ -1,5 +1,6 @@
-from flaskapp import app
-from flaskapp.models import Project
+from flaskapp import app, db
+from flaskapp.models import Project, Group
+from flaskapp.admin.utils import add_users
 import secrets
 import os
 
@@ -15,3 +16,14 @@ def save_file(file):
     file_path = os.path.join(app.root_path, 'static/projects', upload_file_name)
     file.save(file_path)
     return upload_file_name
+
+
+def create_section_keys(section_login, number_of_users):
+    if not Group.query.filter_by(name=section_login).first():
+        new_group = Group(name=section_login, is_containing_sections=False)
+        db.session.add(new_group)
+        db.session.commit()
+        add_users(number_of_users, new_group)
+        return True
+    else:
+        return False

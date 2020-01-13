@@ -1,0 +1,39 @@
+{% extends "layout_section.html" %}
+{% block content %}
+
+    {% if keys %}
+
+        <div class="jumbotron">
+          <h4>Klucze dostępu</h4>
+          <hr class="my-4">
+          <p class="lead">Poniższe klucze służą do zalogowania się, aby ocenić projekty innych studentów</p>
+          <p class="lead">Każda osoba z sekcji projektowej powinna użyć jednego z nich, kiedy rozpocznie się ocenianie</p>
+        </div>
+
+        <table class="table table-hover text-center table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Nr.</th>
+              <th scope="col">Klucz</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          {% for key in keys %}
+            <tr>
+              <th>{{ loop.index }}</th>
+              <td>{{ key }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+
+        </table>
+
+    {% else %}
+        <div class="jumbotron">
+          <h4>Klucze nie zostały jeszcze wygenerowane</h4>
+          <hr class="my-4">
+          <p class="lead">Zostaną one stworzone po udostępnieniu projektu</p>
+        </div>
+    {% endif %}
+{% endblock content %}

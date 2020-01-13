@@ -91,33 +91,6 @@ def delete_group(group_id):
         return redirect(url_for('main.home'))
 
 
-@admin.route('/create_section_keys/<int:group_id>', methods=['GET', 'POST'])
-@login_required
-def create_section_keys(group_id):
-    if current_user.is_admin:
-        group = Group.query.filter_by(id=group_id).first()
-        is_any_project = False
-        for section in group.users:
-            if section.project and not Group.query.filter_by(name=section.login).first():
-                is_any_project = True
-                users_num = section.project.creators_num
-                new_group = Group(name=section.login, is_containing_sections=False)
-                db.session.add(new_group)
-                db.session.commit()
-
-                add_users(users_num, new_group)
-
-        if is_any_project:
-            flash('Klucze zostały wygenerowane', 'success')
-        else:
-            flash('Nowe klucze mogą być wygenerowane (automatycznie) tylko dla sekcji które przesłały już projekt lub'
-                  ' nie posiadają jeszcze użytkowników', 'warning')
-    else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
-        return redirect(url_for('main.home'))
-    return redirect(url_for('admin.sections', group_id=group_id))
-
-
 @admin.route('/add_user/<int:section_id>', methods=['GET', 'POST'])
 @login_required
 def add_user(section_id):

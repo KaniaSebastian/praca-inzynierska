@@ -5,7 +5,7 @@ from flaskapp.users.forms import CreateProjectForm, UpdateProjectForm, PointsFor
 from flask_login import current_user, login_required
 import os
 from datetime import datetime
-from flaskapp.users.utils import save_file
+from flaskapp.users.utils import save_file, create_section_keys
 import pytz
 
 users = Blueprint('users', __name__)
@@ -36,8 +36,9 @@ def project():
                                   date_posted=datetime.now(pytz.timezone('Poland')))
             db.session.add(new_project)
             db.session.commit()
+            create_section_keys(current_user.login, form.creators_num.data)
             flash('Projekt został dodany', 'success')
-            return redirect(url_for('users.project'))
+            return redirect(url_for('users.access_keys'))
     else:
         flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
         return redirect(url_for('main.home'))
@@ -85,6 +86,21 @@ def update_project():
         flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
         return redirect(url_for('admin.panel'))
     return render_template('project.html', title='Edytuj projekt', form=form, legend='Edytuj projekt')
+
+
+@users.route('/keys')
+@login_required
+def access_keys():
+    if not current_user.is_admin and current_user.group.is_containing_sections:
+        users_group = Group.query.filter_by(name=current_user.login).first()
+        if users_group:
+            keys = [user.login for user in users_group.users]
+        else:
+            keys = None
+    else:
+        flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
+        return redirect(url_for('main.home'))
+    return render_template('keys.html', title='Klucze dostępu', keys=keys)
 
 
 @users.route('/rating', methods=['GET', 'POST'])
