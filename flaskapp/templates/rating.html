@@ -11,7 +11,7 @@
             <p class="lead">Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce <a href="{{ url_for('main.results') }}">wyniki końcowe</a>.</p>
         </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
-        <p> Całkowita ilość punktów do rozdania wynosi <b id="points_to_give">{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie. </p>
+        <p> Całkowita liczba punktów do rozdania wynosi <b id="points_to_give">{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie. </p>
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             {% for project in group_projects %}

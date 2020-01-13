@@ -32,7 +32,7 @@ class CreateProjectForm(FlaskForm):
     title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane'), Length(max=100, message='Tytuł może się składać z maksymalnie 100 znaków.')])
     file = FileField('Projekt', validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf'), FileRequired(message='Dodanie pliku jest wymagane')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
-    creators_num = IntegerField('Ilość osób pracujących nad projektem',
+    creators_num = IntegerField('Liczba osób pracujących nad projektem',
                                 validators=[DataRequired(message='To pole jest wymagane'),
                                             NumberRange(min=0, max=10, message='Ta wartość nie może być ujemna i nie większa niż 10')])
     url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])

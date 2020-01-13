@@ -299,13 +299,15 @@ def manage_groups():
                            set_upload_time_form=set_upload_time_form, set_rating_form=set_rating_form, group_name_form=group_name_form)
 
 
-@admin.route('/generate-csv/<string:group_name>/<string:subject>')
+@admin.route('/generate-csv/<int:group_id>')
 @login_required
-def generate_csv(group_name, subject):
+def generate_csv(group_id):
     if current_user.is_admin:
+        group = Group.query.get_or_404(group_id)
+
         def generate():
-            group = Group.query.filter_by(name=group_name).first()
-            group_name_with_subject = remove_accents(group_name) + ' (' + remove_accents(subject) + ')'
+            group = Group.query.get_or_404(group_id)
+            group_name_with_subject = remove_accents(group.name) + ' (' + remove_accents(group.subject) + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Klucz dostepu")
@@ -328,16 +330,17 @@ def generate_csv(group_name, subject):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(subject) + '-' + remove_accents(group_name.replace(" ", "_")) + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(group.subject) + '-' + remove_accents(group.name.replace(" ", "_")) + ".csv"})
 
 
-@admin.route('/results-csv/<string:group_name>/<string:subject>')
+@admin.route('/results-csv/<int:group_id>')
 @login_required
-def results_csv(group_name, subject):
+def results_csv(group_id):
     if current_user.is_admin:
+        group = Group.query.get_or_404(group_id)
         def generate():
-            group = Group.query.filter_by(name=group_name).first()
-            group_name_with_subject = remove_accents(group_name) + ' (' + remove_accents(subject) + ')'
+            group = Group.query.get_or_404(group_id)
+            group_name_with_subject = remove_accents(group.name) + ' (' + remove_accents(group.subject) + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Wynik")
@@ -352,4 +355,4 @@ def results_csv(group_name, subject):
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(subject) + '-' + remove_accents(group_name.replace(" ", "_")) + '-wyniki' + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(group.subject) + '-' + remove_accents(group.name.replace(" ", "_")) + '-wyniki' + ".csv"})

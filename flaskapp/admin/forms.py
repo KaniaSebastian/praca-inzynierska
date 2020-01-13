@@ -14,7 +14,7 @@ class AdminLoginForm(FlaskForm):
 
 class AdminCreateGroup(FlaskForm):
     name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=14, message='Nazwa grupy musi zawierać od 1 do 14 znaków')])
-    number = IntegerField('Ilość sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
+    number = IntegerField('Liczba sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
                                                                NumberRange(min=0, max=100, message='Ta wartość nie może być ujemna, ani wększa niż 100')])
     subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków')])
     submit = SubmitField('Utwórz')
@@ -33,7 +33,7 @@ class SetUploadTimeForm(FlaskForm):
 
 class SetRatingForm(FlaskForm):
     rating_status = SelectField('Ocenianie', choices=[('disabled', 'Wyłączone'), ('enabled', 'Włączone'), ('ended', 'Zakończone')])
-    points = IntegerField('Punkty na użytkownika', validators=[DataRequired(message='Nieprawidłowa ilość punktów'),
+    points = IntegerField('Punkty na użytkownika', validators=[DataRequired(message='Nieprawidłowa liczba punktów'),
                                                                NumberRange(min=0, max=None, message='Ta wartość nie może być ujemna')])
     selected_group_id = HiddenField('Id', validators=[DataRequired()])
     submitRating = SubmitField('Zatwierdź')
