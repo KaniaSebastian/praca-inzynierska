@@ -1,10 +1,11 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, Response
 from flaskapp import app, db, bcrypt, admin_password
 from flaskapp.models import User, Project, Group
-from flaskapp.admin.forms import AdminCreateGroup, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
-from flaskapp.admin.utils import remove_accents, add_users
+from flaskapp.admin.forms import CreateGroupForm, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
+from flaskapp.admin.utils import add_users
 from flask_login import login_user, current_user, login_required
 import os
+from werkzeug.urls import url_quote
 
 admin = Blueprint('admin', __name__)
 
@@ -43,20 +44,17 @@ def panel():
     return render_template('admin/panel.html', title='Panel administracyjny', groups=groups)
 
 
-@admin.route('/create_group', methods=['GET', 'POST'])
+@admin.route('/create-group', methods=['GET', 'POST'])
 @login_required
 def create_group():
     if current_user.is_admin:
-        form = AdminCreateGroup()
+        form = CreateGroupForm()
         if form.validate_on_submit():
-
             new_group = Group(name=form.name.data, is_containing_sections=True, subject=form.subject.data)
             db.session.add(new_group)
             db.session.commit()
-
             users_number = form.number.data
             add_users(users_number, new_group)
-
             flash('Grupa została utworzona', 'success')
             return redirect(url_for('admin.panel'))
     else:
@@ -64,7 +62,7 @@ def create_group():
         return redirect(url_for('main.home'))
     return render_template('admin/create_group.html', title='Panel administracyjny', form=form)
 
-# change url in manage_group.html if route changed
+
 @admin.route('/delete_group/<int:group_id>', methods=['POST'])
 @login_required
 def delete_group(group_id):
@@ -280,7 +278,7 @@ def generate_csv(group_id):
 
         def generate():
             group = Group.query.get_or_404(group_id)
-            group_name_with_subject = remove_accents(group.name) + ' (' + remove_accents(group.subject) + ')'
+            group_name_with_subject = group.name + ' (' + group.subject + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Klucz dostepu")
@@ -288,7 +286,7 @@ def generate_csv(group_id):
 
             for n in range(len(group.users)):
                 group_users = Group.query.filter_by(name=group.users[n].login).first()
-                section = '\n' + 'Sekcja ' + str(n+1)
+                section = '\n' + 'Sekcja ' + str(group.users[n].section_number)
                 if group_users:
                     row = (section, group.users[n].login, 'Uzytkownicy:')
                 else:
@@ -302,8 +300,11 @@ def generate_csv(group_id):
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
+    filename = group.subject + '-' + group.name.replace(" ", "_") + ".csv"
+    filename = filename.encode('utf-8')
+    filename = url_quote(filename)
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(group.subject) + '-' + remove_accents(group.name.replace(" ", "_")) + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + filename})
 
 
 @admin.route('/results-csv/<int:group_id>')
@@ -311,21 +312,27 @@ def generate_csv(group_id):
 def results_csv(group_id):
     if current_user.is_admin:
         group = Group.query.get_or_404(group_id)
+
         def generate():
             group = Group.query.get_or_404(group_id)
-            group_name_with_subject = remove_accents(group.name) + ' (' + remove_accents(group.subject) + ')'
+            group_name_with_subject = group.name + ' (' + group.subject + ')'
             header = ('Grupa:', group_name_with_subject)
             yield ",".join(header) + '\n'
             header = ("Sekcja", "Wynik")
             yield ",".join(header) + '\n\n'
 
-            for n, section in enumerate(group.users, 1):
-                section_name = '\n' + 'Sekcja ' + str(n)
+            for section in group.users:
+                section_name = '\n' + 'Sekcja ' + str(section.section_number)
+                section_project_title = section.project.title if section.project else '---'
                 section_score = (str(section.project.score) if section.project else '---')
-                row = (section_name, section_score)
+                row = (section_name, section_project_title, section_score)
                 yield ','.join(row) + '\n'
     else:
         flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
         return redirect(url_for('main.home'))
+    filename = group.subject + '-' + group.name.replace(" ", "_") + '-wyniki' + ".csv"
+    filename = filename.encode('utf-8')
+    filename = url_quote(filename)
     return Response(generate(), mimetype='text/csv',
-                    headers={"Content-Disposition": "attachment;filename=" + remove_accents(group.subject) + '-' + remove_accents(group.name.replace(" ", "_")) + '-wyniki' + ".csv"})
+                    headers={"Content-Disposition": "attachment;filename=" + filename})
+

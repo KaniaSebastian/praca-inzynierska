@@ -12,10 +12,12 @@
 
     <script src="https://kit.fontawesome.com/c1dc42c07b.js" crossorigin="anonymous"></script>
 
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}">
+
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
-        <title>adres.pl</title>
+        <title>zapunktuj.pl</title>
     {% endif %}
 </head>
 <body>
@@ -39,11 +41,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{{ url_for('main.about') }}">Informacje</a>
 						</li>
-
-{#						<li class="nav-item">#}
-{#							<a class="nav-link" href="#">Kontakt</a>#}
-{#						</li>#}
-
 					</ul>
 
 					<ul class="navbar-nav">
@@ -89,7 +86,6 @@
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
-
 			{% block body %}{% endblock %}
 			</div>
 		</div>

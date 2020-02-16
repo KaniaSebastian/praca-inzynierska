@@ -38,7 +38,13 @@
                             {% endif %}
                         </td>
 
-                        <td> <a href="{{ url_for('admin.projects', group_id=group.id) }}"> <i class="fa fa-copy fa-xlg text-info" data-toggle="tooltip" data-placement="top" title="Projekty tej grupy"></i> </a></td>
+                        <td>
+                            <a href="{{ url_for('admin.projects', group_id=group.id) }}">
+                                <i class="fa fa-copy fa-xlg text-info" data-toggle="tooltip" data-placement="top" title="Projekty tej grupy">
+                                    {{ group.users|selectattr('project')|list|length }}
+                                </i>
+                            </a>
+                        </td>
                         <td> <a href="{{ url_for('admin.generate_csv', group_id=group.id) }}">
                             <i class="fa fa-download fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="Plik CSV z kluczami dostępu"></i></a>
                         </td>

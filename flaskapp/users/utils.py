@@ -18,7 +18,7 @@ def save_file(file):
     return upload_file_name
 
 
-def create_section_keys(section_login, number_of_users):
+def create_users_keys(section_login, number_of_users):
     if not Group.query.filter_by(name=section_login).first():
         new_group = Group(name=section_login, is_containing_sections=False)
         db.session.add(new_group)

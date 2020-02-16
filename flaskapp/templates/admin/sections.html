@@ -20,7 +20,7 @@
 
 			{% for section in group.users %}
 				<tr class="table-secondary border border-thick">
-					<td> {{ loop.index }} </td>
+					<td> {{ section.section_number }} </td>
 					<td> {{ section.login }} </td>
                     {% if section.project %}
                         <td> <a href="{{ url_for('main.project_view', section_id=section.id) }}">

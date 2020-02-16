@@ -11,15 +11,18 @@
         <a href="{{ url_for('admin.sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
     {% else %}
         {% if project.author.group.upload_time %}
-            <h6 class="mb-3">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
+            <h6 class="mb-3 lead">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
         {% else %}
-            <h6 class="mb-3">Termin na udostępnienie projektu: nie wyznaczono</h6>
+            <h6 class="mb-3 lead">Termin na udostępnienie projektu: nie wyznaczono</h6>
         {% endif %}
     {% endif %}
 
     {% if project %}
 
       <div class="card mb-3 mx-auto" style="max-width: 720px;">
+          <div class="card-header">
+              Sekcja nr. {{ project.author.section_number }}
+          </div>
           <div class="row no-gutters">
             <div class="col-md-4 border-bottom">
                 <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">

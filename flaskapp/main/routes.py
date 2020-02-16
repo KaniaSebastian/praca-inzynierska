@@ -80,20 +80,11 @@ def results(group_id):
             else:
                 user_project = None
 
-    group_projects = dict()
-    for counter, section in enumerate(group.users, 1):
-        section_project = Project.query.filter_by(author=section).first()
-        if section_project:
-            group_projects[counter] = section_project
-    group_projects_sorted = {k: v for k, v in sorted(group_projects.items(), key=lambda item: item[1].score, reverse=True)}  # sorting by score
+    group_projects = Project.query.join(User).filter(User.group == group).order_by(User.section_number.asc()).all()
+    group_projects_sorted = sorted(group_projects, key=lambda project: project.score, reverse=True)
 
-    users_that_rated_num = 0
-    for section in group.users:
-        section_group = Group.query.filter_by(name=section.login).first()
-        if section_group:
-            for user in section_group.users:
-                if user.did_rate:
-                    users_that_rated_num = users_that_rated_num + 1
+    section_keys = [section.login for section in group.users]
+    users_that_rated_num = User.query.filter_by(did_rate=True).join(Group).filter(Group.name.in_(section_keys)).count()
 
     return render_template('results.html', title='Wyniki', group=group, group_projects=group_projects,
                            group_projects_sorted=group_projects_sorted, user_project=user_project,

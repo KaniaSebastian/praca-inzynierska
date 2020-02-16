@@ -1,7 +1,9 @@
 {% extends "layout_user.html" %}
 {% block content %}
     {% if group.rating_status == 'disabled' %}
-        Możliwość oceniania jest w tym momencie wyłączona.
+        <div class="jumbotron">
+              <p class="lead">Możliwość oceniania jest w tym momencie wyłączona.</p>
+        </div>
     {% elif group.rating_status == 'ended' %}
         <div class="jumbotron">
               <p class="lead">Ocenianie zostało zakończone. Możesz zobaczyć <a href="{{ url_for('main.results') }}">wyniki</a>.</p>
@@ -11,7 +13,9 @@
             <p class="lead">Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce <a href="{{ url_for('main.results') }}">wyniki końcowe</a>.</p>
         </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
-        <p> Całkowita liczba punktów do rozdania wynosi <b id="points_to_give">{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie. </p>
+        <div class="jumbotron">
+          <p class="lead">Całkowita liczba punktów do rozdania wynosi <b id="points_to_give">{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie.</p>
+        </div>
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             {% for project in group_projects %}
@@ -57,7 +61,7 @@
                                 <div class="input-group input-group-sm">
                                         <div class="input-group-prepend input-group-sm">
                                             {{ form.all_points[loop.index0].points.label(class="input-group-text") }}
-                                            {{ form.all_points[loop.index0].points(class="form-control") }}
+                                            {{ form.all_points[loop.index0].points(class="form-control", onfocus="clear_if_zero(this)") }}
                                         </div>
                                 </div>
                             </div>
@@ -131,6 +135,13 @@
                 $('#result').html('')
             }
         });
+
+        function clear_if_zero(input) {
+            if (input.value <= 0 )
+            {
+                input.value = ''
+            }
+        }
     </script>
 
 {% endblock scripts%}

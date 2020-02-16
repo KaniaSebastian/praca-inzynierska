@@ -21,32 +21,39 @@
         {% endif %}
     {% else %}
 
-        {% if not current_user.is_admin %}
-            {% if user_project %}
-                <h4><p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p></h4>
+        <div class="jumbotron">
+            {% if not current_user.is_admin %}
+                {% if user_project %}
+                  <h4>
+                    <p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p>
+                  </h4>
+                  <hr class="my-4">
+                {% endif %}
             {% endif %}
-        {% endif %}
-
-        <h6><p>W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
+          <h6><p class="lead">W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
+        </div>
 
         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">Podgląd</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Tabela</a>
+            <a class="nav-link" id="table-tab" data-toggle="tab" href="#sorted-table" role="tab" aria-controls="table" aria-selected="false">Ranking</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="sorted-table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Spis wg sekcji</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="view" role="tabpanel" aria-labelledby="home-tab">
-              {% for section_num, project in group_projects_sorted.items() %}
+              {% for project in group_projects_sorted %}
                 {% if user_project and project == user_project %}
                     <div class="card mb-3 mx-auto border border-info bg-light" style="max-width: 720px;">
                 {% else %}
                     <div class="card mb-3 mx-auto" style="max-width: 720px;">
                 {% endif %}
                   <div class="card-header">
-                      Sekcja nr. {{ section_num }} zdobyła <b> {{ project.score }} pkt</b>.
+                      Sekcja nr. {{ project.author.section_number }} zdobyła <b> {{ project.score }} pkt</b>.
                   </div>
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
@@ -89,6 +96,7 @@
                 <tr>
                   <th scope="col">Sekcja</th>
                   <th scope="col">Zdobyte punkty</th>
+                  <th scope="col">Projekt</th>
                   {% if current_user.is_admin %}
                       <th scope="col">Ostatnia edycja</th>
                   {% endif %}
@@ -97,14 +105,15 @@
 
               <tbody>
 
-              {% for section_num, project in group_projects.items() %}
+              {% for project in group_projects %}
                 {% if not current_user.is_admin and project == user_project %}
                     <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% else %}
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
-                  <td>Sekcja {{ section_num }}</td>
+                  <td>Sekcja {{ project.author.section_number }}</td>
                   <td>{{ project.score }}</td>
+                  <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
                         {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
@@ -122,6 +131,49 @@
               </tbody>
             </table>
           </div>
+
+          <div class="tab-pane fade" id="sorted-table" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table table-hover text-center table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Sekcja</th>
+                  <th scope="col">Zdobyte punkty</th>
+                  <th scope="col">Projekt</th>
+                  {% if current_user.is_admin %}
+                      <th scope="col">Ostatnia edycja</th>
+                  {% endif %}
+                </tr>
+              </thead>
+
+              <tbody>
+
+              {% for project in group_projects_sorted %}
+                {% if not current_user.is_admin and project == user_project %}
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% else %}
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% endif %}
+                  <td>Sekcja {{ project.author.section_number }}</td>
+                  <td>{{ project.score }}</td>
+                  <td>{{ project.title }}</td>
+                  {% if current_user.is_admin %}
+                      <td>
+                        {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% elif not project.author.group.upload_time %}
+                            <span><b> w terminie</b></span>
+                        {% else %}
+                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% endif %}
+                      </td>
+                  {% else %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
         </div>
 
     {% endif %}

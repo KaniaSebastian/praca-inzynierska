@@ -5,7 +5,7 @@ from flaskapp.users.forms import CreateProjectForm, UpdateProjectForm, PointsFor
 from flask_login import current_user, login_required
 import os
 from datetime import datetime
-from flaskapp.users.utils import save_file, create_section_keys
+from flaskapp.users.utils import save_file, create_users_keys
 import pytz
 
 users = Blueprint('users', __name__)
@@ -36,7 +36,7 @@ def project():
                                   date_posted=datetime.now(pytz.timezone('Poland')))
             db.session.add(new_project)
             db.session.commit()
-            create_section_keys(current_user.login, form.creators_num.data)
+            create_users_keys(current_user.login, form.creators_num.data)
             flash('Projekt został dodany', 'success')
             return redirect(url_for('users.access_keys'))
     else:
@@ -118,7 +118,7 @@ def rating():
         if len(group_projects) == 0:
             flash('Za mało udostępnionych projektów, aby przeprowadzić ocenianie', 'warning')
             return redirect(url_for('main.project_view'))
-        user_ratings = [{'points': None} for item in range(len(group_projects))]
+        user_ratings = [{'points': 0} for item in range(len(group_projects))]
         form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
 
         if form.validate_on_submit():

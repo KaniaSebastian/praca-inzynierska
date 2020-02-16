@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, SelectField, HiddenField
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms.validators import DataRequired, NumberRange, Length
+from wtforms.validators import DataRequired, NumberRange, Length, InputRequired
 from flaskapp.models import Group
 
 
@@ -12,11 +12,10 @@ class AdminLoginForm(FlaskForm):
     submit = SubmitField('Zaloguj')
 
 
-class AdminCreateGroup(FlaskForm):
+class CreateGroupForm(FlaskForm):
     name = StringField('Nazwa grupy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=20, message='Nazwa grupy musi zawierać od 1 do 20 znaków')])
-    number = IntegerField('Liczba sekcji w grupie', validators=[DataRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'),
-                                                               NumberRange(min=0, max=100, message='Ta wartość nie może być ujemna, ani wększa niż 100')])
-    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=3, message='Skrót może się składać z maksymalnie 3 znaków')])
+    number = IntegerField('Liczba sekcji w grupie', validators=[InputRequired(message='To pole jest wymagane, a wartość musi być liczbą całkowitą'), NumberRange(min=0, max=100, message='Ta wartość nie może być ujemna, ani wększa niż 100')])
+    subject = StringField('Przedmiot - skrót od nazwy', validators=[DataRequired(message='To pole jest wymagane'), Length(max=6, message='Skrót może się składać z maksymalnie 6 znaków')])
     submit = SubmitField('Utwórz')
 
     def validate_name(self, name):

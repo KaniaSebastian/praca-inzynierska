@@ -29,7 +29,7 @@ class CustomIntegerField(IntegerField):
 
 
 class CreateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane'), Length(max=100, message='Tytuł może się składać z maksymalnie 100 znaków.')])
+    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane'), Length(max=50, message='Tytuł może się składać z maksymalnie 50 znaków.')])
     file = FileField('Projekt', validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf'), FileRequired(message='Dodanie pliku jest wymagane')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
     creators_num = IntegerField('Liczba osób pracujących nad projektem',
@@ -40,7 +40,7 @@ class CreateProjectForm(FlaskForm):
 
 
 class UpdateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=100, message='Tytuł może się składać z maksymalnie 100 znaków.')])
+    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=50, message='Tytuł może się składać z maksymalnie 50 znaków.')])
     file = FileField('Projekt',
                       validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf.')])
     description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
@@ -49,7 +49,7 @@ class UpdateProjectForm(FlaskForm):
 
 
 class PointsEntryForm(FlaskForm):
-    points = CustomIntegerField('Punkty: ', validators=[InputRequired(message='Nieprawidłowa wartość'),
+    points = CustomIntegerField('Punkty: ', validators=[InputRequired(message='To pole jest wymagane. Wpisz minimum wartość 0.'),
                                                         NumberRange(min=0, max=None,
                                                                     message='Ta wartość musi być liczbą nieujemną')])
 
@@ -73,7 +73,7 @@ class PointsForm(FlaskForm):
             if field.data.get('points'):
                 points_sum = points_sum + field.data.get('points')
         if points_sum > self.points_per_user:
-            if points_sum > 1000:
+            if points_sum > 10000:
                 flash('Podane wartości są za duże', 'danger')
                 raise ValidationError()
             flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' pkt. za dużo', 'danger')

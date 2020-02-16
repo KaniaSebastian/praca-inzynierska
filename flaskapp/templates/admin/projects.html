@@ -2,7 +2,7 @@
 {% block content %}
 
     {% if projects|length %}
-        <p> Udostępnione projekty: {{ projects|length }}/{{number_of_sections}} </p>
+        <h6 class="mb-3 lead">Udostępnione projekty: <b> {{ projects|length }}/{{number_of_sections}} </b></h6>
 
         {% for project in projects %}
               <div class="card mb-3 mx-auto" style="max-width: 720px;">

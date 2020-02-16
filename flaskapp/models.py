@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     project = db.relationship('Project', backref='author', uselist=False, lazy=True, cascade="all, delete")
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
     did_rate = db.Column(db.Boolean, default=False)
+    section_number = db.Column(db.Integer)
 
     def __repr__(self):
         return f"User('{self.login}', admin={self.is_admin})"
@@ -22,7 +23,7 @@ class User(db.Model, UserMixin):
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(60), nullable=False)
     date_posted = db.Column(db.DateTime)
     upload_file = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text(1500), nullable=False)
@@ -41,8 +42,7 @@ class Group(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     is_containing_sections = db.Column(db.Boolean, nullable=False, default=False)
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
-    subject = db.Column(db.String(5))
-    upload_time = db.Column(db.DateTime)
+    subject = db.Column(db.String(6))
     rating_status = db.Column(db.String, default='disabled')
     points_per_user = db.Column(db.Integer, default=0)
 
