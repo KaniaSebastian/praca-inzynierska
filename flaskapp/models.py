@@ -42,6 +42,7 @@ class Group(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     is_containing_sections = db.Column(db.Boolean, nullable=False, default=False)
     users = db.relationship('User', backref='group', lazy=True, cascade="all, delete")
+    upload_time = db.Column(db.DateTime)
     subject = db.Column(db.String(6))
     rating_status = db.Column(db.String, default='disabled')
     points_per_user = db.Column(db.Integer, default=0)
