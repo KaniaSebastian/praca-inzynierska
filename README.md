@@ -1,2 +1,2 @@
 # Praca Inżynierska
-Projekt i implementacja aplikacji internetowej w języku Python.
+Projekt i implementacja aplikacji internetowej z wykorzystaniem języka Python.

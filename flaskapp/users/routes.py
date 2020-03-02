@@ -19,6 +19,8 @@ def project():
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
         if form.validate_on_submit():
+            if current_user.group.rating_status != 'disabled':
+                return redirect(url_for('main.home'))
             new_file = save_file(form.file.data)
 
             ip = request.environ.get('HTTP_X_FORWARDED_FOR')
@@ -54,6 +56,8 @@ def update_project():
         form = UpdateProjectForm()
         user_project = Project.query.filter_by(author=current_user).first()
         if form.validate_on_submit():
+            if current_user.group.rating_status != 'disabled':
+                return redirect(url_for('main.home'))
             user_project.title = form.title.data
             user_project.description = form.description.data
             user_project.optional_link = form.url.data
@@ -122,6 +126,8 @@ def rating():
         form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
 
         if form.validate_on_submit():
+            if current_user.did_rate or group.rating_status != 'enabled':
+                return redirect(url_for('main.home'))
             for i, single_project in enumerate(group_projects):
                 single_project.score = single_project.score + form.all_points[i].data.get('points')
             current_user.did_rate = True
