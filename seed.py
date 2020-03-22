@@ -20,7 +20,7 @@ for filename in os.listdir(folder):
 db.drop_all()
 db.create_all()
 
-admin = User(login='admin', is_admin=True)
+admin = User(login='admin', is_admin=True, password='$2b$12$y2NuF2eQtopJw72T0YiiDe5SponuGrVEJ/jl5OttikAKsd5M1M6aS')
 db.session.add(admin)
 
 db.session.commit()

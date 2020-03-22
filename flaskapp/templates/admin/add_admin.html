@@ -1,0 +1,39 @@
+{% extends "admin/layout_admin.html" %}
+{% block content %}
+	<div class="body-section">
+
+        <div class="jumbotron">
+          <h4>Hasło dla administratora będzie można ustawić po zalogowaniu.</h4>
+          <hr class="my-4">
+          <p class="lead">Domyślne hasło służące do pierwszego zalogowania to <b>'admin'</b>. </p>
+        </div>
+
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset>
+
+				<legend class="border-bottom">Dodaj administratora</legend>
+
+				<div class="form-group">
+					{{ form.login.label(class="form-control-label") }}
+
+					{% if form.login.errors %}
+						{{ form.login(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.login.errors %}
+							    <span class="d-block">{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.login(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+			</fieldset>
+
+            <div class="form-group mt-3">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+		</form>
+	</div>
+{% endblock content %}

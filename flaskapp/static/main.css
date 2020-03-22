@@ -1,4 +1,5 @@
-body {
+body
+{
     padding-top: 70px; /* from fixed-top nav bar */
     background-image: url("white_wall.png"); /* Background pattern from Toptal Subtle Patterns */
 }
@@ -9,7 +10,8 @@ body {
 	height: 300px;
 }
 
-.table > tbody > tr > td {
+.table > tbody > tr > td
+{
      vertical-align: middle;
 }
 

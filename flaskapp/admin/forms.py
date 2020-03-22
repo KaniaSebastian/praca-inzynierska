@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, SelectField, HiddenField
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms.validators import DataRequired, NumberRange, Length, InputRequired
-from flaskapp.models import Group
+from wtforms.validators import DataRequired, NumberRange, Length, InputRequired, EqualTo
+from flaskapp.models import Group, User
+from flask_login import current_user
+from flaskapp import bcrypt
 
 
 class AdminLoginForm(FlaskForm):
@@ -49,3 +51,30 @@ class EditGroupNameForm(FlaskForm):
         group_for_validation = Group.query.get(self.selected_group_id.data)
         if group and group.id != group_for_validation.id:
             raise ValidationError('Ta nazwa jest już używana dla innej grupy.')
+
+
+class AddAdminForm(FlaskForm):
+    login = StringField('Login', validators=[DataRequired(message='To pole jest wymagane.'),
+                                             Length(min=2, max=20, message='Login musi zawierać od 2 do 20 znaków')])
+    submit = SubmitField('Dodaj')
+
+    def validate_login(self, login):
+        user = User.query.filter_by(login=login.data).first()
+        if user:
+            raise ValidationError('Administrator o takim loginie już istnieje.')
+
+
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField('Hasło', validators=[DataRequired(message='To pole jest wymagane.'), Length(min=4, max=30, message='Hasło musi zawierać od 4 do 30 znaków')])
+    confirm_password = PasswordField('Potwierdź hasło',
+                                     validators=[DataRequired(message='To pole jest wymagane.'), EqualTo('password', message='Hasła różnią się od siebie')])
+    old_password = PasswordField('Zatwierdź zmiany wpisując stare hasło', validators=[DataRequired(message='To pole jest wymagane.')])
+    submit = SubmitField('Zmień hasło')
+
+    def validate_old_password(self, old_password):
+        if not bcrypt.check_password_hash(current_user.password, old_password.data):
+            raise ValidationError('Wpisano nieprawidłowe hasło')
+
+    def validate_password(self, password):
+        if password.data == 'admin':
+            raise ValidationError('Wybrane hasło jest zbyt proste')

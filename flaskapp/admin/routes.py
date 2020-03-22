@@ -1,7 +1,8 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, Response
-from flaskapp import app, db, bcrypt, admin_password
+from flaskapp import app, db, bcrypt
 from flaskapp.models import User, Project, Group
-from flaskapp.admin.forms import CreateGroupForm, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm
+from flaskapp.admin.forms import CreateGroupForm, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm, \
+    AddAdminForm, ChangePasswordForm
 from flaskapp.admin.utils import add_users
 from flask_login import login_user, current_user, login_required
 import os
@@ -20,11 +21,18 @@ def admin_login(admin_name, remember):
         form.remember.data = True if remember == 1 else False
     if form.validate_on_submit():
         user = User.query.filter_by(login=form.login.data).first()
-        if user and user.is_admin and bcrypt.check_password_hash(admin_password, form.password.data):
+        if user and user.is_admin and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash('Zalogowałeś się', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('admin.panel'))
+            if next_page:
+                flash('Zalogowałeś się', 'success')
+                return redirect(next_page)
+            elif bcrypt.check_password_hash(current_user.password, 'admin'):
+                flash('Zalogowałeś się. Ze względów bezpieczeństwa musisz ustawić nowe hasło.', 'warning')
+                return redirect(url_for('admin.change_password'))
+            else:
+                flash('Zalogowałeś się', 'success')
+                return redirect(url_for('admin.panel'))
         else:
             flash('Logowanie nieudane. Sprawdź poprawność wpisanych danych', 'danger')
     return render_template('admin/login_admin.html', title='Zaloguj się jako administrator', form=form)
@@ -34,7 +42,7 @@ def admin_login(admin_name, remember):
 @login_required
 def panel():
     if current_user.is_admin:
-        groups = Group.query.filter_by(is_containing_sections=True).all()
+        groups = current_user.admin_groups
         browser = request.user_agent.browser
         if browser != 'chrome' and browser != 'edge':
             flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
@@ -50,7 +58,7 @@ def create_group():
     if current_user.is_admin:
         form = CreateGroupForm()
         if form.validate_on_submit():
-            new_group = Group(name=form.name.data, is_containing_sections=True, subject=form.subject.data)
+            new_group = Group(name=form.name.data, is_containing_sections=True, subject=form.subject.data, admin=current_user)
             db.session.add(new_group)
             db.session.commit()
             users_number = form.number.data
@@ -182,6 +190,9 @@ def delete_section(section_id):
 def sections(group_id):
     if current_user.is_admin:
         group = Group.query.get_or_404(group_id)
+        if current_user.id != group.admin_id:
+            flash('Nie masz dostępu do tej grupy', 'warning')
+            return redirect(url_for('main.home'))
         user_groups = list()
         for section in group.users:
             user_groups.append(Group.query.filter_by(name=section.login).first())
@@ -200,6 +211,9 @@ def projects(group_id):
         group = Group.query.get_or_404(group_id)
         if not group.is_containing_sections:
             abort(404)
+        if current_user.id != group.admin_id:
+            flash('Nie masz dostępu do tej grupy', 'warning')
+            return redirect(url_for('main.home'))
         number_of_sections = len(group.users)
         projects = list()
         for section in group.users:
@@ -222,7 +236,7 @@ def manage_groups():
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupNameForm()
-        groups = Group.query.filter_by(is_containing_sections=True).all()
+        groups = current_user.admin_groups
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
@@ -335,4 +349,40 @@ def results_csv(group_id):
     filename = url_quote(filename)
     return Response(generate(), mimetype='text/csv',
                     headers={"Content-Disposition": "attachment;filename=" + filename})
+
+
+@admin.route('/add-admin', methods=['GET', 'POST'])
+@login_required
+def add_admin():
+    if current_user.is_admin:
+        form = AddAdminForm()
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash('admin').decode('utf-8')
+            new_admin = User(login=form.login.data, is_admin=True, password=hashed_password)
+            db.session.add(new_admin)
+            db.session.commit()
+            flash('Nowe konto administratora zostało utworzone', 'success')
+            return redirect(url_for('admin.panel'))
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('main.home'))
+    return render_template('admin/add_admin.html', title='Dodaj administratora', form=form)
+
+
+@admin.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if current_user.is_admin:
+        form = ChangePasswordForm()
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            current_user.password = hashed_password
+            db.session.commit()
+            flash('Hasło zostało zmienione', 'success')
+            return redirect(url_for('admin.panel'))
+    else:
+        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        return redirect(url_for('main.home'))
+    return render_template('admin/change_password.html', title='Dodaj administratora', form=form)
+
 

@@ -17,8 +17,6 @@ login_manager.login_view = 'main.login'
 login_manager.login_message = 'Musisz się zalogować, aby zobaczyć tę stronę.'
 login_manager.login_message_category = 'info'
 
-admin_password = '$2b$12$KD6gapvzV3Ng/YHyIfGtQebmh2cezDureto6t2mPk2JUM3WCZ5t3u'
-
 from flaskapp.admin.routes import admin
 from flaskapp.users.routes import users
 from flaskapp.main.routes import main
