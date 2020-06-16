@@ -2,19 +2,19 @@
 {% block content %}
     {% if group.rating_status == 'disabled' %}
         <div class="jumbotron">
-              <p class="lead">Możliwość oceniania jest w tym momencie wyłączona.</p>
+              <p class="lead">{{ gettext('Możliwość oceniania jest w tym momencie wyłączona.') }}</p>
         </div>
     {% elif group.rating_status == 'ended' %}
         <div class="jumbotron">
-              <p class="lead">Ocenianie zostało zakończone. Możesz zobaczyć <a href="{{ url_for('main.results') }}">wyniki</a>.</p>
+              <p class="lead">{{ gettext('Ocenianie zostało zakończone. Możesz zobaczyć') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki') }}</a>.</p>
         </div>
     {% elif group.rating_status == 'enabled' and current_user.did_rate %}
         <div class="jumbotron">
-            <p class="lead">Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce <a href="{{ url_for('main.results') }}">wyniki końcowe</a>.</p>
+            <p class="lead">{{ gettext('Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki końcowe') }}</a>.</p>
         </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
         <div class="jumbotron">
-          <p class="lead">Całkowita liczba punktów do rozdania wynosi <b id="points_to_give">{{ group.points_per_user }}</b>. Możesz je rozdać dowolnie.</p>
+          <p class="lead">{{ gettext('Całkowita liczba punktów do rozdania wynosi') }} <b id="points_to_give">{{ group.points_per_user }}</b>. {{ gettext('Możesz je rozdać dowolnie') }}.</p>
         </div>
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
@@ -36,7 +36,7 @@
                         <h5 class="card-title">{{ project.title }}</h5>
                         <p class="card-text">{{ project.description }}</p>
                         {% if project.optional_link %}
-                            <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                            <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
                         {% endif %}
 
                         {{ form.all_points[loop.index0].hidden_tag() }}
@@ -116,12 +116,12 @@
 
             else if (difference > 0)
             {
-                $('#output-text').html("<p class='text-warning'>Pozostałe punkty do rozdania: </p>")
+                $('#output-text').html("<p class='text-warning'>{{ gettext('Pozostałe punkty do rozdania:') }} </p>")
                 $('#result').html('<b>'+difference+'</b>')
             }
             else if (difference < 0)
             {
-                $('#output-text').html("<p class='text-danger'>Przydzielono o " + '<b>' + Math.abs(difference) + '</b>' + " pkt. za dużo</p>")
+                $('#output-text').html("<p class='text-danger'>{{ gettext('Przydzielono o') }} " + '<b>' + Math.abs(difference) + '</b>' + " {{ gettext('pkt. za dużo') }}</p>")
                 $('#result').text('')
             }
             else if (difference == 0)

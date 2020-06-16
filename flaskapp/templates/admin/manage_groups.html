@@ -5,11 +5,11 @@
             <table class="table text-center align-middle">
                 <thead>
                     <tr>
-                        <th scope="col">Grupa</th>
-                        <th scope="col">Liczba sekcji</th>
-                        <th scope="col">Termin oddania prac</th>
-                        <th scope="col">Ocenianie</th>
-                        <th>Usuń</th>
+                        <th scope="col">{{ gettext('Grupa') }}</th>
+                        <th scope="col">{{ gettext('Liczba sekcji') }}</th>
+                        <th scope="col">{{ gettext('Termin oddania prac') }}</th>
+                        <th scope="col">{{ gettext('Ocenianie') }}</th>
+                        <th>{{ gettext('Usuń') }}</th>
                     </tr>
                 </thead>
             <tbody>
@@ -17,9 +17,9 @@
                     <tr>
                         <td>
                             <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}">
-                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="Sekcje i użytkownicy"> {{ group.name }} ({{ group.subject }}) </button>
+                                <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Sekcje i użytkownicy') }}"> {{ group.name }} ({{ group.subject }}) </button>
                             </a>
-                            <span data-toggle="tooltip" data-placement="top" title="Edytuj nazwę">
+                            <span data-toggle="tooltip" data-placement="top" title="{{ gettext('Edytuj nazwę') }}">
                                 <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editModal" data-group-id={{ group.id }} data-group-name="{{ group.name }}" data-group-subject="{{ group.subject }}">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </button>
@@ -28,25 +28,25 @@
                         <td> {{ group.users.__len__() }} </td>
                         <td>
                             <span>{{ group.upload_time.strftime('%d-%m-%Y, %H:%M') if group.upload_time else '--------------------' }}</span>
-                            <span data-toggle="tooltip" data-placement="top" title="Ustaw termin">
+                            <span data-toggle="tooltip" data-placement="top" title="{{ gettext('Ustaw termin') }}">
                                 <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="modal" data-target="#dateTimeModal" data-group-id={{ group.id }} data-time={{ group.upload_time.strftime('%Y-%m-%dT%H:%M') if group.upload_time else pass}}>
                                     <i class="fa fa-clock-o fa-lg"></i>
                                 </button>
                             </span>
                         </td>
                         <td>
-                            <span data-toggle="tooltip" data-placement="top" title="Ustaw ocenianie/punkty">
+                            <span data-toggle="tooltip" data-placement="top" title="{{ gettext('Ustaw ocenianie/punkty') }}">
                                 {% if group.rating_status == 'enabled' %}
-                                    <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Włączone</button>
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Włączone') }}</button>
                                 {% elif group.rating_status == 'disabled' %}
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Wyłączone</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Wyłączone') }}</button>
                                 {% else %}
-                                    <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">Zakończone</button>
+                                    <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Zakończone') }}</button>
                                 {% endif %}
                             </span>
                         </td>
                         <td>
-                            <span data-toggle="tooltip" data-placement="top" title="Usuń grupę">
+                            <span data-toggle="tooltip" data-placement="top" title="{{ gettext('Usuń grupę') }}">
                                 <i class="fa fa-trash-o fa-xlg text-danger hover-pointer" data-toggle="modal" data-target="#deleteModal-{{ group.id }}"></i>
                             </span>
                         </td>
@@ -59,7 +59,7 @@
                             <form name="ratingOptionsForm" method="POST" action="" novalidate>
                               {{ set_rating_form.csrf_token() }}
                               <div class="modal-header">
-                                <h5 class="modal-title" id="ratingOptionsModalLabel-{{ group.id }}">Włącz możliwość oceny projektów przez studentów</h5>
+                                <h5 class="modal-title" id="ratingOptionsModalLabel-{{ group.id }}">{{ gettext('Włącz możliwość oceny projektów przez studentów') }}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
@@ -99,7 +99,7 @@
                                         {% if set_rating_form.points.errors %}
                                             <div class="input-group">
                                                 {{ set_rating_form.points(class="form-control form-control-lg is-invalid", value=group.points_per_user, id='points-'+group.id|string()) }}
-                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="<liczba-sekcji> - 5" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="{{ gettext('<liczba-sekcji> - 5') }}" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">{{ gettext('Wygeneruj') }}</button>
                                             </div>
                                             <div class="invalid-feedback">
                                                 {% for error in set_rating_form.points.errors %}
@@ -109,7 +109,7 @@
                                         {% else %}
                                             <div class="input-group">
                                                 {{ set_rating_form.points(class="form-control form-control-lg", value=group.points_per_user, id='points-'+group.id|string()) }}
-                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="<liczba-sekcji> - 5" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">Wygeneruj</button>
+                                                <button type="button" class="btn btn-outline-dark generate-button" data-toggle="tooltip" data-placement="top" title="{{ gettext('<liczba-sekcji> - 5') }}" onclick="generatePoints({{ group.users|length }}, {{ group.id }})">{{ gettext('Wygeneruj') }}</button>
                                             </div>
                                         {% endif %}
                                     </div>
@@ -118,7 +118,7 @@
                                 </fieldset>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                                 {{ set_rating_form.submitRating(class="btn btn-primary") }}
                               </div>
                             </form>
@@ -131,18 +131,18 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel-{{ group.id }}">Uwaga!</h5>
+                            <h5 class="modal-title" id="deleteModalLabel-{{ group.id }}">{{ gettext('Uwaga!') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                              Czy na pewno chcesz usunąć tę grupę ? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje!
+                              {{ gettext('Czy na pewno chcesz usunąć tę grupę? Spowoduje to usunięcie wszystkich projektów udostępnionych przez należące do niej sekcje!') }}
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                               <form action="{{ url_for('admin.delete_group', group_id=group.id) }}" method="POST">
-                                <input class="btn btn-danger" type="submit" value="Usuń" >
+                                <input class="btn btn-danger" type="submit" value="{{ gettext('Usuń') }}" >
                               </form>
                           </div>
                         </div>
@@ -155,9 +155,9 @@
         {% else %}
             <div class="panel panel-default">
                 <div class="jumbotron">
-                  <h4>Aktualnie w bazie nie ma żadnych grup.</h4>
+                  <h4>{{ gettext('Aktualnie w bazie nie ma żadnych grup.') }}</h4>
                   <hr class="my-4">
-                  <p class="lead">Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</p>
+                  <p class="lead">{{ gettext('Kliknij') }} <a href="{{ url_for('admin.create_group') }}">{{ gettext('tutaj') }}</a>, {{ gettext('aby utworzyć nową grupę.') }}</p>
                 </div>
 			</div>
         {% endif %}
@@ -171,7 +171,7 @@
             <form method="POST" action="" novalidate>
               {{ set_upload_time_form.csrf_token() }}
               <div class="modal-header">
-                <h5 class="modal-title" id="dateTimeModalLabel">Ustaw czas na udostępnianie prac</h5>
+                <h5 class="modal-title" id="dateTimeModalLabel">{{ gettext('Ustaw czas na udostępnianie prac') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -202,7 +202,7 @@
                 </fieldset>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                 {{ set_upload_time_form.submitTime(class="btn btn-primary") }}
               </div>
             </form>
@@ -216,7 +216,7 @@
             <form method="POST" action="" novalidate>
               {{ set_upload_time_form.csrf_token() }}
               <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Zmień nazwę grupy</h5>
+                <h5 class="modal-title" id="editModalLabel">{{ gettext('Zmień nazwę grupy') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -264,7 +264,7 @@
                   </fieldset>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                 {{ group_name_form.submitName(class="btn btn-primary") }}
               </div>
             </form>

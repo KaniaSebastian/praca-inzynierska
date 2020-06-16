@@ -6,20 +6,20 @@
             <table class="table text-center align-middle">
                 <thead>
                     <tr>
-                        <th scope="col">Grupa</th>
-                        <th scope="col">Liczba sekcji</th>
-                        <th>Termin oddania prac</th>
-                        <th>Ocenianie</th>
-                        <th>Projekty</th>
-                        <th>Loginy</th>
-                        <th>&nbspWyniki&nbsp</th>
+                        <th scope="col">{{ gettext('Grupa') }}</th>
+                        <th scope="col">{{ gettext('Liczba sekcji') }}</th>
+                        <th>{{ gettext('Termin oddania prac') }}</th>
+                        <th>{{ gettext('Ocenianie') }}</th>
+                        <th>{{ gettext('Projekty') }}</th>
+                        <th>{{ gettext('Loginy') }}</th>
+                        <th>&nbsp{{ gettext('Wyniki') }}&nbsp</th>
                     </tr>
                 </thead>
             <tbody>
                 {% for group in groups %}
                     <tr>
                         <td> <a href="{{ url_for('admin.sections', group_id=group.id) }}">
-                            <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="Sekcje i użytkownicy"> {{ group.name }} ({{ group.subject }}) </button> </a>
+                            <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Sekcje i użytkownicy') }}"> {{ group.name }} ({{ group.subject }}) </button> </a>
                         </td>
                         <td> {{ group.users.__len__() }} </td>
                         <td>{% if group.upload_time %}
@@ -30,31 +30,31 @@
                         </td>
                         <td>
                             {% if group.rating_status == 'enabled' %}
-                                <span class="text-info"> Włączone </span>
+                                <span class="text-info"> {{ gettext('Włączone') }} </span>
                             {% elif group.rating_status == 'disabled'%}
-                                <span class="text-danger"> Wyłączone </span>
+                                <span class="text-danger"> {{ gettext('Wyłączone') }} </span>
                             {% else %}
-                                <span class="text-success"> Zakończone </span>
+                                <span class="text-success"> {{ gettext('Zakończone') }} </span>
                             {% endif %}
                         </td>
 
                         <td>
                             <a href="{{ url_for('admin.projects', group_id=group.id) }}">
-                                <i class="fa fa-copy fa-xlg text-info" data-toggle="tooltip" data-placement="top" title="Projekty tej grupy">
+                                <i class="fa fa-copy fa-xlg text-info" data-toggle="tooltip" data-placement="top" title="{{ gettext('Projekty tej grupy') }}">
                                     {{ group.users|selectattr('project')|list|length }}
                                 </i>
                             </a>
                         </td>
                         <td> <a href="{{ url_for('admin.generate_csv', group_id=group.id) }}">
-                            <i class="fa fa-download fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="Plik CSV z kluczami dostępu"></i></a>
+                            <i class="fa fa-download fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Plik CSV z kluczami dostępu') }}"></i></a>
                         </td>
                         <td>
                             {% if group.rating_status == 'ended' %}
-                                <a href="{{ url_for('main.results', group_id=group.id) }}" class="text-decoration-none"> <i class="fa fa-poll fa-xlg text-info mr-2" data-toggle="tooltip" data-placement="top" title="Wyniki oceniania"></i> </a>
-                                <a href="{{ url_for('admin.results_csv', group_id=group.id) }}"> <i class="fa fa-arrow-down fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="Plik CSV z wynikami"></i> </a>
+                                <a href="{{ url_for('main.results', group_id=group.id) }}" class="text-decoration-none"> <i class="fa fa-poll fa-xlg text-info mr-2" data-toggle="tooltip" data-placement="top" title="{{ gettext('Wyniki oceniania') }}"></i> </a>
+                                <a href="{{ url_for('admin.results_csv', group_id=group.id) }}"> <i class="fa fa-arrow-down fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Plik CSV z wynikami') }}"></i> </a>
                             {% else %}
-                                <i class="fa fa-poll fa-xlg text-secondary mr-2" data-toggle="tooltip" data-placement="top" title="Opcja zablokowana do zakończenia oceniania"></i>
-                                <i class="fa fa-arrow-down fa-xlg text-secondary" data-toggle="tooltip" data-placement="top" title="Opcja zablokowana do zakończenia oceniania"></i>
+                                <i class="fa fa-poll fa-xlg text-secondary mr-2" data-toggle="tooltip" data-placement="top" title="{{ gettext('Opcja zablokowana do zakończenia oceniania') }}"></i>
+                                <i class="fa fa-arrow-down fa-xlg text-secondary" data-toggle="tooltip" data-placement="top" title="{{ gettext('Opcja zablokowana do zakończenia oceniania') }}"></i>
                             {% endif %}
                         </td>
 
@@ -65,9 +65,9 @@
         {% else %}
             <div class="panel panel-default">
                 <div class="jumbotron">
-                  <h4>Aktualnie w bazie nie ma żadnych grup.</h4>
+                  <h4>{{ gettext('Aktualnie w bazie nie ma żadnych grup.') }}</h4>
                   <hr class="my-4">
-                  <p class="lead">Kliknij <a href="{{ url_for('admin.create_group') }}">tutaj</a>, aby utworzyć nową grupę.</p>
+                  <p class="lead">{{ gettext('Kliknij') }} <a href="{{ url_for('admin.create_group') }}">{{ gettext('tutaj') }}</a>, {{ gettext('aby utworzyć nową grupę.') }}</p>
                 </div>
 			</div>
         {% endif %}

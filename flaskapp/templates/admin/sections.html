@@ -1,17 +1,17 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
 
-    <h4 class="border-bottom mb-4 lead">Grupa: {{ group.name }} ({{ group.subject }})</h4>
+    <h4 class="border-bottom mb-4 lead">{{ gettext('Grupa:') }} {{ group.name }} ({{ group.subject }})</h4>
 
     <table class="table table-sm text-center align-middle ">
         <thead>
             <tr>
-                <th scope="col" class="border-bottom border-thick">Sekcja</th>
-                <th scope="col" class="border-bottom border-thick">Login</th>
+                <th scope="col" class="border-bottom border-thick">{{ gettext('Sekcja') }}</th>
+                <th scope="col" class="border-bottom border-thick">{{ gettext('Login') }}</th>
                 <th colspan="3" class="border-bottom border-thick"></th>
                 <th scope="col" class="border-bottom border-thick">
                     <a href="{{ url_for('admin.add_section', group_id=group.id) }}">
-                        <i class="fa fa-plus fa-lg text-success" data-toggle="tooltip" data-placement="top" title="Dodaj sekcję"></i>
+                        <i class="fa fa-plus fa-lg text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Dodaj sekcję') }}"></i>
                     </a>
                 </th>
             </tr>
@@ -24,18 +24,18 @@
 					<td> {{ section.login }} </td>
                     {% if section.project %}
                         <td> <a href="{{ url_for('main.project_view', section_id=section.id) }}">
-                            <button type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Projekt sekcji">Projekt</button> </a>
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="{{ gettext('Projekt sekcji') }}">{{ gettext('Projekt') }}</button> </a>
                         </td>
                     {% else %}
-                        <td> <a> <button type="button" data-toggle="tooltip" data-placement="top" title="Ta sekcja nie udostępniła projektu" class="btn btn-sm btn-outline-secondary disabled">Projekt</button> </a> </td>
+                        <td> <a> <button type="button" data-toggle="tooltip" data-placement="top" title="{{ gettext('Ta sekcja nie udostępniła projektu') }}" class="btn btn-sm btn-outline-secondary disabled">{{ gettext('Projekt') }}</button> </a> </td>
                     {% endif %}
-                    <td>Użytkownicy: {{ user_groups[loop.index0].users|length }}</td>
+                    <td>{{ gettext('Użytkownicy') }}: {{ user_groups[loop.index0].users|length }}</td>
                     <td><a href="{{ url_for('admin.add_user', section_id=section.id) }}">
-                        <i class="fa fa-user-plus fa-xlg-static text-success" data-toggle="tooltip" data-placement="top" title="Dodaj użytkownika sekcji"></i> </a>
+                        <i class="fa fa-user-plus fa-xlg-static text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Dodaj użytkownika sekcji') }}"></i> </a>
                     </td>
 					<td class="border-right border-thick">
                         <span data-toggle="modal" data-target="#deleteSectionModal-{{ section.id }}">
-                                <i class="fa fa-trash-o fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="Usuń sekcję"></i>
+                                <i class="fa fa-trash-o fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="{{ gettext('Usuń sekcję') }}"></i>
                         </span>
                     </td>
                 </tr>
@@ -48,14 +48,14 @@
                             {% if group %}
                                 <td class="border-left border-bottom border-thick">
                                     {% if user.did_rate %}
-                                        {{ user.login }} <i class="fa fa-check-circle-o fa-sm text-primary" data-toggle="tooltip" data-placement="top" title="Ten użytkownik zakończył ocenianie"></i>
+                                        {{ user.login }} <i class="fa fa-check-circle-o fa-sm text-primary" data-toggle="tooltip" data-placement="top" title="{{ gettext('Ten użytkownik zakończył ocenianie') }}"></i>
                                     {% else %}
                                         {{ user.login }}
                                     {% endif %}
                                 </td>
                                 <td class="border-up border-bottom border-thick">
                                     <span data-toggle="modal" data-target="#deleteUserModal-{{ user.id }}">
-                                        <i class="fa fa-user-minus fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="Usuń użytkownika sekcji"></i>
+                                        <i class="fa fa-user-minus fa-xlg-static text-danger hover-pointer" data-toggle="tooltip" data-placement="top" title="{{ gettext('Usuń użytkownika sekcji') }}"></i>
                                     </span>
                                 </td>
                                 <td class="border-up border-bottom border-right border-thick"></td>
@@ -67,18 +67,18 @@
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="deleteUserModalLabel-{{ user.id }}">Uwaga!</h5>
+                                <h5 class="modal-title" id="deleteUserModalLabel-{{ user.id }}">{{ gettext('Uwaga!') }}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
                               <div class="modal-body">
-                                  Czy na pewno chcesz usunąć tego użytkownika ?
+                                  {{ gettext('Czy na pewno chcesz usunąć tego użytkownika?') }}
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                                   <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="POST">
-                                    <input class="btn btn-danger" type="submit" value="Usuń" >
+                                    <input class="btn btn-danger" type="submit" value="{{ gettext('Usuń') }}" >
                                   </form>
                               </div>
                             </div>
@@ -93,18 +93,18 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="deleteSectionModalLabel-{{ section.id }}">Uwaga!</h5>
+                        <h5 class="modal-title" id="deleteSectionModalLabel-{{ section.id }}">{{ gettext('Uwaga!') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
                       <div class="modal-body">
-                          Czy na pewno chcesz usunąć tę sekcję ? Spowoduje to także usunięcie udostępnionego przez nią projektu!
+                          {{ gettext('Czy na pewno chcesz usunąć tę sekcję? Spowoduje to także usunięcie udostępnionego przez nią projektu!') }}
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ gettext('Zamknij') }}</button>
                           <form action="{{ url_for('admin.delete_section', section_id=section.id) }}" method="POST">
-                            <input class="btn btn-danger" type="submit" value="Usuń" >
+                            <input class="btn btn-danger" type="submit" value="{{ gettext('Usuń') }}" >
                           </form>
                       </div>
                     </div>

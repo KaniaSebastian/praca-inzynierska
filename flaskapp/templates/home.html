@@ -3,40 +3,40 @@
 
     {% if current_user.is_anonymous %}
         <div class="jumbotron">
-          <h1 class="display-4">Witaj!</h1>
-          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <h1 class="display-4">{{ gettext('Witaj!') }}</h1>
+          <p class="lead"> {{ gettext('Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników.') }} </p>
           <hr class="my-4">
-          <p>Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button">Zaloguj się</a>
+          <p>{{ gettext('Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować.') }}</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button">{{ gettext('Zaloguj się') }}</a>
         </div>
     {% elif current_user.is_admin %}
         <div class="jumbotron">
-          <h1 class="display-4">Jesteś zalogowany jako administrator!</h1>
-          <p class="lead"> Możesz tworzyć grupy projektowe oraz nimi zarządzać. </p>
+          <h1 class="display-4">{{ gettext('Jesteś zalogowany jako administrator!') }}</h1>
+          <p class="lead"> {{ gettext('Możesz tworzyć grupy projektowe oraz nimi zarządzać.') }} </p>
           <hr class="my-4">
-          <p>Aby zarządzać systemem przejdź do panelu administracyjnego.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('admin.panel') }}" role="button">Panel</a>
+          <p>{{ gettext('Aby zarządzać systemem przejdź do panelu administracyjnego.') }}</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('admin.panel') }}" role="button">{{ gettext('Panel') }}</a>
         </div>
     {% elif current_user.group.is_containing_sections %}
         <div class="jumbotron">
-          <h1 class="display-4">Witaj!</h1>
-          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <h1 class="display-4">{{ gettext('Witaj!') }}</h1>
+          <p class="lead"> {{ gettext('Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników.') }} </p>
           {% if current_user.group.upload_time %}
-              <p class="lead"> Termin na udostępnienie projektu: <b> {{ current_user.group.upload_time.strftime('%d-%m-%Y, %H:%M') }} </b> </p>
+              <p class="lead"> {{ gettext('Termin na udostępnienie projektu:') }} <b> {{ current_user.group.upload_time.strftime('%d-%m-%Y, %H:%M') }} </b> </p>
           {% else %}
-              <p class="lead"> Termin na udostępnienie projektu: <b> nie wyznaczono </b> </p>
+              <p class="lead"> {{ gettext('Termin na udostępnienie projektu:') }} <b> {{ gettext('nie wyznaczono') }} </b> </p>
           {% endif %}
           <hr class="my-4">
-          <p> Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">Projekt</a>
+          <p> {{ gettext('Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.') }}</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">{{ gettext('Projekt') }}</a>
         </div>
     {% elif not current_user.group.is_containing_sections %}
         <div class="jumbotron">
-          <h1 class="display-4">Witaj!</h1>
-          <p class="lead"> Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników. </p>
+          <h1 class="display-4">{{ gettext('Witaj!') }}</h1>
+          <p class="lead"> {{ gettext('Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników.') }}</p>
           <hr class="my-4">
-          <p> Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych studentów lub zobaczyć wyniki końcowe.</p>
-          <a class="btn btn-primary btn-lg" href="{{ url_for('users.rating') }}" role="button">Ocenianie</a>
+          <p> {{ gettext('Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych studentów lub zobaczyć wyniki końcowe.') }}</p>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('users.rating') }}" role="button">{{ gettext('Ocenianie') }}</a>
         </div>
     {% endif %}
 

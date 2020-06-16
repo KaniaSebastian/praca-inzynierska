@@ -5,6 +5,7 @@ from wtforms.fields.html5 import URLField
 from wtforms.validators import DataRequired, NumberRange, url, optional, InputRequired, Length
 from wtforms.utils import unset_value
 from flask import flash
+from flask_babel import lazy_gettext
 
 
 # Custom Form Field
@@ -15,7 +16,7 @@ class CustomIntegerField(IntegerField):
                 self.data = int(value)
             except (ValueError, TypeError):
                 self.data = None
-                raise ValueError(self.gettext("Podana wartość nie jest liczbą całkowitą"))
+                raise ValueError(self.gettext(lazy_gettext("Podana wartość nie jest liczbą całkowitą")))
         else:
             self.data = None
 
@@ -25,37 +26,37 @@ class CustomIntegerField(IntegerField):
                 self.data = int(valuelist[0])
             except ValueError:
                 self.data = None
-                raise ValueError(self.gettext("Podana wartość nie jest liczbą całkowitą"))
+                raise ValueError(self.gettext(lazy_gettext("Podana wartość nie jest liczbą całkowitą")))
 
 
 class CreateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane'), Length(max=50, message='Tytuł może się składać z maksymalnie 50 znaków.')])
-    file = FileField('Projekt', validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf'), FileRequired(message='Dodanie pliku jest wymagane')])
-    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
-    creators_num = IntegerField('Liczba osób pracujących nad projektem',
-                                validators=[DataRequired(message='To pole jest wymagane'),
-                                            NumberRange(min=0, max=10, message='Ta wartość nie może być ujemna i nie większa niż 10')])
-    url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
-    submit = SubmitField('Dodaj')
+    title = StringField(lazy_gettext('Tytuł'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=50, message=lazy_gettext('Tytuł może się składać z maksymalnie 50 znaków.'))])
+    file = FileField(lazy_gettext('Projekt'), validators=[FileAllowed(['jpg', 'png', 'pdf'], message=lazy_gettext('Plik musi mieć rozszerzenie jpg, png lub pdf')), FileRequired(message=lazy_gettext('Dodanie pliku jest wymagane'))])
+    description = TextAreaField(lazy_gettext('Opis projektu'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=1000, message=lazy_gettext('Opis może się składać z maksymalnie 1000 znaków.'))])
+    creators_num = IntegerField(lazy_gettext('Liczba osób pracujących nad projektem'),
+                                validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')),
+                                            NumberRange(min=0, max=10, message=lazy_gettext('Ta wartość nie może być ujemna i nie większa niż 10'))])
+    url = URLField(lazy_gettext('Link do dodatkowych materiałów (opcjonalne)'), validators=[optional(), url(message=lazy_gettext('Nieprawidłowy adres URL'))])
+    submit = SubmitField(lazy_gettext('Dodaj'))
 
 
 class UpdateProjectForm(FlaskForm):
-    title = StringField('Tytuł', validators=[DataRequired(message='To pole jest wymagane.'), Length(max=50, message='Tytuł może się składać z maksymalnie 50 znaków.')])
-    file = FileField('Projekt',
-                      validators=[FileAllowed(['jpg', 'png', 'pdf'], message='Plik musi mieć rozszerzenie jpg, png lub pdf.')])
-    description = TextAreaField('Opis projektu', validators=[DataRequired(message='To pole jest wymagane'), Length(max=1000, message='Opis może się składać z maksymalnie 1000 znaków.')])
-    url = URLField('Link do dodatkowych materiałów (opcjonalne)', validators=[optional(), url(message='Nieprawidłowy adres URL')])
-    submit = SubmitField('Edytuj')
+    title = StringField(lazy_gettext('Tytuł'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane.')), Length(max=50, message=lazy_gettext('Tytuł może się składać z maksymalnie 50 znaków.'))])
+    file = FileField(lazy_gettext('Projekt'),
+                      validators=[FileAllowed(['jpg', 'png', 'pdf'], message=lazy_gettext('Plik musi mieć rozszerzenie jpg, png lub pdf.'))])
+    description = TextAreaField(lazy_gettext('Opis projektu'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=1000, message=lazy_gettext('Opis może się składać z maksymalnie 1000 znaków.'))])
+    url = URLField(lazy_gettext('Link do dodatkowych materiałów (opcjonalne)'), validators=[optional(), url(message=lazy_gettext('Nieprawidłowy adres URL'))])
+    submit = SubmitField(lazy_gettext('Edytuj'))
 
 
 class PointsEntryForm(FlaskForm):
-    points = CustomIntegerField('Punkty: ', validators=[InputRequired(message='To pole jest wymagane. Wpisz minimum wartość 0.'),
+    points = CustomIntegerField(lazy_gettext('Punkty: '), validators=[InputRequired(message=lazy_gettext('To pole jest wymagane. Wpisz minimum wartość 0.')),
                                                         NumberRange(min=0, max=None,
-                                                                    message='Ta wartość musi być liczbą nieujemną')])
+                                                                    message=lazy_gettext('Ta wartość musi być liczbą nieujemną'))])
 
     def validate_points(self, points):
         if not isinstance(points.data, int) or points.data < 0:
-            flash('Formularz nie został uzupełniony poprawnie', 'danger')
+            flash(lazy_gettext('Formularz nie został uzupełniony poprawnie'), 'danger')
 
 
 class PointsForm(FlaskForm):
@@ -65,7 +66,7 @@ class PointsForm(FlaskForm):
         self.points_per_user = points_per_user
 
     all_points = FieldList(FormField(PointsEntryForm))
-    submit = SubmitField('Zatwierdź')
+    submit = SubmitField(lazy_gettext('Zatwierdź'))
 
     def validate_all_points(self, all_points):
         points_sum = 0
@@ -74,11 +75,11 @@ class PointsForm(FlaskForm):
                 points_sum = points_sum + field.data.get('points')
         if points_sum > self.points_per_user:
             if points_sum > 10000:
-                flash('Podane wartości są za duże', 'danger')
+                flash(lazy_gettext('Podane wartości są za duże'), 'danger')
                 raise ValidationError()
-            flash('Przydzielono o ' + str(points_sum - self.points_per_user) + ' pkt. za dużo', 'danger')
+            flash(lazy_gettext('Przydzielono o ') + str(points_sum - self.points_per_user) + lazy_gettext(' pkt. za dużo'), 'danger')
             raise ValidationError()
         elif points_sum < self.points_per_user:
             if points_sum >= 0:
-                flash('Przydzielono o ' + str(self.points_per_user - points_sum) + ' pkt. za mało', 'danger')
+                flash(lazy_gettext('Przydzielono o ') + str(self.points_per_user - points_sum) + lazy_gettext(' pkt. za mało'), 'danger')
             raise ValidationError()

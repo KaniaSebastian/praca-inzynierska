@@ -2,13 +2,14 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flaskapp.models import User, Project, Group
 from flaskapp.main.forms import LoginForm
 from flask_login import login_user, logout_user, current_user, login_required
+from flask_babel import gettext
 
 main = Blueprint('main', __name__)
 
 
 @main.route('/')
 def home():
-    return render_template('home.html', title='Strona główna')
+    return render_template('home.html', title=gettext('Strona główna'))
 
 
 @main.route('/about')
@@ -29,18 +30,18 @@ def login():
         if user:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash('Zalogowałeś się', 'success')
+            flash(gettext('Zalogowałeś się'), 'success')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
-            flash('Logowanie nieudane. Sprawdź poprawność wpisanych danych', 'danger')
+            flash(gettext('Logowanie nieudane. Sprawdź poprawność wpisanych danych'), 'danger')
 
-    return render_template('login.html', title='Zaloguj się', form=form)
+    return render_template('login.html', title=gettext('Zaloguj się'), form=form)
 
 
 @main.route('/logout')
 def logout():
     logout_user()
-    flash('Wylogowałeś się', 'success')
+    flash(gettext('Wylogowałeś się'), 'success')
     return redirect(url_for('main.home'))
 
 
@@ -55,7 +56,7 @@ def project_view(section_id):
         project = user.project
     elif current_user.is_admin:
         project = Project.query.filter_by(user_id=section_id).first()
-    return render_template('project_view.html', title='Projekt', project=project)
+    return render_template('project_view.html', title=gettext('Projekt'), project=project)
 
 
 @main.route('/results', defaults={'group_id': None})
@@ -86,6 +87,6 @@ def results(group_id):
     section_keys = [section.login for section in group.users]
     users_that_rated_num = User.query.filter_by(did_rate=True).join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
 
-    return render_template('results.html', title='Wyniki', group=group, group_projects=group_projects,
+    return render_template('results.html', title=gettext('Wyniki'), group=group, group_projects=group_projects,
                            group_projects_sorted=group_projects_sorted, user_project=user_project,
                            users_that_rated_num=users_that_rated_num)

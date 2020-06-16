@@ -7,6 +7,7 @@ from flaskapp.admin.utils import add_users
 from flask_login import login_user, current_user, login_required
 import os
 from werkzeug.urls import url_quote
+from flask_babel import gettext
 
 admin = Blueprint('admin', __name__)
 
@@ -25,17 +26,17 @@ def admin_login(admin_name, remember):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             if next_page:
-                flash('Zalogowałeś się', 'success')
+                flash(gettext('Zalogowałeś się'), 'success')
                 return redirect(next_page)
             elif bcrypt.check_password_hash(current_user.password, 'admin'):
-                flash('Zalogowałeś się. Ze względów bezpieczeństwa musisz ustawić nowe hasło.', 'warning')
+                flash(gettext('Zalogowałeś się. Ze względów bezpieczeństwa musisz ustawić nowe hasło.'), 'warning')
                 return redirect(url_for('admin.change_password'))
             else:
-                flash('Zalogowałeś się', 'success')
+                flash(gettext('Zalogowałeś się'), 'success')
                 return redirect(url_for('admin.panel'))
         else:
-            flash('Logowanie nieudane. Sprawdź poprawność wpisanych danych', 'danger')
-    return render_template('admin/login_admin.html', title='Zaloguj się jako administrator', form=form)
+            flash(gettext('Logowanie nieudane. Sprawdź poprawność wpisanych danych'), 'danger')
+    return render_template('admin/login_admin.html', title=gettext('Zaloguj się jako administrator'), form=form)
 
 
 @admin.route('/panel', methods=['GET', 'POST'])
@@ -45,11 +46,11 @@ def panel():
         groups = current_user.admin_groups
         browser = request.user_agent.browser
         if browser != 'chrome' and browser != 'edge':
-            flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
+            flash(gettext('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge'), 'warning')
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/panel.html', title='Panel administracyjny', groups=groups)
+    return render_template('admin/panel.html', title=gettext('Panel administracyjny'), groups=groups)
 
 
 @admin.route('/create-group', methods=['GET', 'POST'])
@@ -63,12 +64,12 @@ def create_group():
             db.session.commit()
             users_number = form.number.data
             add_users(users_number, new_group)
-            flash('Grupa została utworzona', 'success')
+            flash(gettext('Grupa została utworzona'), 'success')
             return redirect(url_for('admin.panel'))
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/create_group.html', title='Panel administracyjny', form=form)
+    return render_template('admin/create_group.html', title=gettext('Panel administracyjny'), form=form)
 
 
 @admin.route('/delete_group/<int:group_id>', methods=['POST'])
@@ -90,10 +91,10 @@ def delete_group(group_id):
 
         db.session.delete(group)
         db.session.commit()
-        flash('Grupa została usunięta', 'success')
+        flash(gettext('Grupa została usunięta'), 'success')
         return redirect(url_for('admin.manage_groups'))
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
 
 
@@ -107,7 +108,7 @@ def add_user(section_id):
             users_num = 1
             add_users(users_num, users_group)
 
-            flash('Użytkownik został dodany', 'success')
+            flash(gettext('Użytkownik został dodany'), 'success')
         else:
             new_group = Group(name=section.login, is_containing_sections=False)
             db.session.add(new_group)
@@ -116,10 +117,10 @@ def add_user(section_id):
             users_num = 1
             add_users(users_num, new_group)
 
-            flash('Użytkownik został dodany', 'success')
+            flash(gettext('Użytkownik został dodany'), 'success')
 
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=section.group_id))
 
@@ -137,9 +138,9 @@ def delete_user(user_id):
         else:
             db.session.delete(user_to_delete)
         db.session.commit()
-        flash('Użytkownik został usunięty', 'success')
+        flash(gettext('Użytkownik został usunięty'), 'success')
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=user_section.group_id))
 
@@ -151,9 +152,9 @@ def add_section(group_id):
         group = Group.query.get_or_404(group_id)
         users_num = 1
         add_users(users_num, group)
-        flash('Sekcja została dodana', 'success')
+        flash(gettext('Sekcja została dodana'), 'success')
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=group_id))
 
@@ -178,9 +179,9 @@ def delete_section(section_id):
 
         db.session.delete(section_to_delete)
         db.session.commit()
-        flash('Sekcja została usunięta', 'success')
+        flash(gettext('Sekcja została usunięta'), 'success')
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
     return redirect(url_for('admin.sections', group_id=section_id))
 
@@ -191,7 +192,7 @@ def sections(group_id):
     if current_user.is_admin:
         group = Group.query.get_or_404(group_id)
         if current_user.id != group.admin_id:
-            flash('Nie masz dostępu do tej grupy', 'warning')
+            flash(gettext('Nie masz dostępu do tej grupy'), 'warning')
             return redirect(url_for('main.home'))
         user_groups = list()
         for section in group.users:
@@ -199,9 +200,9 @@ def sections(group_id):
         if not group.is_containing_sections:
             return redirect((url_for('admin.panel')))
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/sections.html', title='Sekcje', group=group, user_groups=user_groups)
+    return render_template('admin/sections.html', title=gettext('Sekcje'), group=group, user_groups=user_groups)
 
 
 @admin.route('/projects/<int:group_id>')
@@ -212,7 +213,7 @@ def projects(group_id):
         if not group.is_containing_sections:
             abort(404)
         if current_user.id != group.admin_id:
-            flash('Nie masz dostępu do tej grupy', 'warning')
+            flash(gettext('Nie masz dostępu do tej grupy'), 'warning')
             return redirect(url_for('main.home'))
         number_of_sections = len(group.users)
         projects = list()
@@ -221,9 +222,9 @@ def projects(group_id):
             if project:
                 projects.append(project)
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/projects.html', title='Projekt', projects=projects, number_of_sections=number_of_sections)
+    return render_template('admin/projects.html', title=gettext('Projekt'), projects=projects, number_of_sections=number_of_sections)
 
 
 @admin.route('/manage-groups', methods=['GET', 'POST'])
@@ -232,7 +233,7 @@ def manage_groups():
     if current_user.is_admin:
         browser = request.user_agent.browser
         if browser != 'chrome' and browser != 'edge':
-            flash('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge', 'warning')
+            flash(gettext('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge'), 'warning')
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupNameForm()
@@ -242,7 +243,7 @@ def manage_groups():
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
             group.upload_time = set_upload_time_form.upload_time.data
             db.session.commit()
-            flash('Czas na udostępnienie projektu został zaktualizowany', 'success')
+            flash(gettext('Czas na udostępnienie projektu został zaktualizowany'), 'success')
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in set_upload_time_form.upload_time.errors:
@@ -254,11 +255,11 @@ def manage_groups():
             group.points_per_user = set_rating_form.points.data
             db.session.commit()
             if set_rating_form.rating_status.data == 'enabled':
-                flash('Ocenianie zostało włączone', 'success')
+                flash(gettext('Ocenianie zostało włączone'), 'success')
             elif set_rating_form.rating_status.data == 'disabled':
-                flash('Ocenianie zostało wyłączone', 'success')
+                flash(gettext('Ocenianie zostało wyłączone'), 'success')
             else:
-                flash('Ocenianie zostało zakończone', 'success')
+                flash(gettext('Ocenianie zostało zakończone'), 'success')
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in set_rating_form.points.errors:
@@ -269,7 +270,7 @@ def manage_groups():
             group.name = group_name_form.name.data
             group.subject = group_name_form.subject.data
             db.session.commit()
-            flash('Nazwa grupy została zmieniona', 'success')
+            flash(gettext('Nazwa grupy została zmieniona'), 'success')
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in group_name_form.name.errors:
@@ -278,9 +279,9 @@ def manage_groups():
                 flash(error, 'danger')
 
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/manage_groups.html', title='Zarządzanie grupami', groups=groups,
+    return render_template('admin/manage_groups.html', title=gettext('Zarządzanie grupami'), groups=groups,
                            set_upload_time_form=set_upload_time_form, set_rating_form=set_rating_form, group_name_form=group_name_form)
 
 
@@ -293,16 +294,16 @@ def generate_csv(group_id):
         def generate():
             group = Group.query.get_or_404(group_id)
             group_name_with_subject = group.name + ' (' + group.subject + ')'
-            header = ('Grupa:', group_name_with_subject)
+            header = (gettext('Grupa:'), group_name_with_subject)
             yield ",".join(header) + '\n'
-            header = ("Sekcja", "Klucz dostepu")
+            header = (gettext("Sekcja"), gettext("Klucz dostepu"))
             yield ",".join(header) + '\n\n'
 
             for n in range(len(group.users)):
                 group_users = Group.query.filter_by(name=group.users[n].login).first()
-                section = '\n' + 'Sekcja ' + str(group.users[n].section_number)
+                section = '\n' + gettext('Sekcja ') + str(group.users[n].section_number)
                 if group_users:
-                    row = (section, group.users[n].login, 'Uzytkownicy:')
+                    row = (section, group.users[n].login, gettext('Uzytkownicy:'))
                 else:
                     row = (section, group.users[n].login)
                 yield ','.join(row) + '\n'
@@ -312,7 +313,7 @@ def generate_csv(group_id):
                         row = ('', '', user.login)
                         yield ','.join(row) + '\n'
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
     filename = group.subject + '-' + group.name.replace(" ", "_") + ".csv"
     filename = filename.encode('utf-8')
@@ -330,21 +331,21 @@ def results_csv(group_id):
         def generate():
             group = Group.query.get_or_404(group_id)
             group_name_with_subject = group.name + ' (' + group.subject + ')'
-            header = ('Grupa:', group_name_with_subject)
+            header = (gettext('Grupa:'), group_name_with_subject)
             yield ",".join(header) + '\n'
-            header = ("Sekcja", "Wynik")
+            header = (gettext("Sekcja"), gettext("Wynik"))
             yield ",".join(header) + '\n\n'
 
             for section in group.users:
-                section_name = '\n' + 'Sekcja ' + str(section.section_number)
+                section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
                 section_project_title = section.project.title if section.project else '---'
                 section_score = (str(section.project.score) if section.project else '---')
                 row = (section_name, section_project_title, section_score)
                 yield ','.join(row) + '\n'
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    filename = group.subject + '-' + group.name.replace(" ", "_") + '-wyniki' + ".csv"
+    filename = group.subject + '-' + group.name.replace(" ", "_") + gettext('-wyniki') + ".csv"
     filename = filename.encode('utf-8')
     filename = url_quote(filename)
     return Response(generate(), mimetype='text/csv',
@@ -361,12 +362,12 @@ def add_admin():
             new_admin = User(login=form.login.data, is_admin=True, password=hashed_password)
             db.session.add(new_admin)
             db.session.commit()
-            flash('Nowe konto administratora zostało utworzone', 'success')
+            flash(gettext('Nowe konto administratora zostało utworzone'), 'success')
             return redirect(url_for('admin.panel'))
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/add_admin.html', title='Dodaj administratora', form=form)
+    return render_template('admin/add_admin.html', title=gettext('Dodaj administratora'), form=form)
 
 
 @admin.route('/change-password', methods=['GET', 'POST'])
@@ -378,11 +379,11 @@ def change_password():
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             current_user.password = hashed_password
             db.session.commit()
-            flash('Hasło zostało zmienione', 'success')
+            flash(gettext('Hasło zostało zmienione'), 'success')
             return redirect(url_for('admin.panel'))
     else:
-        flash('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony', 'warning')
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/change_password.html', title='Dodaj administratora', form=form)
+    return render_template('admin/change_password.html', title=gettext('Dodaj administratora'), form=form)
 
 

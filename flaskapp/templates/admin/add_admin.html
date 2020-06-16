@@ -3,16 +3,16 @@
 	<div class="body-section">
 
         <div class="jumbotron">
-          <h4>Hasło dla administratora będzie można ustawić po zalogowaniu.</h4>
+          <h4>{{ gettext('Hasło dla administratora będzie można ustawić po zalogowaniu.') }}</h4>
           <hr class="my-4">
-          <p class="lead">Domyślne hasło służące do pierwszego zalogowania to <b>'admin'</b>. </p>
+          <p class="lead">{{ gettext('Domyślne hasło służące do pierwszego zalogowania to') }} <b>{{ gettext('\'admin\'') }}</b>. </p>
         </div>
 
 		<form method="POST" action="" novalidate>
 			{{ form.hidden_tag() }}
 			<fieldset>
 
-				<legend class="border-bottom">Dodaj administratora</legend>
+				<legend class="border-bottom">{{ gettext('Dodaj administratora') }}</legend>
 
 				<div class="form-group">
 					{{ form.login.label(class="form-control-label") }}

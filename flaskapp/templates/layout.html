@@ -17,14 +17,14 @@
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
-        <title>zapunktuj.pl</title>
+        <title>zapunktuj</title>
     {% endif %}
 </head>
 <body>
 	<header>
 		<nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
 			<div class="container">
-				<a class="navbar-brand" href="{{ url_for('main.home') }}"><img src="{{url_for('static', filename='logo.png')}}" width="35" height="35" class="d-inline-block mr-2">zapunktuj
+				<a class="navbar-brand" href="{{ url_for('main.home') }}"><img src="{{url_for('static', filename='logo.png')}}" width="35" height="35" class="d-inline-block mr-2">{{ gettext('zapunktuj') }}
 				</a>
 
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="menu toggle">
@@ -35,11 +35,11 @@
 
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('main.home') }}">Start</a>
+							<a class="nav-link" href="{{ url_for('main.home') }}">{{ gettext('Start') }}</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('main.about') }}">Informacje</a>
+							<a class="nav-link" href="{{ url_for('main.about') }}">{{ gettext('Informacje') }}</a>
 						</li>
 					</ul>
 
@@ -47,24 +47,24 @@
 					{% if current_user.is_authenticated %}
 						{% if current_user.is_admin %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('admin.panel') }}">Panel Administratora</a>
+								<a class="nav-item nav-link" href="{{ url_for('admin.panel') }}">{{ gettext('Panel Administratora') }}</a>
 							</li>
 						{% elif current_user.group.is_containing_sections %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('users.project') }}">Projekt</a>
+								<a class="nav-item nav-link" href="{{ url_for('users.project') }}">{{ gettext('Projekt') }}</a>
 							</li>
                         {% else %}
 							<li class="nav-item">
-								<a class="nav-item nav-link" href="{{ url_for('users.rating') }}">Ocenianie</a>
+								<a class="nav-item nav-link" href="{{ url_for('users.rating') }}">{{ gettext('Ocenianie') }}</a>
 							</li>
 						{% endif %}
 
 						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('main.logout') }}">Wyloguj</a>
+							<a class="nav-item nav-link" href="{{ url_for('main.logout') }}">{{ gettext('Wyloguj') }}</a>
 						</li>
 					{% else %}
 						<li class="nav-item">
-							<a class="nav-item nav-link" href="{{ url_for('main.login') }}">Zaloguj</a>
+							<a class="nav-item nav-link" href="{{ url_for('main.login') }}">{{ gettext('Zaloguj') }}</a>
 						</li>
 					{% endif %}
 					</ul>

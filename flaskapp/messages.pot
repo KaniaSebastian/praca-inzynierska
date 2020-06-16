@@ -1,0 +1,1056 @@
+# Translations template for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-06-15 20:24+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: flaskapp/admin/forms.py:12 flaskapp/admin/forms.py:58
+#: flaskapp/main/forms.py:8 flaskapp/templates/admin/sections.html:10
+msgid "Login"
+msgstr ""
+
+#: flaskapp/admin/forms.py:12 flaskapp/admin/forms.py:13
+#: flaskapp/admin/forms.py:19 flaskapp/admin/forms.py:21
+#: flaskapp/main/forms.py:8 flaskapp/users/forms.py:33
+#: flaskapp/users/forms.py:35 flaskapp/users/forms.py:37
+#: flaskapp/users/forms.py:47
+msgid "To pole jest wymagane"
+msgstr ""
+
+#: flaskapp/admin/forms.py:13 flaskapp/admin/forms.py:69
+msgid "Hasło"
+msgstr ""
+
+#: flaskapp/admin/forms.py:14 flaskapp/main/forms.py:9
+msgid "Pamiętaj mnie"
+msgstr ""
+
+#: flaskapp/admin/forms.py:15 flaskapp/main/forms.py:11
+#: flaskapp/templates/layout.html:67
+msgid "Zaloguj"
+msgstr ""
+
+#: flaskapp/admin/forms.py:19 flaskapp/admin/forms.py:45
+msgid "Nazwa grupy"
+msgstr ""
+
+#: flaskapp/admin/forms.py:19 flaskapp/admin/forms.py:45
+msgid "Nazwa grupy musi zawierać od 1 do 20 znaków"
+msgstr ""
+
+#: flaskapp/admin/forms.py:20
+msgid "Liczba sekcji w grupie"
+msgstr ""
+
+#: flaskapp/admin/forms.py:20
+msgid "To pole jest wymagane, a wartość musi być liczbą całkowitą"
+msgstr ""
+
+#: flaskapp/admin/forms.py:20
+msgid "Ta wartość nie może być ujemna, ani wększa niż 100"
+msgstr ""
+
+#: flaskapp/admin/forms.py:21 flaskapp/admin/forms.py:46
+msgid "Przedmiot - skrót od nazwy"
+msgstr ""
+
+#: flaskapp/admin/forms.py:21 flaskapp/admin/forms.py:46
+msgid "Skrót może się składać z maksymalnie 6 znaków"
+msgstr ""
+
+#: flaskapp/admin/forms.py:22
+msgid "Utwórz"
+msgstr ""
+
+#: flaskapp/admin/forms.py:27
+msgid "Ta nazwa jest już używana dla innej grupy"
+msgstr ""
+
+#: flaskapp/admin/forms.py:31
+msgid "Czas"
+msgstr ""
+
+#: flaskapp/admin/forms.py:31 flaskapp/users/forms.py:59
+msgid "Formularz nie został uzupełniony poprawnie"
+msgstr ""
+
+#: flaskapp/admin/forms.py:32 flaskapp/admin/forms.py:40
+#: flaskapp/admin/forms.py:47
+msgid "Id"
+msgstr ""
+
+#: flaskapp/admin/forms.py:33 flaskapp/admin/forms.py:41
+#: flaskapp/admin/forms.py:48 flaskapp/users/forms.py:69
+msgid "Zatwierdź"
+msgstr ""
+
+#: flaskapp/admin/forms.py:37 flaskapp/templates/admin/manage_groups.html:11
+#: flaskapp/templates/admin/panel.html:12 flaskapp/templates/home.html:39
+#: flaskapp/templates/layout.html:58
+msgid "Ocenianie"
+msgstr ""
+
+#: flaskapp/admin/forms.py:37 flaskapp/templates/admin/manage_groups.html:42
+#: flaskapp/templates/admin/panel.html:35
+msgid "Wyłączone"
+msgstr ""
+
+#: flaskapp/admin/forms.py:37 flaskapp/templates/admin/manage_groups.html:40
+#: flaskapp/templates/admin/panel.html:33
+msgid "Włączone"
+msgstr ""
+
+#: flaskapp/admin/forms.py:37 flaskapp/templates/admin/manage_groups.html:44
+#: flaskapp/templates/admin/panel.html:37
+msgid "Zakończone"
+msgstr ""
+
+#: flaskapp/admin/forms.py:38
+msgid "Punkty na użytkownika"
+msgstr ""
+
+#: flaskapp/admin/forms.py:38
+msgid "Nieprawidłowa liczba punktów"
+msgstr ""
+
+#: flaskapp/admin/forms.py:39
+msgid "Ta wartość nie może być ujemna"
+msgstr ""
+
+#: flaskapp/admin/forms.py:45 flaskapp/admin/forms.py:58
+#: flaskapp/admin/forms.py:69 flaskapp/admin/forms.py:71
+#: flaskapp/admin/forms.py:72 flaskapp/users/forms.py:44
+msgid "To pole jest wymagane."
+msgstr ""
+
+#: flaskapp/admin/forms.py:54
+msgid "Ta nazwa jest już używana dla innej grupy."
+msgstr ""
+
+#: flaskapp/admin/forms.py:59
+msgid "Login musi zawierać od 2 do 20 znaków"
+msgstr ""
+
+#: flaskapp/admin/forms.py:60 flaskapp/users/forms.py:40
+msgid "Dodaj"
+msgstr ""
+
+#: flaskapp/admin/forms.py:65
+msgid "Administrator o takim loginie już istnieje."
+msgstr ""
+
+#: flaskapp/admin/forms.py:69
+msgid "Hasło musi zawierać od 4 do 30 znaków"
+msgstr ""
+
+#: flaskapp/admin/forms.py:70
+msgid "Potwierdź hasło"
+msgstr ""
+
+#: flaskapp/admin/forms.py:72
+msgid "Zatwierdź zmiany wpisując stare hasło"
+msgstr ""
+
+#: flaskapp/admin/forms.py:73 flaskapp/templates/admin/layout_admin.html:13
+msgid "Zmień hasło"
+msgstr ""
+
+#: flaskapp/admin/forms.py:77
+msgid "Wpisano nieprawidłowe hasło"
+msgstr ""
+
+#: flaskapp/admin/forms.py:81
+msgid "Wybrane hasło jest zbyt proste"
+msgstr ""
+
+#: flaskapp/admin/routes.py:29 flaskapp/admin/routes.py:35
+#: flaskapp/main/routes.py:33
+msgid "Zalogowałeś się"
+msgstr ""
+
+#: flaskapp/admin/routes.py:32
+msgid "Zalogowałeś się. Ze względów bezpieczeństwa musisz ustawić nowe hasło."
+msgstr ""
+
+#: flaskapp/admin/routes.py:38 flaskapp/main/routes.py:36
+msgid "Logowanie nieudane. Sprawdź poprawność wpisanych danych"
+msgstr ""
+
+#: flaskapp/admin/routes.py:39 flaskapp/templates/admin/login_admin.html:10
+msgid "Zaloguj się jako administrator"
+msgstr ""
+
+#: flaskapp/admin/routes.py:49 flaskapp/admin/routes.py:236
+msgid ""
+"Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach "
+"Chrome oraz Edge"
+msgstr ""
+
+#: flaskapp/admin/routes.py:51 flaskapp/admin/routes.py:70
+#: flaskapp/admin/routes.py:97 flaskapp/admin/routes.py:123
+#: flaskapp/admin/routes.py:143 flaskapp/admin/routes.py:157
+#: flaskapp/admin/routes.py:184 flaskapp/admin/routes.py:203
+#: flaskapp/admin/routes.py:225 flaskapp/admin/routes.py:282
+#: flaskapp/admin/routes.py:316 flaskapp/admin/routes.py:346
+#: flaskapp/admin/routes.py:368 flaskapp/admin/routes.py:385
+msgid "Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony"
+msgstr ""
+
+#: flaskapp/admin/routes.py:53 flaskapp/admin/routes.py:72
+msgid "Panel administracyjny"
+msgstr ""
+
+#: flaskapp/admin/routes.py:67
+msgid "Grupa została utworzona"
+msgstr ""
+
+#: flaskapp/admin/routes.py:94
+msgid "Grupa została usunięta"
+msgstr ""
+
+#: flaskapp/admin/routes.py:111 flaskapp/admin/routes.py:120
+msgid "Użytkownik został dodany"
+msgstr ""
+
+#: flaskapp/admin/routes.py:141
+msgid "Użytkownik został usunięty"
+msgstr ""
+
+#: flaskapp/admin/routes.py:155
+msgid "Sekcja została dodana"
+msgstr ""
+
+#: flaskapp/admin/routes.py:182
+msgid "Sekcja została usunięta"
+msgstr ""
+
+#: flaskapp/admin/routes.py:195 flaskapp/admin/routes.py:216
+msgid "Nie masz dostępu do tej grupy"
+msgstr ""
+
+#: flaskapp/admin/routes.py:205
+msgid "Sekcje"
+msgstr ""
+
+#: flaskapp/admin/routes.py:227 flaskapp/main/routes.py:59
+#: flaskapp/templates/admin/sections.html:27
+#: flaskapp/templates/admin/sections.html:30 flaskapp/templates/home.html:31
+#: flaskapp/templates/layout.html:54 flaskapp/templates/results.html:99
+#: flaskapp/templates/results.html:141 flaskapp/users/forms.py:34
+#: flaskapp/users/forms.py:45 flaskapp/users/routes.py:48
+msgid "Projekt"
+msgstr ""
+
+#: flaskapp/admin/routes.py:246
+msgid "Czas na udostępnienie projektu został zaktualizowany"
+msgstr ""
+
+#: flaskapp/admin/routes.py:258
+msgid "Ocenianie zostało włączone"
+msgstr ""
+
+#: flaskapp/admin/routes.py:260
+msgid "Ocenianie zostało wyłączone"
+msgstr ""
+
+#: flaskapp/admin/routes.py:262
+msgid "Ocenianie zostało zakończone"
+msgstr ""
+
+#: flaskapp/admin/routes.py:273
+msgid "Nazwa grupy została zmieniona"
+msgstr ""
+
+#: flaskapp/admin/routes.py:284
+msgid "Zarządzanie grupami"
+msgstr ""
+
+#: flaskapp/admin/routes.py:297 flaskapp/admin/routes.py:334
+#: flaskapp/templates/admin/sections.html:4
+msgid "Grupa:"
+msgstr ""
+
+#: flaskapp/admin/routes.py:299 flaskapp/admin/routes.py:336
+#: flaskapp/templates/admin/sections.html:9 flaskapp/templates/results.html:97
+#: flaskapp/templates/results.html:114 flaskapp/templates/results.html:139
+#: flaskapp/templates/results.html:156
+msgid "Sekcja"
+msgstr ""
+
+#: flaskapp/admin/routes.py:299
+msgid "Klucz dostepu"
+msgstr ""
+
+#: flaskapp/admin/routes.py:304 flaskapp/admin/routes.py:340
+msgid "Sekcja "
+msgstr ""
+
+#: flaskapp/admin/routes.py:306
+msgid "Uzytkownicy:"
+msgstr ""
+
+#: flaskapp/admin/routes.py:336
+msgid "Wynik"
+msgstr ""
+
+#: flaskapp/admin/routes.py:348
+msgid "-wyniki"
+msgstr ""
+
+#: flaskapp/admin/routes.py:365
+msgid "Nowe konto administratora zostało utworzone"
+msgstr ""
+
+#: flaskapp/admin/routes.py:370 flaskapp/admin/routes.py:387
+#: flaskapp/templates/admin/add_admin.html:15
+msgid "Dodaj administratora"
+msgstr ""
+
+#: flaskapp/admin/routes.py:382
+msgid "Hasło zostało zmienione"
+msgstr ""
+
+#: flaskapp/main/forms.py:10
+msgid "Zaznacz, że nie jesteś robotem"
+msgstr ""
+
+#: flaskapp/main/routes.py:12
+msgid "Strona główna"
+msgstr ""
+
+#: flaskapp/main/routes.py:38 flaskapp/templates/home.html:10
+#: flaskapp/templates/login.html:9
+msgid "Zaloguj się"
+msgstr ""
+
+#: flaskapp/main/routes.py:44
+msgid "Wylogowałeś się"
+msgstr ""
+
+#: flaskapp/main/routes.py:90 flaskapp/templates/admin/panel.html:15
+#: flaskapp/templates/layout_section.html:15
+msgid "Wyniki"
+msgstr ""
+
+#: flaskapp/templates/about.html:4
+msgid "Aplikacja 'zapunktuj'"
+msgstr ""
+
+#: flaskapp/templates/about.html:5
+msgid ""
+"Na tej stronie masz możliwość udostępnienia swojego projektu oraz oceny "
+"projektów udostępnionych przez innych użytkowników."
+msgstr ""
+
+#: flaskapp/templates/about.html:6
+msgid "Aplikacja została wykonana w ramach pracy inżynierskiej."
+msgstr ""
+
+#: flaskapp/templates/about.html:8
+msgid "Autor: Sebastian Kania"
+msgstr ""
+
+#: flaskapp/templates/about.html:9
+msgid "Kontakt: zapunktuj.kontakt@gmail.com"
+msgstr ""
+
+#: flaskapp/templates/home.html:6 flaskapp/templates/home.html:22
+#: flaskapp/templates/home.html:35
+msgid "Witaj!"
+msgstr ""
+
+#: flaskapp/templates/home.html:7 flaskapp/templates/home.html:23
+#: flaskapp/templates/home.html:36
+msgid ""
+"Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie "
+"projektów innych użytkowników."
+msgstr ""
+
+#: flaskapp/templates/home.html:9
+msgid "Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować."
+msgstr ""
+
+#: flaskapp/templates/home.html:14
+msgid "Jesteś zalogowany jako administrator!"
+msgstr ""
+
+#: flaskapp/templates/home.html:15
+msgid "Możesz tworzyć grupy projektowe oraz nimi zarządzać."
+msgstr ""
+
+#: flaskapp/templates/home.html:17
+msgid "Aby zarządzać systemem przejdź do panelu administracyjnego."
+msgstr ""
+
+#: flaskapp/templates/home.html:18
+msgid "Panel"
+msgstr ""
+
+#: flaskapp/templates/home.html:25 flaskapp/templates/home.html:27
+#: flaskapp/templates/project.html:5 flaskapp/templates/project.html:7
+#: flaskapp/templates/project_view.html:14
+msgid "Termin na udostępnienie projektu:"
+msgstr ""
+
+#: flaskapp/templates/home.html:27 flaskapp/templates/project.html:7
+msgid "nie wyznaczono"
+msgstr ""
+
+#: flaskapp/templates/home.html:30
+msgid "Jesteś zalogowany. Możesz udostępnić projekt lub go edytować."
+msgstr ""
+
+#: flaskapp/templates/home.html:38
+msgid ""
+"Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych "
+"studentów lub zobaczyć wyniki końcowe."
+msgstr ""
+
+#: flaskapp/templates/keys.html:7 flaskapp/users/routes.py:108
+msgid "Klucze dostępu"
+msgstr ""
+
+#: flaskapp/templates/keys.html:9
+msgid ""
+"Poniższe klucze służą do zalogowania się, aby ocenić projekty innych "
+"studentów"
+msgstr ""
+
+#: flaskapp/templates/keys.html:10
+msgid ""
+"Każda osoba z sekcji projektowej powinna użyć jednego z nich, kiedy "
+"rozpocznie się ocenianie"
+msgstr ""
+
+#: flaskapp/templates/keys.html:16
+msgid "Nr."
+msgstr ""
+
+#: flaskapp/templates/keys.html:17
+msgid "Klucz"
+msgstr ""
+
+#: flaskapp/templates/keys.html:34
+msgid "Klucze nie zostały jeszcze wygenerowane"
+msgstr ""
+
+#: flaskapp/templates/keys.html:36
+msgid "Zostaną one stworzone po udostępnieniu projektu"
+msgstr ""
+
+#: flaskapp/templates/layout.html:27
+msgid "zapunktuj"
+msgstr ""
+
+#: flaskapp/templates/layout.html:38
+msgid "Start"
+msgstr ""
+
+#: flaskapp/templates/layout.html:42
+msgid "Informacje"
+msgstr ""
+
+#: flaskapp/templates/layout.html:50
+msgid "Panel Administratora"
+msgstr ""
+
+#: flaskapp/templates/layout.html:63
+msgid "Wyloguj"
+msgstr ""
+
+#: flaskapp/templates/layout_section.html:6
+#: flaskapp/templates/layout_user.html:6
+msgid "Menu"
+msgstr ""
+
+#: flaskapp/templates/layout_section.html:9
+msgid "Dodaj Projekt"
+msgstr ""
+
+#: flaskapp/templates/layout_section.html:11
+#: flaskapp/templates/layout_user.html:8
+msgid "Podgląd Projektu"
+msgstr ""
+
+#: flaskapp/templates/layout_section.html:12
+msgid "Edytuj Projekt"
+msgstr ""
+
+#: flaskapp/templates/layout_section.html:14
+msgid "Klucze Do Oceniania"
+msgstr ""
+
+#: flaskapp/templates/layout_user.html:9
+msgid "Oceń Projekty"
+msgstr ""
+
+#: flaskapp/templates/layout_user.html:10
+msgid "Wyniki Końcowe"
+msgstr ""
+
+#: flaskapp/templates/project.html:56 flaskapp/users/routes.py:48
+msgid "Dodaj projekt"
+msgstr ""
+
+#: flaskapp/templates/project.html:97
+msgid "Ocenianie zostało rozpoczęte. Nie można już dodać/edytować projektu."
+msgstr ""
+
+#: flaskapp/templates/project.html:99
+msgid ""
+"Aby wziąć udział w głosowaniu zaloguj się za pomocą klucza do oceniania "
+"dostępnym"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:160
+#: flaskapp/templates/admin/panel.html:70 flaskapp/templates/project.html:99
+#: flaskapp/templates/project_view.html:70
+msgid "tutaj"
+msgstr ""
+
+#: flaskapp/templates/project_view.html:11
+msgid "Powrót"
+msgstr ""
+
+#: flaskapp/templates/project_view.html:16
+msgid "Termin na udostępnienie projektu: nie wyznaczono"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:10
+#: flaskapp/templates/project_view.html:24 flaskapp/templates/results.html:56
+msgid "Sekcja nr."
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:17
+#: flaskapp/templates/project_view.html:31 flaskapp/templates/results.html:63
+msgid "PDF"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:19
+#: flaskapp/templates/project_view.html:33 flaskapp/templates/results.html:65
+msgid "Grafika"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:28
+#: flaskapp/templates/project_view.html:42 flaskapp/templates/rating.html:39
+#: flaskapp/templates/results.html:74
+msgid "Dodatkowy załącznik"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:32
+#: flaskapp/templates/admin/projects.html:34
+#: flaskapp/templates/admin/projects.html:36
+#: flaskapp/templates/project_view.html:46
+#: flaskapp/templates/project_view.html:48
+#: flaskapp/templates/project_view.html:50
+msgid "Ostatnia edycja:"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:32
+#: flaskapp/templates/admin/projects.html:34
+#: flaskapp/templates/admin/projects.html:36
+#: flaskapp/templates/project_view.html:46
+#: flaskapp/templates/project_view.html:48
+#: flaskapp/templates/project_view.html:50
+msgid "o godz."
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:42
+#: flaskapp/templates/project_view.html:56
+msgid "z ip:"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:44
+#: flaskapp/templates/project_view.html:58
+msgid "z ip: (nieznane)"
+msgstr ""
+
+#: flaskapp/templates/project_view.html:68
+msgid "Projekt nie istnieje."
+msgstr ""
+
+#: flaskapp/templates/project_view.html:70
+msgid "Nie udostępniono jeszcze projektu. Aby to zrobić kliknij"
+msgstr ""
+
+#: flaskapp/templates/rating.html:5
+msgid "Możliwość oceniania jest w tym momencie wyłączona."
+msgstr ""
+
+#: flaskapp/templates/rating.html:9
+msgid "Ocenianie zostało zakończone. Możesz zobaczyć"
+msgstr ""
+
+#: flaskapp/templates/rating.html:9
+msgid "wyniki"
+msgstr ""
+
+#: flaskapp/templates/rating.html:13
+msgid ""
+"Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy "
+"będzie można zobaczyć wyniki w zakładce"
+msgstr ""
+
+#: flaskapp/templates/rating.html:13
+msgid "wyniki końcowe"
+msgstr ""
+
+#: flaskapp/templates/rating.html:17
+msgid "Całkowita liczba punktów do rozdania wynosi"
+msgstr ""
+
+#: flaskapp/templates/rating.html:17
+msgid "Możesz je rozdać dowolnie"
+msgstr ""
+
+#: flaskapp/templates/rating.html:119
+msgid "Pozostałe punkty do rozdania:"
+msgstr ""
+
+#: flaskapp/templates/rating.html:124
+msgid "Przydzielono o"
+msgstr ""
+
+#: flaskapp/templates/rating.html:124
+msgid "pkt. za dużo"
+msgstr ""
+
+#: flaskapp/templates/results.html:15
+msgid ""
+"Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w "
+"sekcji \"Zarządzanie grupami\"."
+msgstr ""
+
+#: flaskapp/templates/results.html:19
+msgid ""
+"Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu"
+" oceniania przez grupę."
+msgstr ""
+
+#: flaskapp/templates/results.html:28
+msgid "Twój"
+msgstr ""
+
+#: flaskapp/templates/results.html:28
+msgid "projekt"
+msgstr ""
+
+#: flaskapp/templates/results.html:28
+msgid "uzyskał"
+msgstr ""
+
+#: flaskapp/templates/results.html:28 flaskapp/templates/results.html:56
+msgid "pkt"
+msgstr ""
+
+#: flaskapp/templates/results.html:33
+msgid "W głosowaniu wzięło udział"
+msgstr ""
+
+#: flaskapp/templates/results.html:33
+msgid "użytkowników."
+msgstr ""
+
+#: flaskapp/templates/results.html:38
+msgid "Podgląd"
+msgstr ""
+
+#: flaskapp/templates/results.html:41
+msgid "Ranking"
+msgstr ""
+
+#: flaskapp/templates/results.html:44
+msgid "Spis wg sekcji"
+msgstr ""
+
+#: flaskapp/templates/results.html:56
+msgid "zdobyła"
+msgstr ""
+
+#: flaskapp/templates/results.html:78 flaskapp/templates/results.html:80
+#: flaskapp/templates/results.html:82
+msgid "Ostatnio edytowano:"
+msgstr ""
+
+#: flaskapp/templates/results.html:78 flaskapp/templates/results.html:80
+#: flaskapp/templates/results.html:82 flaskapp/templates/results.html:120
+#: flaskapp/templates/results.html:124 flaskapp/templates/results.html:162
+#: flaskapp/templates/results.html:166
+msgid "o godzinie"
+msgstr ""
+
+#: flaskapp/templates/results.html:98 flaskapp/templates/results.html:140
+msgid "Zdobyte punkty"
+msgstr ""
+
+#: flaskapp/templates/results.html:101 flaskapp/templates/results.html:143
+msgid "Ostatnia edycja"
+msgstr ""
+
+#: flaskapp/templates/results.html:120 flaskapp/templates/results.html:122
+#: flaskapp/templates/results.html:162 flaskapp/templates/results.html:164
+msgid "w terminie"
+msgstr ""
+
+#: flaskapp/templates/results.html:124 flaskapp/templates/results.html:166
+msgid "po terminie"
+msgstr ""
+
+#: flaskapp/templates/admin/add_admin.html:6
+msgid "Hasło dla administratora będzie można ustawić po zalogowaniu."
+msgstr ""
+
+#: flaskapp/templates/admin/add_admin.html:8
+msgid "Domyślne hasło służące do pierwszego zalogowania to"
+msgstr ""
+
+#: flaskapp/templates/admin/add_admin.html:8
+msgid "'admin'"
+msgstr ""
+
+#: flaskapp/templates/admin/change_password.html:8
+msgid "Ustaw nowe hasło"
+msgstr ""
+
+#: flaskapp/templates/admin/create_group.html:8
+msgid "Utwórz grupę"
+msgstr ""
+
+#: flaskapp/templates/admin/layout_admin.html:8
+msgid "Grupy Studenckie"
+msgstr ""
+
+#: flaskapp/templates/admin/layout_admin.html:9
+msgid "Zarządzaj Grupami"
+msgstr ""
+
+#: flaskapp/templates/admin/layout_admin.html:10
+msgid "Dodaj Grupę"
+msgstr ""
+
+#: flaskapp/templates/admin/layout_admin.html:12
+msgid "Dodaj Administratora"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:8
+#: flaskapp/templates/admin/panel.html:9
+msgid "Grupa"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:9
+#: flaskapp/templates/admin/panel.html:10
+msgid "Liczba sekcji"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:10
+#: flaskapp/templates/admin/panel.html:11
+msgid "Termin oddania prac"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:12
+#: flaskapp/templates/admin/manage_groups.html:145
+#: flaskapp/templates/admin/sections.html:81
+#: flaskapp/templates/admin/sections.html:107
+msgid "Usuń"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:20
+#: flaskapp/templates/admin/panel.html:22
+msgid "Sekcje i użytkownicy"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:22
+msgid "Edytuj nazwę"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:31
+msgid "Ustaw termin"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:38
+msgid "Ustaw ocenianie/punkty"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:49
+msgid "Usuń grupę"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:62
+msgid "Włącz możliwość oceny projektów przez studentów"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:102
+#: flaskapp/templates/admin/manage_groups.html:112
+msgid "<liczba-sekcji> - 5"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:102
+#: flaskapp/templates/admin/manage_groups.html:112
+msgid "Wygeneruj"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:121
+#: flaskapp/templates/admin/manage_groups.html:143
+#: flaskapp/templates/admin/manage_groups.html:205
+#: flaskapp/templates/admin/manage_groups.html:267
+#: flaskapp/templates/admin/sections.html:79
+#: flaskapp/templates/admin/sections.html:105
+msgid "Zamknij"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:134
+#: flaskapp/templates/admin/sections.html:70
+#: flaskapp/templates/admin/sections.html:96
+msgid "Uwaga!"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:140
+msgid ""
+"Czy na pewno chcesz usunąć tę grupę? Spowoduje to usunięcie wszystkich "
+"projektów udostępnionych przez należące do niej sekcje!"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:158
+#: flaskapp/templates/admin/panel.html:68
+msgid "Aktualnie w bazie nie ma żadnych grup."
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:160
+#: flaskapp/templates/admin/panel.html:70
+msgid "Kliknij"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:160
+#: flaskapp/templates/admin/panel.html:70
+msgid "aby utworzyć nową grupę."
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:174
+msgid "Ustaw czas na udostępnianie prac"
+msgstr ""
+
+#: flaskapp/templates/admin/manage_groups.html:219
+msgid "Zmień nazwę grupy"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:13
+msgid "Projekty"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:14
+msgid "Loginy"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:43
+msgid "Projekty tej grupy"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:49
+msgid "Plik CSV z kluczami dostępu"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:53
+msgid "Wyniki oceniania"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:54
+msgid "Plik CSV z wynikami"
+msgstr ""
+
+#: flaskapp/templates/admin/panel.html:56
+#: flaskapp/templates/admin/panel.html:57
+msgid "Opcja zablokowana do zakończenia oceniania"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:5
+msgid "Udostępnione projekty:"
+msgstr ""
+
+#: flaskapp/templates/admin/projects.html:54
+msgid "Żadna z sekcji nie udostępniła jeszcze projektu."
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:14
+msgid "Dodaj sekcję"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:27
+msgid "Projekt sekcji"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:30
+msgid "Ta sekcja nie udostępniła projektu"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:32
+msgid "Użytkownicy"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:34
+msgid "Dodaj użytkownika sekcji"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:38
+msgid "Usuń sekcję"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:51
+msgid "Ten użytkownik zakończył ocenianie"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:58
+msgid "Usuń użytkownika sekcji"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:76
+msgid "Czy na pewno chcesz usunąć tego użytkownika?"
+msgstr ""
+
+#: flaskapp/templates/admin/sections.html:102
+msgid ""
+"Czy na pewno chcesz usunąć tę sekcję? Spowoduje to także usunięcie "
+"udostępnionego przez nią projektu!"
+msgstr ""
+
+#: flaskapp/templates/errors/403.html:6
+msgid "Nie masz odpowiednich uprawnień."
+msgstr ""
+
+#: flaskapp/templates/errors/404.html:6
+msgid "Strona nie została znaleziona."
+msgstr ""
+
+#: flaskapp/templates/errors/413.html:6
+msgid "Rozmiar udostępnionego pliku jest za duży. Dopuszczalna wartość to 20 MB."
+msgstr ""
+
+#: flaskapp/templates/errors/500.html:7
+msgid "Coś poszło nie tak."
+msgstr ""
+
+#: flaskapp/users/forms.py:19 flaskapp/users/forms.py:29
+msgid "Podana wartość nie jest liczbą całkowitą"
+msgstr ""
+
+#: flaskapp/users/forms.py:33 flaskapp/users/forms.py:44
+msgid "Tytuł"
+msgstr ""
+
+#: flaskapp/users/forms.py:33 flaskapp/users/forms.py:44
+msgid "Tytuł może się składać z maksymalnie 50 znaków."
+msgstr ""
+
+#: flaskapp/users/forms.py:34
+msgid "Plik musi mieć rozszerzenie jpg, png lub pdf"
+msgstr ""
+
+#: flaskapp/users/forms.py:34
+msgid "Dodanie pliku jest wymagane"
+msgstr ""
+
+#: flaskapp/users/forms.py:35 flaskapp/users/forms.py:47
+msgid "Opis projektu"
+msgstr ""
+
+#: flaskapp/users/forms.py:35 flaskapp/users/forms.py:47
+msgid "Opis może się składać z maksymalnie 1000 znaków."
+msgstr ""
+
+#: flaskapp/users/forms.py:36
+msgid "Liczba osób pracujących nad projektem"
+msgstr ""
+
+#: flaskapp/users/forms.py:38
+msgid "Ta wartość nie może być ujemna i nie większa niż 10"
+msgstr ""
+
+#: flaskapp/users/forms.py:39 flaskapp/users/forms.py:48
+msgid "Link do dodatkowych materiałów (opcjonalne)"
+msgstr ""
+
+#: flaskapp/users/forms.py:39 flaskapp/users/forms.py:48
+msgid "Nieprawidłowy adres URL"
+msgstr ""
+
+#: flaskapp/users/forms.py:46
+msgid "Plik musi mieć rozszerzenie jpg, png lub pdf."
+msgstr ""
+
+#: flaskapp/users/forms.py:49
+msgid "Edytuj"
+msgstr ""
+
+#: flaskapp/users/forms.py:53
+msgid "Punkty: "
+msgstr ""
+
+#: flaskapp/users/forms.py:53
+msgid "To pole jest wymagane. Wpisz minimum wartość 0."
+msgstr ""
+
+#: flaskapp/users/forms.py:55
+msgid "Ta wartość musi być liczbą nieujemną"
+msgstr ""
+
+#: flaskapp/users/forms.py:78
+msgid "Podane wartości są za duże"
+msgstr ""
+
+#: flaskapp/users/forms.py:80 flaskapp/users/forms.py:84
+msgid "Przydzielono o "
+msgstr ""
+
+#: flaskapp/users/forms.py:80
+msgid " pkt. za dużo"
+msgstr ""
+
+#: flaskapp/users/forms.py:84
+msgid " pkt. za mało"
+msgstr ""
+
+#: flaskapp/users/routes.py:43
+msgid "Projekt został dodany"
+msgstr ""
+
+#: flaskapp/users/routes.py:46 flaskapp/users/routes.py:91
+#: flaskapp/users/routes.py:106
+msgid "Dostęp do tej strony posiada tylko sekcja"
+msgstr ""
+
+#: flaskapp/users/routes.py:84
+msgid "Projekt został edytowany"
+msgstr ""
+
+#: flaskapp/users/routes.py:93
+msgid "Edytuj projekt"
+msgstr ""
+
+#: flaskapp/users/routes.py:124
+msgid "Za mało udostępnionych projektów, aby przeprowadzić ocenianie"
+msgstr ""
+
+#: flaskapp/users/routes.py:136
+msgid "Punkty zostały przydzielone"
+msgstr ""
+
+#: flaskapp/users/routes.py:139
+msgid "Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji"
+msgstr ""
+
+#: flaskapp/users/routes.py:141
+msgid "Ocenianie prac"
+msgstr ""
+

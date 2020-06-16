@@ -3,16 +3,16 @@
 <div class="row">
 	<div class="col-md-3">
 		<div class="body-section mr-5 mb-5 pr-2">
-			<h4>Menu</h4>
+			<h4>{{ gettext('Menu') }}</h4>
             <ul class="list-group">
                 {% if not current_user.project %}
-                    <a href="{{ url_for('users.project') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Projekt</a>
+                    <a href="{{ url_for('users.project') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Dodaj Projekt') }}</a>
                 {% else %}
-                    <a href="{{ url_for('main.project_view') }}" class="list-group-item list-group-item-light list-group-item-action">Podgląd Projektu</a>
-                    <a href="{{ url_for('users.update_project') }}" class="list-group-item list-group-item-light list-group-item-action">Edytuj Projekt</a>
+                    <a href="{{ url_for('main.project_view') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Podgląd Projektu') }}</a>
+                    <a href="{{ url_for('users.update_project') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Edytuj Projekt') }}</a>
                 {% endif %}
-                <a href="{{ url_for('users.access_keys') }}" class="list-group-item list-group-item-light list-group-item-action">Klucze Do Oceniania</a>
-                <a href="{{ url_for('main.results') }}" class="list-group-item list-group-item-light list-group-item-action">Wyniki</a>
+                <a href="{{ url_for('users.access_keys') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Klucze Do Oceniania') }}</a>
+                <a href="{{ url_for('main.results') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Wyniki') }}</a>
             </ul>
 		</div>
 	</div>

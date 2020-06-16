@@ -1,2 +1,2 @@
-# Praca Inżynierska
-Projekt i implementacja aplikacji internetowej z wykorzystaniem języka Python.
+# PeerGrade
+An application that allows peer grading - team projects can be garded by classmates.
