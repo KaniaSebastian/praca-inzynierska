@@ -8,12 +8,12 @@
 {% block content %}
 
     {% if current_user.is_admin %}
-        <a href="{{ url_for('admin.sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; Powrót</button> </a>
+        <a href="{{ url_for('admin.sections', group_id=project.author.group.id) }}"> <button type="button" class="btn btn-light mb-4">&laquo; {{ gettext('Powrót') }}</button> </a>
     {% else %}
         {% if project.author.group.upload_time %}
-            <h6 class="mb-3 lead">Termin na udostępnienie projektu: <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
+            <h6 class="mb-3 lead">{{ gettext('Termin na udostępnienie projektu:') }} <b>{{ project.author.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
         {% else %}
-            <h6 class="mb-3 lead">Termin na udostępnienie projektu: nie wyznaczono</h6>
+            <h6 class="mb-3 lead">{{ gettext('Termin na udostępnienie projektu: nie wyznaczono') }}</h6>
         {% endif %}
     {% endif %}
 
@@ -21,16 +21,16 @@
 
       <div class="card mb-3 mx-auto" style="max-width: 720px;">
           <div class="card-header">
-              Sekcja nr. {{ project.author.section_number }}
+              {{ gettext('Sekcja nr.') }} {{ project.author.section_number }}
           </div>
           <div class="row no-gutters">
             <div class="col-md-4 border-bottom">
                 <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
                     {% set extension = project.upload_file.split('.') %}
                     {% if extension[1] == 'pdf' %}
-                        <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                        <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="{{ gettext('PDF') }}">
                     {% else %}
-                        <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
+                        <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="{{ gettext('Grafika') }}">
                     {% endif %}
                 </a>
             </div>
@@ -39,23 +39,23 @@
                 <h5 class="card-title">{{ project.title }}</h5>
                   <p class="card-text">{{ project.description }} <br/><br/> </p>
                 {% if project.optional_link %}
-                    <p class="blockquote-footer"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
+                    <p class="blockquote-footer"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
                 {% endif %}
                 <p class="card-text custom-card-footer">
                     {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                        <small class="text-muted">Ostatnia edycja: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                        <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                     {% elif not project.author.group.upload_time %}
-                        <small class="text-muted">Ostatnia edycja: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                        <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                     {% else %}
-                        <small class="text-muted">Ostatnia edycja: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                        <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                     {% endif %}
                 </p>
 
                 <p class="card-text custom-card-footer">
                     {% if project.last_editor %}
-                        <small class="text-muted">z ip: {{ project.last_editor }} </small>
+                        <small class="text-muted">{{ gettext('z ip:') }} {{ project.last_editor }} </small>
                     {% else %}
-                        <small class="text-muted"> z ip: (nieznane) </small>
+                        <small class="text-muted"> {{ gettext('z ip: (nieznane)') }}</small>
                     {% endif %}
                 </p>
               </div>
@@ -65,9 +65,9 @@
 
     {% else %}
         {% if current_user.is_admin %}
-            Projekt nie istnieje.
+            {{ gettext('Projekt nie istnieje.') }}
         {% else %}
-            Nie udostępniono jeszcze projektu. Aby to zrobić kliknij <a href="{{ url_for('users.project') }}">tutaj</a>.
+            {{ gettext('Nie udostępniono jeszcze projektu. Aby to zrobić kliknij') }} <a href="{{ url_for('users.project') }}">{{ gettext('tutaj') }}</a>.
         {% endif %}
     {% endif %}
 

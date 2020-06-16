@@ -4,17 +4,17 @@
     {% if keys %}
 
         <div class="jumbotron">
-          <h4>Klucze dostępu</h4>
+          <h4>{{ gettext('Klucze dostępu') }}</h4>
           <hr class="my-4">
-          <p class="lead">Poniższe klucze służą do zalogowania się, aby ocenić projekty innych studentów</p>
-          <p class="lead">Każda osoba z sekcji projektowej powinna użyć jednego z nich, kiedy rozpocznie się ocenianie</p>
+          <p class="lead">{{ gettext('Poniższe klucze służą do zalogowania się, aby ocenić projekty innych studentów') }}</p>
+          <p class="lead">{{ gettext('Każda osoba z sekcji projektowej powinna użyć jednego z nich, kiedy rozpocznie się ocenianie') }}</p>
         </div>
 
         <table class="table table-hover text-center table-striped">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">Nr.</th>
-              <th scope="col">Klucz</th>
+              <th scope="col">{{ gettext('Nr.') }}</th>
+              <th scope="col">{{ gettext('Klucz') }}</th>
             </tr>
           </thead>
 
@@ -31,9 +31,9 @@
 
     {% else %}
         <div class="jumbotron">
-          <h4>Klucze nie zostały jeszcze wygenerowane</h4>
+          <h4>{{ gettext('Klucze nie zostały jeszcze wygenerowane') }}</h4>
           <hr class="my-4">
-          <p class="lead">Zostaną one stworzone po udostępnieniu projektu</p>
+          <p class="lead">{{ gettext('Zostaną one stworzone po udostępnieniu projektu') }}</p>
         </div>
     {% endif %}
 {% endblock content %}

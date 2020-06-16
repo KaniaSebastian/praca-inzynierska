@@ -5,12 +5,12 @@
 		<div class="body-section mr-5 pr-2">
 			<h4>Menu</h4>
             <ul class="list-group">
-                <a href="{{ url_for('admin.panel') }}" class="list-group-item list-group-item-light list-group-item-action">Grupy Studenckie</a>
-                <a href="{{ url_for('admin.manage_groups') }}" class="list-group-item list-group-item-light list-group-item-action">Zarządzaj Grupami</a>
-                <a href="{{ url_for('admin.create_group') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Grupę</a>
+                <a href="{{ url_for('admin.panel') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Grupy Studenckie') }}</a>
+                <a href="{{ url_for('admin.manage_groups') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Zarządzaj Grupami') }}</a>
+                <a href="{{ url_for('admin.create_group') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Dodaj Grupę') }}</a>
                 <hr/>
-                <a href="{{ url_for('admin.add_admin') }}" class="list-group-item list-group-item-light list-group-item-action">Dodaj Administratora</a>
-                <a href="{{ url_for('admin.change_password') }}" class="list-group-item list-group-item-light list-group-item-action">Zmień hasło</a>
+                <a href="{{ url_for('admin.add_admin') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Dodaj Administratora') }}</a>
+                <a href="{{ url_for('admin.change_password') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Zmień hasło') }}</a>
             </ul>
 		</div>
 	</div>

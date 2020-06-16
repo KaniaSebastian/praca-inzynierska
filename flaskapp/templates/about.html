@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="jumbotron">
-      <h1 class="display-4">Aplikacja 'zapunktuj'</h1>
-      <p class="lead">Na tej stronie masz możliwość udostępnienia swojego projektu oraz oceny projektów udostępnionych przez innych użytkowników.</p>
-      <p class="lead">Aplikacja została wykonana w ramach pracy inżynierskiej.</p>
+      <h1 class="display-4">{{ gettext('Aplikacja \'zapunktuj\'') }}</h1>
+      <p class="lead">{{ gettext('Na tej stronie masz możliwość udostępnienia swojego projektu oraz oceny projektów udostępnionych przez innych użytkowników.') }}</p>
+      <p class="lead">{{ gettext('Aplikacja została wykonana w ramach pracy inżynierskiej.') }}</p>
       <hr class="my-4">
-      <p>Autor: Sebastian Kania</p>
-      <p>Kontakt: zapunktuj.kontakt@gmail.com</p>
+      <p>{{ gettext('Autor: Sebastian Kania') }}</p>
+      <p>{{ gettext('Kontakt: zapunktuj.kontakt@gmail.com') }}</p>
     </div>
 {% endblock body %}

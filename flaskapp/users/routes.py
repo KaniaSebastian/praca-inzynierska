@@ -7,6 +7,7 @@ import os
 from datetime import datetime
 from flaskapp.users.utils import save_file, create_users_keys
 import pytz
+from flask_babel import gettext
 
 users = Blueprint('users', __name__)
 
@@ -39,12 +40,12 @@ def project():
             db.session.add(new_project)
             db.session.commit()
             create_users_keys(current_user.login, form.creators_num.data)
-            flash('Projekt został dodany', 'success')
+            flash(gettext('Projekt został dodany'), 'success')
             return redirect(url_for('users.access_keys'))
     else:
-        flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
+        flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('project.html', title='Projekt', form=form, legend='Dodaj projekt')
+    return render_template('project.html', title=gettext('Projekt'), form=form, legend=gettext('Dodaj projekt'))
 
 
 @users.route('/project/update', methods=['GET', 'POST'])
@@ -80,16 +81,16 @@ def update_project():
                 user_project.upload_file = new_file
                 os.remove(os.path.join(app.root_path, 'static/projects', old_file))
             db.session.commit()
-            flash('Projekt został edytowany', 'success')
+            flash(gettext('Projekt został edytowany'), 'success')
             return redirect(url_for('main.project_view'))
         elif request.method == 'GET':
             form.title.data = user_project.title
             form.description.data = user_project.description
             form.url.data = user_project.optional_link
     else:
-        flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
+        flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('admin.panel'))
-    return render_template('project.html', title='Edytuj projekt', form=form, legend='Edytuj projekt')
+    return render_template('project.html', title=gettext('Edytuj projekt'), form=form, legend=gettext('Edytuj projekt'))
 
 
 @users.route('/keys')
@@ -102,9 +103,9 @@ def access_keys():
         else:
             keys = None
     else:
-        flash('Dostęp do tej strony posiada tylko sekcja', 'warning')
+        flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('keys.html', title='Klucze dostępu', keys=keys)
+    return render_template('keys.html', title=gettext('Klucze dostępu'), keys=keys)
 
 
 @users.route('/rating', methods=['GET', 'POST'])
@@ -120,7 +121,7 @@ def rating():
             if section_project and section_project.author.login != current_user.group.name:
                 group_projects.append(section_project)
         if len(group_projects) == 0:
-            flash('Za mało udostępnionych projektów, aby przeprowadzić ocenianie', 'warning')
+            flash(gettext('Za mało udostępnionych projektów, aby przeprowadzić ocenianie'), 'warning')
             return redirect(url_for('main.project_view'))
         user_ratings = [{'points': 0} for item in range(len(group_projects))]
         form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
@@ -132,10 +133,10 @@ def rating():
                 single_project.score = single_project.score + form.all_points[i].data.get('points')
             current_user.did_rate = True
             db.session.commit()
-            flash('Punkty zostały przydzielone', 'success')
+            flash(gettext('Punkty zostały przydzielone'), 'success')
             return redirect(url_for('users.rating'))
     else:
-        flash('Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji', 'warning')
+        flash(gettext('Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('rating.html', title='Ocenianie prac', group=group, group_projects=group_projects, form=form)
+    return render_template('rating.html', title=gettext('Ocenianie prac'), group=group, group_projects=group_projects, form=form)
 

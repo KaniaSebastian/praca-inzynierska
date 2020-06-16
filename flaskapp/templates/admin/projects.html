@@ -2,21 +2,21 @@
 {% block content %}
 
     {% if projects|length %}
-        <h6 class="mb-3 lead">Udostępnione projekty: <b> {{ projects|length }}/{{number_of_sections}} </b></h6>
+        <h6 class="mb-3 lead">{{ gettext('Udostępnione projekty:') }} <b> {{ projects|length }}/{{number_of_sections}} </b></h6>
 
         {% for project in projects %}
               <div class="card mb-3 mx-auto" style="max-width: 720px;">
                   <div class="card-header">
-                      Sekcja nr. {{ project.author.section_number }}
+                      {{ gettext('Sekcja nr.') }} {{ project.author.section_number }}
                   </div>
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
                         <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
                             {% set extension = project.upload_file.split('.') %}
                             {% if extension[1] == 'pdf' %}
-                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="{{ gettext('PDF') }}">
                             {% else %}
-                                <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
+                                <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="{{ gettext('Grafika') }}">
                             {% endif %}
                         </a>
                     </div>
@@ -25,23 +25,23 @@
                         <h5 class="card-title">{{ project.title }} <br/><br/></h5>
                         <p class="card-text">{{ project.description }}</p>
                         {% if project.optional_link %}
-                            <p class="blockquote-footer"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
+                            <p class="blockquote-footer"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p> <br/><br/>
                         {% endif %}
                         <p class="card-text custom-card-footer">
                             {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnia edycja: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% elif not project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnia edycja: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% else %}
-                                <small class="text-muted">Ostatnia edycja: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godz. <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnia edycja:') }} <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godz.') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% endif %}
                         </p>
 
                         <p class="card-text custom-card-footer">
                             {% if project.last_editor %}
-                                <small class="text-muted">z ip: {{ project.last_editor }} </small>
+                                <small class="text-muted">{{ gettext('z ip:') }} {{ project.last_editor }} </small>
                             {% else %}
-                                <small class="text-muted"> z ip: (nieznane) </small>
+                                <small class="text-muted"> {{ gettext('z ip: (nieznane)') }} </small>
                             {% endif %}
                         </p>
                       </div>
@@ -51,7 +51,7 @@
         {% endfor %}
     {% else %}
         <div class="jumbotron">
-          <p class="lead">Żadna z sekcji nie udostępniła jeszcze projektu.</p>
+          <p class="lead">{{ gettext('Żadna z sekcji nie udostępniła jeszcze projektu.') }}</p>
         </div>
     {% endif %}
 

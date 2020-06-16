@@ -12,11 +12,11 @@
     {% if group.rating_status != 'ended' %}
         {% if current_user.is_admin %}
             <div class="jumbotron">
-              <p class="lead">Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami".</p>
+              <p class="lead">{{ gettext('Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami".') }}</p>
             </div>
         {% else %}
             <div class="jumbotron">
-              <p class="lead">Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.</p>
+              <p class="lead">{{ gettext('Ocenianie nie zostało jeszcze zakończone. Wyniki ukażą się po zakończeniu oceniania przez grupę.') }}</p>
             </div>
         {% endif %}
     {% else %}
@@ -25,23 +25,23 @@
             {% if not current_user.is_admin %}
                 {% if user_project %}
                   <h4>
-                    <p>Twój <a href="{{ url_for('main.project_view') }}">projekt</a> uzyskał <b> {{ user_project.score }} pkt</b>.</p>
+                    <p>{{ gettext('Twój') }} <a href="{{ url_for('main.project_view') }}">{{ gettext('projekt') }}</a> {{ gettext('uzyskał') }} <b> {{ user_project.score }} {{ gettext('pkt') }}</b>.</p>
                   </h4>
                   <hr class="my-4">
                 {% endif %}
             {% endif %}
-          <h6><p class="lead">W głosowaniu wzięło udział {{ users_that_rated_num }} użytkowników.</p></h6>
+          <h6><p class="lead">{{ gettext('W głosowaniu wzięło udział') }} {{ users_that_rated_num }} {{ gettext('użytkowników.') }}</p></h6>
         </div>
 
         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">Podgląd</a>
+            <a class="nav-link active" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">{{ gettext('Podgląd') }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="table-tab" data-toggle="tab" href="#sorted-table" role="tab" aria-controls="table" aria-selected="false">Ranking</a>
+            <a class="nav-link" id="table-tab" data-toggle="tab" href="#sorted-table" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking') }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="sorted-table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Spis wg sekcji</a>
+            <a class="nav-link" id="sorted-table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Spis wg sekcji') }}</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -53,16 +53,16 @@
                     <div class="card mb-3 mx-auto" style="max-width: 720px;">
                 {% endif %}
                   <div class="card-header">
-                      Sekcja nr. {{ project.author.section_number }} zdobyła <b> {{ project.score }} pkt</b>.
+                      {{ gettext('Sekcja nr.') }} {{ project.author.section_number }} {{ gettext('zdobyła') }} <b> {{ project.score }} {{ gettext('pkt') }}</b>.
                   </div>
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
                         <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
                             {% set extension = project.upload_file.split('.') %}
                             {% if extension[1] == 'pdf' %}
-                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="{{ gettext('PDF') }}">
                             {% else %}
-                                <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
+                                <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="{{ gettext('Grafika') }}">
                             {% endif %}
                         </a>
                     </div>
@@ -71,15 +71,15 @@
                         <h5 class="card-title">{{ project.title }}</h5>
                         <p class="card-text">{{ project.description }}</p>
                         {% if project.optional_link %}
-                            <p class="blockquote-footer mt-5"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">Dodatkowy załącznik<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                            <p class="blockquote-footer mt-5"> <a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
                         {% endif %}
                         <p class="card-text custom-card-footer">
                             {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnio edytowano: <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnio edytowano:') }} <span class="text-success"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godzinie') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% elif not project.author.group.upload_time %}
-                                <small class="text-muted">Ostatnio edytowano: <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnio edytowano:') }} <span><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godzinie') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% else %}
-                                <small class="text-muted">Ostatnio edytowano: <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> o godzinie <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
+                                <small class="text-muted">{{ gettext('Ostatnio edytowano:') }} <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godzinie') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% endif %}
                         </p>
                       </div>
@@ -94,11 +94,11 @@
             <table class="table table-hover text-center table-striped">
               <thead class="thead-dark">
                 <tr>
-                  <th scope="col">Sekcja</th>
-                  <th scope="col">Zdobyte punkty</th>
-                  <th scope="col">Projekt</th>
+                  <th scope="col">{{ gettext('Sekcja') }}</th>
+                  <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Projekt') }}</th>
                   {% if current_user.is_admin %}
-                      <th scope="col">Ostatnia edycja</th>
+                      <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
                   {% endif %}
                 </tr>
               </thead>
@@ -111,17 +111,17 @@
                 {% else %}
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
-                  <td>Sekcja {{ project.author.section_number }}</td>
+                  <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
                   <td>{{ project.score }}</td>
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
                         {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-success"><b> {{ gettext('w terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% elif not project.author.group.upload_time %}
-                            <span><b> w terminie</b></span>
+                            <span><b> {{ gettext('w terminie') }}</b></span>
                         {% else %}
-                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-danger"><b> {{ gettext('po terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% endif %}
                       </td>
                   {% else %}
@@ -136,11 +136,11 @@
             <table class="table table-hover text-center table-striped">
               <thead class="thead-dark">
                 <tr>
-                  <th scope="col">Sekcja</th>
-                  <th scope="col">Zdobyte punkty</th>
-                  <th scope="col">Projekt</th>
+                  <th scope="col">{{ gettext('Sekcja') }}</th>
+                  <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Projekt') }}</th>
                   {% if current_user.is_admin %}
-                      <th scope="col">Ostatnia edycja</th>
+                      <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
                   {% endif %}
                 </tr>
               </thead>
@@ -153,17 +153,17 @@
                 {% else %}
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
-                  <td>Sekcja {{ project.author.section_number }}</td>
+                  <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
                   <td>{{ project.score }}</td>
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
                         {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
-                            <span class="text-success"><b> w terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-success"><b> {{ gettext('w terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% elif not project.author.group.upload_time %}
-                            <span><b> w terminie</b></span>
+                            <span><b> {{ gettext('w terminie') }}</b></span>
                         {% else %}
-                            <span class="text-danger"><b> po terminie </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} o godzinie {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                            <span class="text-danger"><b> {{ gettext('po terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
                         {% endif %}
                       </td>
                   {% else %}

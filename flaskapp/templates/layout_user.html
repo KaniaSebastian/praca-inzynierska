@@ -3,11 +3,11 @@
 <div class="row">
 	<div class="col-md-3">
 		<div class="body-section mr-5 mb-5 pr-2">
-			<h4>Menu</h4>
+			<h4>{{ gettext('Menu') }}</h4>
             <ul class="list-group">
-                <a href="{{ url_for('main.project_view') }}" class="list-group-item list-group-item-light list-group-item-action">Podgląd Projektu</a>
-                <a href="{{ url_for('users.rating') }}" class="list-group-item list-group-item-light list-group-item-action">Oceń Projekty</a>
-                <a href="{{ url_for('main.results') }} " class="list-group-item list-group-item-light list-group-item-action">Wyniki Końcowe</a>
+                <a href="{{ url_for('main.project_view') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Podgląd Projektu') }}</a>
+                <a href="{{ url_for('users.rating') }}" class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Oceń Projekty') }}</a>
+                <a href="{{ url_for('main.results') }} " class="list-group-item list-group-item-light list-group-item-action">{{ gettext('Wyniki Końcowe') }}</a>
             </ul>
 		</div>
 	</div>
