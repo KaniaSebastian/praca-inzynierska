@@ -1038,11 +1038,11 @@ msgstr "Assigned"
 
 #: flaskapp/users/forms.py:80
 msgid " pkt. za dużo"
-msgstr "pts. too much"
+msgstr " pts. too much"
 
 #: flaskapp/users/forms.py:84
 msgid " pkt. za mało"
-msgstr "pts. too little"
+msgstr " pts. too little"
 
 #: flaskapp/users/routes.py:43
 msgid "Projekt został dodany"

@@ -301,7 +301,7 @@ def generate_csv(group_id):
 
             for n in range(len(group.users)):
                 group_users = Group.query.filter_by(name=group.users[n].login).first()
-                section = '\n' + gettext('Sekcja ') + str(group.users[n].section_number)
+                section = gettext('Sekcja ') + str(group.users[n].section_number)
                 if group_users:
                     row = (section, group.users[n].login, gettext('Uzytkownicy:'))
                 else:
