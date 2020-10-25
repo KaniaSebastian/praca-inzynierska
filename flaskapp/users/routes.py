@@ -8,6 +8,7 @@ from datetime import datetime
 from flaskapp.users.utils import save_file, create_users_keys
 import pytz
 from flask_babel import gettext
+from random import shuffle
 
 users = Blueprint('users', __name__)
 
@@ -125,6 +126,9 @@ def rating():
             return redirect(url_for('main.project_view'))
         user_ratings = [{'points': 0} for item in range(len(group_projects))]
         form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
+        to_shuffle = list(zip(group_projects, form.all_points))
+        shuffle(to_shuffle)
+        group_projects, form.all_points = zip(*to_shuffle)
 
         if form.validate_on_submit():
             if current_user.did_rate or group.rating_status != 'enabled':
