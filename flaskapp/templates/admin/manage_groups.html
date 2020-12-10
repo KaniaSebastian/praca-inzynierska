@@ -13,7 +13,7 @@
                     </tr>
                 </thead>
             <tbody>
-                {% for group in groups %}
+                {% for group in groups | reverse %}
                     <tr>
                         <td>
                             <a class="text-decoration-none" href="{{ url_for('admin.sections', group_id=group.id) }}">
@@ -89,7 +89,6 @@
 
                                             {{ set_rating_form.rating_status(class="form-control form-control-lg") }}
 
-
                                         {% endif %}
                                     </div>
 
@@ -113,6 +112,28 @@
                                             </div>
                                         {% endif %}
                                     </div>
+
+                                    <div class="form-group">
+                                        {{ set_rating_form.points_per_project.label(class="form-control-label") }}
+
+                                        {% if set_rating_form.points_per_project.errors %}
+                                            <div class="input-group">
+                                                {{ set_rating_form.points_per_project(class="form-control form-control-lg is-invalid", value=group.points_per_project) }}
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                {% for error in set_rating_form.points_per_project.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <div class="input-group">
+                                                {{ set_rating_form.points_per_project(class="form-control form-control-lg", value=group.points_per_project) }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+
+
                                     {{ set_rating_form.selected_group_id(value = group.id) }}
 
                                 </fieldset>

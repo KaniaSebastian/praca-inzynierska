@@ -1,5 +1,6 @@
+from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, SelectField, HiddenField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, IntegerField, ValidationError, SelectField, HiddenField, FormField, FieldList
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired, NumberRange, Length, InputRequired, EqualTo
 from flaskapp.models import Group, User
@@ -35,8 +36,11 @@ class SetUploadTimeForm(FlaskForm):
 
 class SetRatingForm(FlaskForm):
     rating_status = SelectField(lazy_gettext('Ocenianie'), choices=[('disabled', lazy_gettext('Wyłączone')), ('enabled', lazy_gettext('Włączone')), ('ended', lazy_gettext('Zakończone'))])
-    points = IntegerField(lazy_gettext('Punkty na użytkownika'), validators=[DataRequired(message=lazy_gettext('Nieprawidłowa liczba punktów')),
+    points = IntegerField(lazy_gettext('Pula punktów na użytkownika (ocenianie metodą 1 i 2)'), validators=[DataRequired(message=lazy_gettext('Nieprawidłowa liczba punktów')),
                                                                NumberRange(min=0, max=None, message=lazy_gettext('Ta wartość nie może być ujemna'))])
+    points_per_project = IntegerField(lazy_gettext('Punkty na jeden projekt (ocenianie 3 metodą oraz ocenianie przez nauczyciela)'), validators=[DataRequired(message=lazy_gettext('Nieprawidłowa liczba punktów')),
+                                      NumberRange(min=0, max=None, message=lazy_gettext('Ta wartość nie może być ujemna'))])
+    # rating_type_for_admin = SelectField(lazy_gettext('Metoda oceniania, której użyje nauczyciel'), choices=[('points_pool', lazy_gettext('Metoda 1')), ('points_pool_shuffled', lazy_gettext('Metoda 2'))])
     selected_group_id = HiddenField(lazy_gettext('Id'), validators=[DataRequired()])
     submitRating = SubmitField(lazy_gettext('Zatwierdź'))
 

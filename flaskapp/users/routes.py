@@ -2,13 +2,14 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flaskapp import app, db
 from flaskapp.models import User, Project, Group
 from flaskapp.users.forms import CreateProjectForm, UpdateProjectForm, PointsForm
+from flaskapp.main.forms import PointsPoolPerProjectForm
 from flask_login import current_user, login_required
 import os
 from datetime import datetime
 from flaskapp.users.utils import save_file, create_users_keys
 import pytz
 from flask_babel import gettext
-from random import shuffle
+from random import shuffle, choice
 
 users = Blueprint('users', __name__)
 
@@ -113,6 +114,11 @@ def access_keys():
 @login_required
 def rating():
     if not current_user.is_admin and not current_user.group.is_containing_sections:
+        # choose random rating type for user
+        if not current_user.rating_type:
+            current_user.rating_type = choice(['points_pool', 'points_pool_shuffled', 'pool_per_project'])
+            db.session.commit()
+
         section = User.query.filter_by(login=current_user.group.name).first()
         group = Group.query.get_or_404(section.group.id)
 
@@ -125,16 +131,34 @@ def rating():
             flash(gettext('Za mało udostępnionych projektów, aby przeprowadzić ocenianie'), 'warning')
             return redirect(url_for('main.project_view'))
         user_ratings = [{'points': 0} for item in range(len(group_projects))]
-        form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
-        to_shuffle = list(zip(group_projects, form.all_points))
-        shuffle(to_shuffle)
-        group_projects, form.all_points = zip(*to_shuffle)
 
+        # for rating_type='pool_per_project' different form is created
+        if current_user.rating_type == 'pool_per_project':
+            form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+        else:
+            form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
+
+        # if rating_type for user is "points_pool_shuffled" then shuffle projects for rating
+        if current_user.rating_type == "points_pool_shuffled":
+            to_shuffle = list(zip(group_projects, form.all_points))
+            shuffle(to_shuffle)
+            group_projects, form.all_points = zip(*to_shuffle)
+
+        # from validation
         if form.validate_on_submit():
             if current_user.did_rate or group.rating_status != 'enabled':
                 return redirect(url_for('main.home'))
-            for i, single_project in enumerate(group_projects):
-                single_project.score = single_project.score + form.all_points[i].data.get('points')
+
+            if current_user.rating_type == "points_pool":
+                for i, single_project in enumerate(group_projects):
+                    single_project.score_points_pool = single_project.score_points_pool + form.all_points[i].data.get('points')
+            elif current_user.rating_type == "points_pool_shuffled":
+                for i, single_project in enumerate(group_projects):
+                    single_project.score_points_pool_shuffled = single_project.score_points_pool_shuffled + form.all_points[i].data.get('points')
+            else:
+                for i, single_project in enumerate(group_projects):
+                    single_project.score_pool_per_project = form.all_points[i].data.get('points')
+
             current_user.did_rate = True
             db.session.commit()
             flash(gettext('Punkty zostały przydzielone'), 'success')

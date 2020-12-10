@@ -82,7 +82,7 @@ def results(group_id):
                 user_project = None
 
     group_projects = Project.query.join(User).filter(User.group == group).order_by(User.section_number.asc()).all()
-    group_projects_sorted = sorted(group_projects, key=lambda project: project.score, reverse=True)
+    group_projects_sorted = sorted(group_projects, key=lambda project: project.score_points_pool, reverse=True)
 
     section_keys = [section.login for section in group.users]
     users_that_rated_num = User.query.filter_by(did_rate=True).join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()

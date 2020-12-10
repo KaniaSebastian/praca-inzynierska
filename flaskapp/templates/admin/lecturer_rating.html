@@ -1,4 +1,4 @@
-{% extends "layout_user.html" %}
+{% extends "admin/layout_admin.html" %}
 {% block content %}
     {% if group.rating_status == 'disabled' %}
         <div class="jumbotron">
@@ -14,11 +14,7 @@
         </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
         <div class="jumbotron">
-          {% if current_user.rating_type == "pool_per_project" %}
-            <p class="lead">{{ gettext('Oceń projekty przydzielając im punkty od 1 do') }} {{ group.points_per_project }}.</p>
-          {% else %}
-            <p class="lead">{{ gettext('Całkowita liczba punktów do rozdania wynosi') }} <b id="points_to_give">{{ group.points_per_user }}</b>. {{ gettext('Możesz je rozdać dowolnie') }}.</p>
-          {% endif %}
+          <p class="lead">{{ gettext('Całkowita liczba punktów do rozdania wynosi') }} <b id="points_to_give">{{ group.points_per_user }}</b>. {{ gettext('Możesz je rozdać dowolnie') }}.</p>
         </div>
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
@@ -85,8 +81,6 @@
 
             {{ form.submit(class="btn btn-info btn-block mb-1") }}
 
-
-
         </form>
 
     {% endif %}
@@ -96,53 +90,6 @@
 {% block scripts %}
     {{ super() }}
     <script type=text/javascript>
-
-    {% if current_user.rating_type != 'pool_per_project' %}
-        var points_to_give = $('#points_to_give').text();
-        points_to_give = parseInt(points_to_give, 10)
-        $('.form-group').on('input', '.form-control', function(){
-            var totalSum = 0;
-            var difference = 0;
-            $('.form-group .form-control').each(function(){
-                var inputVal = $(this).val();
-
-                if($.isNumeric(inputVal)){
-                    if (inputVal < 0){
-                        inputVal = 0;
-                    }
-                    totalSum += parseInt(inputVal);
-                    difference = points_to_give - totalSum
-                }
-            });
-            if(!$.isNumeric(difference))
-            {
-                $('#output-text').text('')
-                $('#result').html('')
-            }
-
-            else if (difference > 0)
-            {
-                $('#output-text').html("<p class='text-warning'>{{ gettext('Pozostałe punkty do rozdania:') }} </p>")
-                $('#result').html('<b>'+difference+'</b>')
-            }
-            else if (difference < 0)
-            {
-                $('#output-text').html("<p class='text-danger'>{{ gettext('Przydzielono o') }} " + '<b>' + Math.abs(difference) + '</b>' + " {{ gettext('pkt. za dużo') }}</p>")
-                $('#result').text('')
-            }
-            else if (difference == 0)
-            {
-                $('#output-text').html("<p class='text-success'></p>")
-                $('#result').text('')
-            }
-            else
-            {
-                $('#output-text').text('')
-                $('#result').html('')
-            }
-        });
-
-        {% endif %}
 
         function clear_if_zero(input) {
             if (input.value <= 0 )

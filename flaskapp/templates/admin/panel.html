@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
             <tbody>
-                {% for group in groups %}
+                {% for group in groups | reverse %}
                     <tr>
                         <td> <a href="{{ url_for('admin.sections', group_id=group.id) }}">
                             <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Sekcje i użytkownicy') }}"> {{ group.name }} ({{ group.subject }}) </button> </a>
@@ -25,7 +25,7 @@
                         <td>{% if group.upload_time %}
                                 {{ group.upload_time.strftime('%d-%m-%Y, %H:%M') }}
                             {% else %}
-                                --------------------
+                                ------------------
                             {% endif %}
                         </td>
                         <td>
@@ -35,6 +35,12 @@
                                 <span class="text-danger"> {{ gettext('Wyłączone') }} </span>
                             {% else %}
                                 <span class="text-success"> {{ gettext('Zakończone') }} </span>
+                            {% endif %}
+
+                            {% if group.rating_status == 'enabled' and group.users|selectattr('project')|list|length %}
+                                <a href="{{ url_for('admin.lecturer_rating', group_id=group.id) }}">
+                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Oceń projekty studentów') }}">Oceń prace</button>
+                                </a>
                             {% endif %}
                         </td>
 

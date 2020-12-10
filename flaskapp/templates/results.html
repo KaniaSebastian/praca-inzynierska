@@ -24,13 +24,18 @@
         <div class="jumbotron">
             {% if not current_user.is_admin %}
                 {% if user_project %}
-                  <h4>
-                    <p>{{ gettext('Twój') }} <a href="{{ url_for('main.project_view') }}">{{ gettext('projekt') }}</a> {{ gettext('uzyskał') }} <b> {{ user_project.score }} {{ gettext('pkt') }}</b>.</p>
-                  </h4>
+                    <p>
+                        <h4>{{ gettext('Twój') }} <a href="{{ url_for('main.project_view') }}">{{ gettext('projekt') }}</a> {{ gettext('uzyskał') }}:</h4>
+                        <ul>
+                            <li><b> {{ user_project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
+                            <li><b> {{ user_project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
+                            <li><b> {{ user_project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                        </ul>
+                    </p>
                   <hr class="my-4">
                 {% endif %}
             {% endif %}
-          <h6><p class="lead">{{ gettext('W głosowaniu wzięło udział') }} {{ users_that_rated_num }} {{ gettext('użytkowników.') }}</p></h6>
+          <h6><p class="lead">{{ gettext('W głosowaniu wzięło udział') }} {{ users_that_rated_num }} {{ gettext('użytkowników.') }} {{ gettext('Ocenianie zostało przeprowadzone 3 różnymi metodami. Każdy z użytkowników oceniał losowo wybraną metodą.')}}</p></h6>
         </div>
 
         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
@@ -38,22 +43,35 @@
             <a class="nav-link active" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">{{ gettext('Podgląd') }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="table-tab" data-toggle="tab" href="#sorted-table" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking') }}</a>
+            <a class="nav-link" id="table-tab-method-1" data-toggle="tab" href="#sorted-table-method-1" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking-metoda 1') }}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="sorted-table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Spis wg sekcji') }}</a>
+            <a class="nav-link" id="table-tab-method-2" data-toggle="tab" href="#sorted-table-method-2" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking-metoda 2') }}</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" id="table-tab-method-3" data-toggle="tab" href="#sorted-table-method-3" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking-metoda 3') }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="table-tab-teacher" data-toggle="tab" href="#sorted-table-teacher" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Ranking-ocena nauczyciela') }}</a>
+          </li>
+          <!--<li class="nav-item">-->
+            <!--<a class="nav-link" id="sorted-table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">{{ gettext('Spis wg sekcji') }}</a>-->
+          <!--</li>-->
         </ul>
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="view" role="tabpanel" aria-labelledby="home-tab">
-              {% for project in group_projects_sorted %}
+              {% for project in group_projects %}
                 {% if user_project and project == user_project %}
                     <div class="card mb-3 mx-auto border border-info bg-light" style="max-width: 720px;">
                 {% else %}
                     <div class="card mb-3 mx-auto" style="max-width: 720px;">
                 {% endif %}
                   <div class="card-header">
-                      {{ gettext('Sekcja nr.') }} {{ project.author.section_number }} {{ gettext('zdobyła') }} <b> {{ project.score }} {{ gettext('pkt') }}</b>.
+                      {{ gettext('Sekcja nr.') }} {{ project.author.section_number }} {{ gettext('zdobyła') }}:<br>
+                      <li><b> {{ project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
+                      <li><b> {{ project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
+                      <li><b> {{ project.score_pool_per_project }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+                      <li><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
                   </div>
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
@@ -112,7 +130,7 @@
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
-                  <td>{{ project.score }}</td>
+                  <td>{{ project.score_points_pool }}, {{ project.score_points_pool_shuffled }}</td>
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
@@ -132,7 +150,7 @@
             </table>
           </div>
 
-          <div class="tab-pane fade" id="sorted-table" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="tab-pane fade" id="sorted-table-method-1" role="tabpanel" aria-labelledby="profile-tab">
             <table class="table table-hover text-center table-striped">
               <thead class="thead-dark">
                 <tr>
@@ -154,7 +172,133 @@
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
-                  <td>{{ project.score }}</td>
+                  <td>{{ project.score_points_pool }}</td>
+                  <td>{{ project.title }}</td>
+                  {% if current_user.is_admin %}
+                      <td>
+                        {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                            <span class="text-success"><b> {{ gettext('w terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% elif not project.author.group.upload_time %}
+                            <span><b> {{ gettext('w terminie') }}</b></span>
+                        {% else %}
+                            <span class="text-danger"><b> {{ gettext('po terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% endif %}
+                      </td>
+                  {% else %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-pane fade" id="sorted-table-method-2" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table table-hover text-center table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">{{ gettext('Sekcja') }}</th>
+                  <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Projekt') }}</th>
+                  {% if current_user.is_admin %}
+                      <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
+                  {% endif %}
+                </tr>
+              </thead>
+
+              <tbody>
+
+              {% for project in group_projects|sort(attribute='score_points_pool_shuffled', reverse=True) %}
+                {% if not current_user.is_admin and project == user_project %}
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% else %}
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% endif %}
+                  <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
+                  <td>{{ project.score_points_pool_shuffled }}</td>
+                  <td>{{ project.title }}</td>
+                  {% if current_user.is_admin %}
+                      <td>
+                        {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                            <span class="text-success"><b> {{ gettext('w terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% elif not project.author.group.upload_time %}
+                            <span><b> {{ gettext('w terminie') }}</b></span>
+                        {% else %}
+                            <span class="text-danger"><b> {{ gettext('po terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% endif %}
+                      </td>
+                  {% else %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-pane fade" id="sorted-table-method-3" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table table-hover text-center table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">{{ gettext('Sekcja') }}</th>
+                  <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Projekt') }}</th>
+                  {% if current_user.is_admin %}
+                      <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
+                  {% endif %}
+                </tr>
+              </thead>
+
+              <tbody>
+
+              {% for project in group_projects|sort(attribute='score_pool_per_project', reverse=True) %}
+                {% if not current_user.is_admin and project == user_project %}
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% else %}
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% endif %}
+                  <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
+                  <td>{{ project.score_pool_per_project }}/{{ project.author.group.points_per_project }}</td>
+                  <td>{{ project.title }}</td>
+                  {% if current_user.is_admin %}
+                      <td>
+                        {% if project.author.group.upload_time and project.date_posted < project.author.group.upload_time %}
+                            <span class="text-success"><b> {{ gettext('w terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% elif not project.author.group.upload_time %}
+                            <span><b> {{ gettext('w terminie') }}</b></span>
+                        {% else %}
+                            <span class="text-danger"><b> {{ gettext('po terminie') }} </b> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="{{ project.date_posted.strftime('%d-%m-%Y') }} {{ gettext('o godzinie') }} {{ project.date_posted.strftime('%H:%M') }}"></i> </span>
+                        {% endif %}
+                      </td>
+                  {% else %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-pane fade" id="sorted-table-teacher" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table table-hover text-center table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">{{ gettext('Sekcja') }}</th>
+                  <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Projekt') }}</th>
+                  {% if current_user.is_admin %}
+                      <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
+                  {% endif %}
+                </tr>
+              </thead>
+
+              <tbody>
+
+              {% for project in group_projects|sort(attribute='score_admin', reverse=True) %}
+                {% if not current_user.is_admin and project == user_project %}
+                    <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% else %}
+                    <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
+                {% endif %}
+                  <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
+                  <td>{{ project.score_admin }}/{{ project.author.group.points_per_project }}</td>
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>

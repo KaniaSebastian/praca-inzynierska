@@ -3,11 +3,13 @@ from flaskapp import app, db, bcrypt
 from flaskapp.models import User, Project, Group
 from flaskapp.admin.forms import CreateGroupForm, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm, \
     AddAdminForm, ChangePasswordForm
+from flaskapp.main.forms import PointsPoolPerProjectForm
 from flaskapp.admin.utils import add_users
 from flask_login import login_user, current_user, login_required
 import os
 from werkzeug.urls import url_quote
 from flask_babel import gettext
+import sys
 
 admin = Blueprint('admin', __name__)
 
@@ -43,7 +45,10 @@ def admin_login(admin_name, remember):
 @login_required
 def panel():
     if current_user.is_admin:
-        groups = current_user.admin_groups
+        if current_user.login == 'admin':
+            groups = Group.query.filter_by(is_containing_sections=True).all()
+        else:
+            groups = current_user.admin_groups
         browser = request.user_agent.browser
         if browser != 'chrome' and browser != 'edge':
             flash(gettext('Panel administracyjny działa w pełni poprawnie tylko na przeglądarkach Chrome oraz Edge'), 'warning')
@@ -237,7 +242,10 @@ def manage_groups():
         set_upload_time_form = SetUploadTimeForm()
         set_rating_form = SetRatingForm()
         group_name_form = EditGroupNameForm()
-        groups = current_user.admin_groups
+        if current_user.login == 'admin':
+            groups = Group.query.filter_by(is_containing_sections=True).all()
+        else:
+            groups = current_user.admin_groups
 
         if set_upload_time_form.submitTime.data and set_upload_time_form.validate():
             group = Group.query.get_or_404(set_upload_time_form.selected_group_id.data)
@@ -253,6 +261,8 @@ def manage_groups():
             group = Group.query.get_or_404(set_rating_form.selected_group_id.data)
             group.rating_status = set_rating_form.rating_status.data
             group.points_per_user = set_rating_form.points.data
+            # group.rating_type_for_admin = set_rating_form.rating_type_for_admin.data
+            group.points_per_project = set_rating_form.points_per_project.data
             db.session.commit()
             if set_rating_form.rating_status.data == 'enabled':
                 flash(gettext('Ocenianie zostało włączone'), 'success')
@@ -263,6 +273,8 @@ def manage_groups():
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in set_rating_form.points.errors:
+                flash(error, 'danger')
+            for error in set_rating_form.points_per_project.errors:
                 flash(error, 'danger')
 
         if group_name_form.submitName.data and group_name_form.validate():
@@ -333,15 +345,38 @@ def results_csv(group_id):
             group_name_with_subject = group.name + ' (' + group.subject + ')'
             header = (gettext('Grupa:'), group_name_with_subject)
             yield ",".join(header) + '\n'
-            header = (gettext("Sekcja"), gettext("Wynik"))
+            header = (gettext("Sekcja"), gettext("Tytuł projektu"), gettext("Suma wszystkich punktów"),
+                      gettext("Punkty z oceniania sposobem 1"),
+                      gettext("Punkty z oceniania sposobem 2"))
+                      # gettext("Punkty zdobyte w ocenianiu z pulą punktów do rozdania"),
+                      # gettext("Punkty zdobyte w ocenianiu z pulą punktów do rozdania z mieszaniem prac"))
             yield ",".join(header) + '\n\n'
 
             for section in group.users:
                 section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
-                section_project_title = section.project.title if section.project else '---'
-                section_score = (str(section.project.score) if section.project else '---')
-                row = (section_name, section_project_title, section_score)
-                yield ','.join(row) + '\n'
+                if section.project:
+                    section_project_title = section.project.title
+                    section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
+                    section_score_points_pool = (str(section.project.score_points_pool))
+                    section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
+                else:
+                    section_project_title = '---'
+                    section_points_sum = '---'
+                    section_score_points_pool = '---'
+                    section_score_points_pool_shuffled = '---'
+
+                row = (section_name, section_project_title, section_points_sum,
+                       section_score_points_pool, section_score_points_pool_shuffled)
+                yield ','.join(row)
+
+            # Count numbers of evaluators
+            section_keys = [section.login for section in group.users]
+            points_pool_evaluators = User.query.filter_by(did_rate=True, rating_type='points_pool').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+            points_pool_shuffled_evaluators = User.query.filter_by(did_rate=True, rating_type='points_pool_shuffled').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+            row = gettext('\n\n' + 'Oceniający sposobem 1:'), str(points_pool_evaluators)
+            yield ','.join(row)
+            row = gettext('\n' + 'Oceniający sposobem 2:'), str(points_pool_shuffled_evaluators)
+            yield ','.join(row)
     else:
         flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
@@ -387,3 +422,35 @@ def change_password():
     return render_template('admin/change_password.html', title=gettext('Dodaj administratora'), form=form)
 
 
+@admin.route('/lecturer-rating/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+def lecturer_rating(group_id):
+    if current_user.is_admin:
+        group = Group.query.get_or_404(group_id)
+
+        group_projects = list()
+        for section in group.users:
+            section_project = Project.query.filter_by(author=section).first()
+            if section_project and section_project.author.login:
+                group_projects.append(section_project)
+        if len(group_projects) == 0:
+            flash(gettext('Za mało udostępnionych projektów, aby przeprowadzić ocenianie'), 'warning')
+            return redirect(url_for('main.project_view'))
+        user_ratings = [{'points': 0} for item in range(len(group_projects))]
+        form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+
+        if form.validate_on_submit():
+            if group.rating_status != 'enabled':
+                return redirect(url_for('main.home'))
+
+            for i, single_project in enumerate(group_projects):
+                single_project.score_admin = form.all_points[i].data.get('points')
+
+            db.session.commit()
+            flash(gettext('Punkty zostały przydzielone'), 'success')
+            return redirect(url_for('admin.panel'))
+    else:
+        flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
+        return redirect(url_for('main.home'))
+    return render_template('admin/lecturer_rating.html', title=gettext('Ocenianie prac'), group=group,
+                           group_projects=group_projects, form=form)

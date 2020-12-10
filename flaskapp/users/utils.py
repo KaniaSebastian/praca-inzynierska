@@ -1,8 +1,10 @@
 from flaskapp import app, db
 from flaskapp.models import Project, Group
 from flaskapp.admin.utils import add_users
+from flask_login import current_user
 import secrets
 import os
+from random import shuffle
 
 
 def save_file(file):
