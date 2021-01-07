@@ -25,22 +25,43 @@
                         <td>{% if group.upload_time %}
                                 {{ group.upload_time.strftime('%d-%m-%Y, %H:%M') }}
                             {% else %}
-                                ------------------
+                                -----------------
                             {% endif %}
                         </td>
                         <td>
                             {% if group.rating_status == 'enabled' %}
-                                <span class="text-info"> {{ gettext('Włączone') }} </span>
-                            {% elif group.rating_status == 'disabled'%}
-                                <span class="text-danger"> {{ gettext('Wyłączone') }} </span>
-                            {% else %}
-                                <span class="text-success"> {{ gettext('Zakończone') }} </span>
+                                <span class="text-info"> {{ gettext('Włączone (1 tura)') }} </span>
+                            {% elif group.rating_status == 'disabled' %}
+                                <span class="text-danger"> {{ gettext('Wyłączone (1 tura)') }} </span>
+                            {% elif group.rating_status == 'ended' %}
+                                <span class="text-success"> {{ gettext('Zakończone (1 tura)') }} </span>
+                            {% elif group.rating_status == 'disabled_improvement' %}
+                                <span class="text-warning"> {{ gettext('Poprawa prac') }} </span>
+                            {% elif group.rating_status == 'enabled_improvement' %}
+                                <span class="text-info"> {{ gettext('Ocena poprawionych') }} </span>
+                            {% elif group.rating_status == 'ended_improvement' %}
+                                <span class="text-success"> {{ gettext('Zakończone (2 tura)') }} </span>
                             {% endif %}
 
-                            {% if group.rating_status == 'enabled' and group.users|selectattr('project')|list|length %}
+                            {% if (group.rating_status == 'enabled') and group.users|selectattr('project')|list|length and (group.admin_rating_status != 'finished' and group.admin_rating_status != 'finished_improvement') %}
+                                <div><a href="{{ url_for('admin.lecturer_rating', group_id=group.id) }}">
+                                  <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Oceń projekty studentów') }}">{{ gettext('Oceń prace') }}</button>
+                                </a></div>
+                            {% elif group.rating_status == 'enabled_improvement' and group.users|selectattr('project')|list|length and group.admin_rating_status != 'finished_improvement' %}
                                 <a href="{{ url_for('admin.lecturer_rating', group_id=group.id) }}">
-                                    <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Oceń projekty studentów') }}">Oceń prace</button>
+                                  <button type="button" class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="top" title="{{ gettext('Oceń projekty studentów') }}">{{ gettext('Oceń poprawione prace') }}</button>
                                 </a>
+                            {% endif %}
+
+                            {% if group.rating_status != 'disabled' and group.admin_rating_status != 'finished' and group.admin_rating_status != 'finished_improvement' %}
+                              <span class="badge badge-pill badge-warning">{{ gettext('Nie oceniłeś prac (1 tura)') }} <i class="fas fa-exclamation"></i></span>
+                            {% elif group.rating_status != 'disabled_improvement' and group.admin_rating_status != 'finished_improvement' %}
+                            {% endif %}
+
+                            {% if group.admin_rating_status == 'finished' and group.rating_status != 'enabled_improvement' %}
+                              <span class="badge badge-pill badge-success">{{ gettext('Oceniłeś projekty (1 tura)') }} <i class="fas fa-check"></i></span>
+                            {% elif group.admin_rating_status == 'finished_improvement' %}
+                              <span class="badge badge-pill badge-success">{{ gettext('Oceniłeś projekty (2 tura)') }} <i class="fas fa-check"></i></span>
                             {% endif %}
                         </td>
 
@@ -55,7 +76,7 @@
                             <i class="fa fa-download fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Plik CSV z kluczami dostępu') }}"></i></a>
                         </td>
                         <td>
-                            {% if group.rating_status == 'ended' %}
+                            {% if group.rating_status == 'ended' or group.rating_status == 'ended_improvement' %}
                                 <a href="{{ url_for('main.results', group_id=group.id) }}" class="text-decoration-none"> <i class="fa fa-poll fa-xlg text-info mr-2" data-toggle="tooltip" data-placement="top" title="{{ gettext('Wyniki oceniania') }}"></i> </a>
                                 <a href="{{ url_for('admin.results_csv', group_id=group.id) }}"> <i class="fa fa-arrow-down fa-xlg text-success" data-toggle="tooltip" data-placement="top" title="{{ gettext('Plik CSV z wynikami') }}"></i> </a>
                             {% else %}

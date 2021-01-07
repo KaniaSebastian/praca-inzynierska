@@ -9,7 +9,7 @@
 
 {% block content %}
 
-    {% if group.rating_status != 'ended' %}
+    {% if group.rating_status != 'ended' and group.rating_status != 'ended_improvement' %}
         {% if current_user.is_admin %}
             <div class="jumbotron">
               <p class="lead">{{ gettext('Ocenianie nie zostało jeszcze zakończone. Możesz zakończyć ocenianie w sekcji "Zarządzanie grupami".') }}</p>
@@ -25,12 +25,13 @@
             {% if not current_user.is_admin %}
                 {% if user_project %}
                     <p>
-                        <h4>{{ gettext('Twój') }} <a href="{{ url_for('main.project_view') }}">{{ gettext('projekt') }}</a> {{ gettext('uzyskał') }}:</h4>
-                        <ul>
-                            <li><b> {{ user_project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
-                            <li><b> {{ user_project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
-                            <li><b> {{ user_project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
-                        </ul>
+                      <h4>{{ gettext('Twój') }} <a href="{{ url_for('main.project_view') }}">{{ gettext('projekt') }}</a> {{ gettext('uzyskał') }}:</h4>
+                      <ul>
+                        <li><b> {{ user_project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
+                        <li><b> {{ user_project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
+                        <li><b> {{ (user_project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+                        <li><b> {{ user_project.score_admin }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                      </ul>
                     </p>
                   <hr class="my-4">
                 {% endif %}
@@ -70,8 +71,17 @@
                       {{ gettext('Sekcja nr.') }} {{ project.author.section_number }} {{ gettext('zdobyła') }}:<br>
                       <li><b> {{ project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
                       <li><b> {{ project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
-                      <li><b> {{ project.score_pool_per_project }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
-                      <li><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                      <li><b> {{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+                      <li class="text-info"><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                      {% if group.admin_rating_status == 'finished_improvement' %}
+                        <li class="text-success"><b> {{ project.score_admin_improvement }}/{{ group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie projektu') }}.</li>
+                      {% endif %}
+                      {% if project.user_distinctions > 0%}
+                        <li>{{ gettext('Ten projekt został wyróżniony przez studentów') }}. {{ gettext('Liczba wyróżnień to') }}: {{ project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i>.</li>
+                      {% endif %}
+                      {% if project.admin_distinction > 0%}
+                        <li>{{ gettext('Ten projekt został wyróżniony przez nauczyciela') }}<i class="fas fa-star icon-color-gold"></i>.</li>
+                      {% endif %}
                   </div>
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
@@ -100,6 +110,113 @@
                                 <small class="text-muted">{{ gettext('Ostatnio edytowano:') }} <span class="text-danger"><b> {{ project.date_posted.strftime('%d-%m-%Y') }} </b> {{ gettext('o godzinie') }} <b> {{ project.date_posted.strftime('%H:%M') }}</b></span></small>
                             {% endif %}
                         </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!--Comments-->
+                  <div id="accordion">
+                    <!--First card-->
+                    <div class="card">
+                      <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne-{{ project.id }}" aria-expanded="false" aria-controls="collapseOne">
+                            {{ gettext('Komentarze od nauczyciela') }}
+                            <i class="fa fa-lg" aria-hidden="true"></i>
+                            {% if group.rating_status == 'ended_improvement' %}
+                              {% for comment in project.comments if comment.author.is_admin and comment.second_iteration %}
+                                <span class="badge badge-pill badge-info">{{ gettext('Nowy') }}</span>
+                              {% endfor %}
+                            {% endif %}
+                          </button>
+                        </h5>
+                      </div>
+
+                      <div id="collapseOne-{{ project.id }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+
+                          {% if group.rating_status == 'ended_improvement' %}
+                            {% for comment in project.comments %}
+                              {% if comment.author.is_admin and comment.second_iteration %}
+                                <div class="card mb-2">
+                                  <div class="card-header">
+                                    {{ gettext('Komentarz do poprawionej pracy') }}
+                                  </div>
+                                  <div class="card-body">
+                                    <li> {{ comment.comment_wish }} </li>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
+
+                          <div class="card mb-2">
+                            <div class="card-header">
+                              {{ gettext('Pozytywne cechy pracy') }}
+                            </div>
+                            <div class="card-body">
+                              {% for comment in project.comments %}
+                                {% if comment.author.is_admin and not comment.second_iteration %}
+                                  <li> {{ comment.comment_star_1 }} </li>
+                                  <li> {{ comment.comment_star_2 }} </li>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+
+                          <div class="card">
+                            <div class="card-header">
+                              {{ gettext('Rzecz, którą można poprawić') }}
+                            </div>
+                            <div class="card-body">
+                              {% for comment in project.comments %}
+                                {% if comment.author.is_admin and not comment.second_iteration %}
+                                  <li> {{ comment.comment_wish }} </li>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--Second card-->
+                    <div class="card">
+                      <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo-{{ project.id }}" aria-expanded="false" aria-controls="collapseTwo">
+                            Komentarze od studentów
+                            <i class="fa fa-lg" aria-hidden="true"></i>
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseTwo-{{ project.id }}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                          <div class="card mb-2">
+                            <div class="card-header">
+                              {{ gettext('Pozytywne cechy pracy') }}
+                            </div>
+                            <div class="card-body">
+                              {% for comment in project.comments %}
+                                {% if not comment.author.is_admin %}
+                                  <li> {{ comment.comment_star_1 }} </li>
+                                  <li> {{ comment.comment_star_2 }} </li>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                          <div class="card">
+                            <div class="card-header">
+                              {{ gettext('Rzeczy, które można poprawić') }}
+                            </div>
+                            <div class="card-body">
+                              {% for comment in project.comments %}
+                                {% if not comment.author.is_admin %}
+                                  <li> {{ comment.comment_wish }} </li>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -240,6 +357,7 @@
                 <tr>
                   <th scope="col">{{ gettext('Sekcja') }}</th>
                   <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Wyróżnienia') }}</th>
                   <th scope="col">{{ gettext('Projekt') }}</th>
                   {% if current_user.is_admin %}
                       <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
@@ -256,7 +374,12 @@
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
-                  <td>{{ project.score_pool_per_project }}/{{ project.author.group.points_per_project }}</td>
+                  <td>{{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }}</td>
+                  {% if project.user_distinctions > 0 %}
+                      <td>{{ project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i> </td>
+                  {% else %}
+                      <td>--</td>
+                  {% endif %}
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
@@ -282,6 +405,7 @@
                 <tr>
                   <th scope="col">{{ gettext('Sekcja') }}</th>
                   <th scope="col">{{ gettext('Zdobyte punkty') }}</th>
+                  <th scope="col">{{ gettext('Dodatkowe wyróżnienie') }}</th>
                   <th scope="col">{{ gettext('Projekt') }}</th>
                   {% if current_user.is_admin %}
                       <th scope="col">{{ gettext('Ostatnia edycja') }}</th>
@@ -298,7 +422,19 @@
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
-                  <td>{{ project.score_admin }}/{{ project.author.group.points_per_project }}</td>
+                  {% if group.rating_status != 'ended_improvement' %}
+                    <td>{{ project.score_admin }}/{{ project.author.group.points_per_project }}</td>
+                  {% else %}
+                    <td>
+                      <span class="text-info" data-toggle="tooltip" data-placement="right" title="{{ gettext('Ocena nauczyciela w 1 turze') }}"><s>{{ project.score_admin }}/{{ project.author.group.points_per_project }}</s> <i class="fas fa-info-circle text-primary fa-sm"></i></span> </br>
+                      <span class="text-success" data-toggle="tooltip" data-placement="right" title="{{ gettext('Ocena nauczyciela w 2 turze (po poprawie)') }}"> {{ project.score_admin_improvement }}/{{ project.author.group.points_per_project }} <i class="fas fa-info-circle text-primary fa-sm"></i></span>
+                    </td>
+                  {% endif %}
+                  {% if project.admin_distinction > 0 %}
+                      <td><i class="fas fa-star icon-color-gold"></i> </td>
+                  {% else %}
+                      <td>--</td>
+                  {% endif %}
                   <td>{{ project.title }}</td>
                   {% if current_user.is_admin %}
                       <td>
@@ -332,5 +468,9 @@
                 window.open($(this).data("href"), '_blank');
             });
         });
+
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
 {% endblock scripts %}

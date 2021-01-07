@@ -86,3 +86,36 @@ body
 {
     font-size: 1.6em;
 }
+
+.distinctChkBox  input[type='checkbox']
+{
+    display:none;
+}
+
+ .distinctChkBox   input[type='checkbox']+ label:before
+{
+    font-family: 'Font Awesome 5 Free';
+    content: "\f005";
+    font-size:1.5rem;
+    cursor:pointer;
+    color: #DAA520;
+    margin-right: 5px
+}
+
+ .distinctChkBox  input[type='checkbox']:checked + label:before
+ {
+     font-weight:600;
+ }
+
+.icon-color-gold
+{
+    color: #DAA520;
+}
+
+[data-toggle="collapse"] .fa:before {
+  content: "\f0d8";
+}
+
+[data-toggle="collapse"].collapsed .fa:before {
+  content: "\f0d7";
+}

@@ -1,14 +1,15 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, Response
 from flaskapp import app, db, bcrypt
-from flaskapp.models import User, Project, Group
+from flaskapp.models import User, Project, Group, Comments
 from flaskapp.admin.forms import CreateGroupForm, AdminLoginForm, SetUploadTimeForm, SetRatingForm, EditGroupNameForm, \
     AddAdminForm, ChangePasswordForm
 from flaskapp.main.forms import PointsPoolPerProjectForm
+from wtforms.validators import Length
 from flaskapp.admin.utils import add_users
 from flask_login import login_user, current_user, login_required
 import os
 from werkzeug.urls import url_quote
-from flask_babel import gettext
+from flask_babel import gettext, lazy_gettext
 import sys
 
 admin = Blueprint('admin', __name__)
@@ -196,7 +197,7 @@ def delete_section(section_id):
 def sections(group_id):
     if current_user.is_admin:
         group = Group.query.get_or_404(group_id)
-        if current_user.id != group.admin_id:
+        if current_user.id != group.admin_id and current_user.login != 'admin':
             flash(gettext('Nie masz dostępu do tej grupy'), 'warning')
             return redirect(url_for('main.home'))
         user_groups = list()
@@ -217,7 +218,7 @@ def projects(group_id):
         group = Group.query.get_or_404(group_id)
         if not group.is_containing_sections:
             abort(404)
-        if current_user.id != group.admin_id:
+        if current_user.id != group.admin_id and current_user.login != 'admin':
             flash(gettext('Nie masz dostępu do tej grupy'), 'warning')
             return redirect(url_for('main.home'))
         number_of_sections = len(group.users)
@@ -436,15 +437,48 @@ def lecturer_rating(group_id):
         if len(group_projects) == 0:
             flash(gettext('Za mało udostępnionych projektów, aby przeprowadzić ocenianie'), 'warning')
             return redirect(url_for('main.project_view'))
-        user_ratings = [{'points': 0} for item in range(len(group_projects))]
+        if group.rating_status == 'enabled':
+            user_ratings = [{'points': 0} for item in range(len(group_projects))]
+        elif group.rating_status == 'enabled_improvement':
+            user_ratings = [{'points': item.score_admin} for item in group_projects]
         form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+        # if rating improved project disable DataRequired validation for comments
+        if group.rating_status == 'enabled_improvement':
+            for field in form.all_points:
+                field.comment_star_1.validators = [Length(max=1000, message=lazy_gettext('Komentarz może się składać z maksymalnie 1000 znaków.'))]
+                field.comment_star_2.validators = [Length(max=1000, message=lazy_gettext('Komentarz może się składać z maksymalnie 1000 znaków.'))]
+                field.comment_wish.validators = [Length(max=1000, message=lazy_gettext('Komentarz może się składać z maksymalnie 1000 znaków.'))]
+                field.comment_wish.label.text = lazy_gettext('Opcjonalny komentarz.')
 
         if form.validate_on_submit():
-            if group.rating_status != 'enabled':
-                return redirect(url_for('main.home'))
-
             for i, single_project in enumerate(group_projects):
-                single_project.score_admin = form.all_points[i].data.get('points')
+                single_project.score_admin_improvement = form.all_points[i].data.get('points')
+                distinction = int(form.all_points[i].data.get('distinction'))
+                single_project.admin_distinction = distinction
+
+                admin_project_comments = Comments.query.filter_by(project=single_project, author=current_user).first()
+                # if admin_project_comments:
+                #     admin_project_comments.comment_star_1 = form.all_points[i].data.get('comment_star_1')
+                #     admin_project_comments.comment_star_2 = form.all_points[i].data.get('comment_star_2')
+                #     admin_project_comments.comment_wish = form.all_points[i].data.get('comment_wish')
+                # else:
+                if group.rating_status == 'enabled':
+                    new_comments = Comments(comment_star_1=form.all_points[i].data.get('comment_star_1'),
+                                            comment_star_2=form.all_points[i].data.get('comment_star_2'),
+                                            comment_wish=form.all_points[i].data.get('comment_wish'),
+                                            author=current_user, project=single_project)
+                    db.session.add(new_comments)
+                elif group.rating_status == 'enabled_improvement' and form.all_points[i].data.get('comment_wish'):
+                    new_comments = Comments(comment_star_1='empty',
+                                            comment_star_2='empty',
+                                            comment_wish=form.all_points[i].data.get('comment_wish'),
+                                            author=current_user, project=single_project, second_iteration=True)
+                    db.session.add(new_comments)
+
+            if group.admin_rating_status == 'not_started' or group.admin_rating_status == 'not_finished':
+                group.admin_rating_status = 'finished'
+            else:
+                group.admin_rating_status = 'finished_improvement'
 
             db.session.commit()
             flash(gettext('Punkty zostały przydzielone'), 'success')

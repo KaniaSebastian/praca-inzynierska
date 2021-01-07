@@ -1,20 +1,20 @@
 {% extends "admin/layout_admin.html" %}
 {% block content %}
-    {% if group.rating_status == 'disabled' %}
+    {% if group.rating_status == 'disabled' or group.rating_status == 'disabled_improvement' %}
         <div class="jumbotron">
-              <p class="lead">{{ gettext('Możliwość oceniania jest w tym momencie wyłączona.') }}</p>
+          <p class="lead">{{ gettext('Możliwość oceniania jest w tym momencie wyłączona.') }}</p>
         </div>
-    {% elif group.rating_status == 'ended' %}
+    {% elif group.rating_status == 'ended' or group.rating_status == 'ended_improvement' %}
         <div class="jumbotron">
-              <p class="lead">{{ gettext('Ocenianie zostało zakończone. Możesz zobaczyć') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki') }}</a>.</p>
+          <p class="lead">{{ gettext('Ocenianie zostało zakończone. Możesz zobaczyć') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki') }}</a>.</p>
         </div>
     {% elif group.rating_status == 'enabled' and current_user.did_rate %}
         <div class="jumbotron">
-            <p class="lead">{{ gettext('Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki końcowe') }}</a>.</p>
+          <p class="lead">{{ gettext('Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki końcowe') }}</a>.</p>
         </div>
-    {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
+    {% elif (group.rating_status == 'enabled' or group.rating_status == 'enabled_improvement') and not current_user.did_rate %}
         <div class="jumbotron">
-          <p class="lead">{{ gettext('Całkowita liczba punktów do rozdania wynosi') }} <b id="points_to_give">{{ group.points_per_user }}</b>. {{ gettext('Możesz je rozdać dowolnie') }}.</p>
+          <p class="lead">{{ gettext('Oceń projekty przydzielając im punkty od 1 do') }} {{ group.points_per_project }}.</p>
         </div>
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
@@ -31,7 +31,7 @@
                             {% endif %}
                         </a>
                     </div>
-                    <div class="col-md-8 border-left">
+                    <div class="col-md-8 border-left border-bottom">
                       <div class="card-body">
                         <h5 class="card-title">{{ project.title }}</h5>
                         <p class="card-text">{{ project.description }}</p>
@@ -67,9 +67,148 @@
                             </div>
                         {% endif %}
 
+                        <!--previous rating display-->
+                        {% if group.rating_status == 'enabled_improvement' %}
+                          <h6><span class="badge badge-secondary">Poprzednio przyznano {{ project.score_admin }}/{{ group.points_per_project }}</span></h6>
+                        {% endif %}
+
+                        {% if form.all_points[loop.index0].distinction.errors %}
+                            <div class="form-group mb-0 mt-3">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group input-group-sm mt-3">
+                                        {{ form.all_points[loop.index0].distinction.label(class="form-check-label") }}
+                                        {{ form.all_points[loop.index0].distinction(class="form-check-input") }}
+                                    </div>
+                                </div>
+
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.all_points[loop.index0].distinction.errors %}
+                                        <span class="d-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="input-group input-group-sm mt-3">
+                                <span class="distinctChkBox">
+                                    {% if group.rating_status == 'enabled_improvement' and project.admin_distinction == 1 %}
+                                      {{ form.all_points[loop.index0].distinction(class="form-check-input", checked=True) }}
+                                    {% else %}
+                                      {{ form.all_points[loop.index0].distinction(class="form-check-input") }}
+                                    {% endif %}
+
+                                    {{ form.all_points[loop.index0].distinction.label(class="form-check-label") }}
+                                </span>
+                            </div>
+                        {% endif %}
+
                       </div>
                     </div>
                   </div>
+
+                  <!--comments-->
+                  <div class="card border-0">
+                      <ul class="list-group">
+                        <!--if rating improved projects only one comment available-->
+                        {% if group.rating_status != 'enabled_improvement' %}
+                        <li class="list-group-item border-left-0 border-right-0">
+                            <div class="form-group">
+                                {{ form.all_points[loop.index0].comment_star_1.label(class="form-control-label") }}
+
+                                {% if form.all_points[loop.index0].comment_star_1.errors %}
+                                    {{ form.all_points[loop.index0].comment_star_1(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.all_points[loop.index0].comment_star_1.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.all_points[loop.index0].comment_star_1(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </li>
+
+                        <li class="list-group-item border-left-0 border-right-0">
+                            <div class="form-group">
+                                {{ form.all_points[loop.index0].comment_star_2.label(class="form-control-label") }}
+
+                                {% if form.all_points[loop.index0].comment_star_2.errors %}
+                                    {{ form.all_points[loop.index0].comment_star_2(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.all_points[loop.index0].comment_star_2.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.all_points[loop.index0].comment_star_2(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endif %}
+                        <li class="list-group-item border-left-0 border-right-0">
+                            <div class="form-group">
+                                {{ form.all_points[loop.index0].comment_wish.label(class="form-control-label") }}
+
+                                {% if form.all_points[loop.index0].comment_wish.errors %}
+                                    {{ form.all_points[loop.index0].comment_wish(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.all_points[loop.index0].comment_wish.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.all_points[loop.index0].comment_wish(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </li>
+                      </ul>
+                  </div>
+                  <!--older comments-->
+                  {% if group.rating_status == 'enabled_improvement' %}
+                    <div id="accordion">
+                      <!--First card-->
+                      <div class="card">
+                        <div class="card-header" id="headingOne">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne-{{ project.id }}" aria-expanded="false" aria-controls="collapseOne">
+                              {{ gettext('Poprzednie komentarze nauczyciela') }}
+                              <i class="fa fa-lg" aria-hidden="true"></i>
+                            </button>
+                          </h5>
+                        </div>
+
+                        <div id="collapseOne-{{ project.id }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="card-body">
+                            <div class="card mb-2">
+                              <div class="card-header">
+                                {{ gettext('Pozytywne cechy pracy') }}
+                              </div>
+                              <div class="card-body">
+                                {% for comment in project.comments %}
+                                  {% if comment.author.is_admin %}
+                                    <li> {{ comment.comment_star_1 }} </li>
+                                    <li> {{ comment.comment_star_2 }} </li>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="card">
+                              <div class="card-header">
+                                {{ gettext('Rzecz, którą można poprawić') }}
+                              </div>
+                              <div class="card-body">
+                                {% for comment in project.comments %}
+                                  {% if comment.author.is_admin %}
+                                    <li> {{ comment.comment_wish }} </li>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  <!--end older comments-->
                 </div>
 
             {% endfor %}
@@ -99,4 +238,4 @@
         }
     </script>
 
-{% endblock scripts%}
+{% endblock scripts %}

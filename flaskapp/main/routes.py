@@ -86,7 +86,9 @@ def results(group_id):
 
     section_keys = [section.login for section in group.users]
     users_that_rated_num = User.query.filter_by(did_rate=True).join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
-
+    raters_pool_per_project_num = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+    if raters_pool_per_project_num == 0:
+        raters_pool_per_project_num = 1;
     return render_template('results.html', title=gettext('Wyniki'), group=group, group_projects=group_projects,
                            group_projects_sorted=group_projects_sorted, user_project=user_project,
-                           users_that_rated_num=users_that_rated_num)
+                           users_that_rated_num=users_that_rated_num, raters_pool_per_project_num=raters_pool_per_project_num)

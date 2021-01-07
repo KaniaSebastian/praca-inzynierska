@@ -1,6 +1,6 @@
 {% extends "layout_section.html" %}
 {% block content %}
-    {% if current_user.group.rating_status == 'disabled' %}
+    {% if current_user.group.rating_status == 'disabled' or current_user.group.rating_status == 'disabled_improvement'%}
         {% if current_user.group.upload_time %}
             <h6 class="mb-3 lead">{{ gettext('Termin na udostępnienie projektu:') }} <b>{{ current_user.group.upload_time.strftime('%d-%m-%Y, %H:%M') }}</b> </h6>
         {% else %}

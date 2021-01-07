@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flaskapp import app, db
-from flaskapp.models import User, Project, Group
+from flaskapp.models import User, Project, Group, Comments
 from flaskapp.users.forms import CreateProjectForm, UpdateProjectForm, PointsForm
 from flaskapp.main.forms import PointsPoolPerProjectForm
 from flask_login import current_user, login_required
@@ -22,7 +22,7 @@ def project():
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
         if form.validate_on_submit():
-            if current_user.group.rating_status != 'disabled':
+            if current_user.group.rating_status != 'disabled' or current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
             new_file = save_file(form.file.data)
 
@@ -59,7 +59,7 @@ def update_project():
         form = UpdateProjectForm()
         user_project = Project.query.filter_by(author=current_user).first()
         if form.validate_on_submit():
-            if current_user.group.rating_status != 'disabled':
+            if current_user.group.rating_status != 'disabled' or current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
             user_project.title = form.title.data
             user_project.description = form.description.data
@@ -134,7 +134,7 @@ def rating():
 
         # for rating_type='pool_per_project' different form is created
         if current_user.rating_type == 'pool_per_project':
-            form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+            form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_project)
         else:
             form = PointsForm(all_points=user_ratings, points_per_user=group.points_per_user)
 
@@ -157,7 +157,16 @@ def rating():
                     single_project.score_points_pool_shuffled = single_project.score_points_pool_shuffled + form.all_points[i].data.get('points')
             else:
                 for i, single_project in enumerate(group_projects):
-                    single_project.score_pool_per_project = form.all_points[i].data.get('points')
+                    single_project.score_pool_per_project += form.all_points[i].data.get('points')
+                    distinction = int(form.all_points[i].data.get('distinction'))
+                    single_project.user_distinctions += distinction
+
+            for i, single_project in enumerate(group_projects):
+                new_comments = Comments(comment_star_1=form.all_points[i].data.get('comment_star_1'),
+                                        comment_star_2=form.all_points[i].data.get('comment_star_2'),
+                                        comment_wish=form.all_points[i].data.get('comment_wish'),
+                                        author=current_user, project=single_project)
+                db.session.add(new_comments)
 
             current_user.did_rate = True
             db.session.commit()

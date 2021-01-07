@@ -35,7 +35,8 @@ class SetUploadTimeForm(FlaskForm):
 
 
 class SetRatingForm(FlaskForm):
-    rating_status = SelectField(lazy_gettext('Ocenianie'), choices=[('disabled', lazy_gettext('Wyłączone')), ('enabled', lazy_gettext('Włączone')), ('ended', lazy_gettext('Zakończone'))])
+    rating_status = SelectField(lazy_gettext('Ocenianie'), choices=[('disabled', lazy_gettext('Wyłączone (udostępnianie projektów)')), ('enabled', lazy_gettext('Włączone (1 tura)')), ('ended', lazy_gettext('Zakończone (1 tura)')),
+                                                                    ('disabled_improvement', lazy_gettext('Poprawa projektów')), ('enabled_improvement', lazy_gettext('Ocenianie (2 tura - ocenia tylko nauczyciel)')), ('ended_improvement', lazy_gettext('Zakończone (2 tura)'))])
     points = IntegerField(lazy_gettext('Pula punktów na użytkownika (ocenianie metodą 1 i 2)'), validators=[DataRequired(message=lazy_gettext('Nieprawidłowa liczba punktów')),
                                                                NumberRange(min=0, max=None, message=lazy_gettext('Ta wartość nie może być ujemna'))])
     points_per_project = IntegerField(lazy_gettext('Punkty na jeden projekt (ocenianie 3 metodą oraz ocenianie przez nauczyciela)'), validators=[DataRequired(message=lazy_gettext('Nieprawidłowa liczba punktów')),

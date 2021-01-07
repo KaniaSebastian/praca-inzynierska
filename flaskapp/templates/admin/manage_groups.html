@@ -37,11 +37,17 @@
                         <td>
                             <span data-toggle="tooltip" data-placement="top" title="{{ gettext('Ustaw ocenianie/punkty') }}">
                                 {% if group.rating_status == 'enabled' %}
-                                    <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Włączone') }}</button>
+                                  <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Włączone (1 tura)') }}</button>
                                 {% elif group.rating_status == 'disabled' %}
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Wyłączone') }}</button>
-                                {% else %}
-                                    <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Zakończone') }}</button>
+                                  <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Wyłączone (1 tura)') }}</button>
+                                {% elif group.rating_status == 'ended' %}
+                                  <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Zakończone (1 tura)') }}</button>
+                                {% elif group.rating_status == 'disabled_improvement' %}
+                                  <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Poprawa prac') }}</button>
+                                {% elif group.rating_status == 'enabled_improvement' %}
+                                  <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Ocena poprawionych') }}</button>
+                                {% elif group.rating_status == 'ended_improvement' %}
+                                  <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#ratingOptionsModal-{{ group.id }}">{{ gettext('Zakończone (2 tura)') }}</button>
                                 {% endif %}
                             </span>
                         </td>
@@ -83,8 +89,14 @@
                                                 {% set _ = set_rating_form.rating_status.process_data('enabled') %}
                                             {% elif group.rating_status == 'disabled' %}
                                                 {% set _ = set_rating_form.rating_status.process_data('disabled') %}
-                                            {% else %}
+                                            {% elif group.rating_status == 'ended' %}
                                                 {% set _ = set_rating_form.rating_status.process_data('ended') %}
+                                            {% elif group.rating_status == 'disabled_improvement' %}
+                                                {% set _ = set_rating_form.rating_status.process_data('disabled_improvement') %}
+                                            {% elif group.rating_status == 'enabled_improvement' %}
+                                                {% set _ = set_rating_form.rating_status.process_data('enabled_improvement') %}
+                                            {% elif group.rating_status == 'ended_improvement' %}
+                                                {% set _ = set_rating_form.rating_status.process_data('ended_improvement') %}
                                             {% endif %}
 
                                             {{ set_rating_form.rating_status(class="form-control form-control-lg") }}
