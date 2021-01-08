@@ -73,7 +73,6 @@ class Group(db.Model):
     admin_rating_status = db.Column(db.String(20), default='not_started')
     # rating_type_for_admin = db.Column(db.String(50), nullable=True, default='points_pool')
 
-
     def __repr__(self):
         return f"Group ({self.name}, is_containing_sections={self.is_containing_sections}, users({len(self.users)}):{self.users})"
 

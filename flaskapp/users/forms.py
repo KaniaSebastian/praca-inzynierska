@@ -56,7 +56,7 @@ class PointsEntryForm(FlaskForm):
     comment_star_1 = TextAreaField(lazy_gettext('Co w pracy zasługuje na pochwałę?'), render_kw={'rows': 1},
                                 validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')),
                                             Length(max=1000, message=lazy_gettext('Komentarz może się składać z maksymalnie 1000 znaków.'))])
-    comment_star_2 = TextAreaField(lazy_gettext('Druga rzecz, która zasługuje na pochwałę'), render_kw={'rows': 1},
+    comment_star_2 = TextAreaField(lazy_gettext('Druga rzecz, która zasługuje na pochwałę.'), render_kw={'rows': 1},
                                    validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')),
                                                Length(max=1000, message=lazy_gettext('Komentarz może się składać z maksymalnie 1000 znaków.'))])
     comment_wish = TextAreaField(lazy_gettext('Co można poprawić w pracy?'), render_kw={'rows': 1},

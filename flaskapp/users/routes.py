@@ -22,7 +22,7 @@ def project():
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
         if form.validate_on_submit():
-            if current_user.group.rating_status != 'disabled' or current_user.group.rating_status != 'disabled_improvement':
+            if current_user.group.rating_status != 'disabled' and current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
             new_file = save_file(form.file.data)
 
@@ -59,7 +59,7 @@ def update_project():
         form = UpdateProjectForm()
         user_project = Project.query.filter_by(author=current_user).first()
         if form.validate_on_submit():
-            if current_user.group.rating_status != 'disabled' or current_user.group.rating_status != 'disabled_improvement':
+            if current_user.group.rating_status != 'disabled' and current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
             user_project.title = form.title.data
             user_project.description = form.description.data

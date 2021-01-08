@@ -31,12 +31,21 @@
                         <li><b> {{ user_project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
                         <li><b> {{ (user_project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
                         <li><b> {{ user_project.score_admin }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                        {% if user_project.score_admin_improvement %}
+                          <li><b> {{ user_project.score_admin_improvement }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie') }}.</li>
+                        {% endif %}
                       </ul>
                     </p>
                   <hr class="my-4">
                 {% endif %}
             {% endif %}
           <h6><p class="lead">{{ gettext('W głosowaniu wzięło udział') }} {{ users_that_rated_num }} {{ gettext('użytkowników.') }} {{ gettext('Ocenianie zostało przeprowadzone 3 różnymi metodami. Każdy z użytkowników oceniał losowo wybraną metodą.')}}</p></h6>
+          <h6><p class="lead">
+            {{ gettext('Pierwsza metoda polegała na przyznaniu wszystkim projektom punktów ze wspólnej puli') }}.
+            {{ gettext('Druga metoda była podobna do pierwszej i różniła się tym, że prace były wyświetlane w kolejności losowej (na podstawie wyników można więc sprawdzić czy kolejność w jakiej prace były wyświetlane miała wpływ na uzyskane wyniki).') }}
+            {{ gettext('Trzecia metoda polegała na przyznaniu dla każdego projektu punktów w skali od 1 do ') }} {{ group.points_per_project }}. {{ gettext('Osoby oceniające tą metodą mogły także przyznać projektom wyróżnienia') }}.
+            {{ gettext('Nauczyciel oceniał metodą trzecią') }}.
+          </p></h6>
         </div>
 
         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">

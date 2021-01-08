@@ -7,6 +7,7 @@
           <p class="lead"> {{ gettext('Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników.') }} </p>
           <hr class="my-4">
           <p>{{ gettext('Użyj klucza dostępu otrzymanego od nauczyciela, aby się zalogować.') }}</p>
+          <p class="text-danger">{{ gettext('Projekty powinny być udostępniane od 12 stycznia.') }}</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button">{{ gettext('Zaloguj się') }}</a>
         </div>
     {% elif current_user.is_admin %}

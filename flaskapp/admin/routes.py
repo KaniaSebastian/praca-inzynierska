@@ -346,37 +346,56 @@ def results_csv(group_id):
             group_name_with_subject = group.name + ' (' + group.subject + ')'
             header = (gettext('Grupa:'), group_name_with_subject)
             yield ",".join(header) + '\n'
-            header = (gettext("Sekcja"), gettext("Tytuł projektu"), gettext("Suma wszystkich punktów"),
+            header = (gettext("Sekcja"), gettext("Tytuł projektu"),
+                      # gettext("Suma wszystkich punktów"),
                       gettext("Punkty z oceniania sposobem 1"),
-                      gettext("Punkty z oceniania sposobem 2"))
-                      # gettext("Punkty zdobyte w ocenianiu z pulą punktów do rozdania"),
-                      # gettext("Punkty zdobyte w ocenianiu z pulą punktów do rozdania z mieszaniem prac"))
+                      gettext("Punkty z oceniania sposobem 2"),
+                      gettext("Punkty z oceniania sposobem 3"),
+                      gettext("Punkty od nauczyciela"),
+                      gettext("Punkty od nauczyciela (poprawa)"),
+                      gettext("Wyróżnienia (studenci)"),
+                      gettext("Wyróżnienie (nauczyciel)"))
             yield ",".join(header) + '\n\n'
-
-            for section in group.users:
-                section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
-                if section.project:
-                    section_project_title = section.project.title
-                    section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
-                    section_score_points_pool = (str(section.project.score_points_pool))
-                    section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
-                else:
-                    section_project_title = '---'
-                    section_points_sum = '---'
-                    section_score_points_pool = '---'
-                    section_score_points_pool_shuffled = '---'
-
-                row = (section_name, section_project_title, section_points_sum,
-                       section_score_points_pool, section_score_points_pool_shuffled)
-                yield ','.join(row)
 
             # Count numbers of evaluators
             section_keys = [section.login for section in group.users]
             points_pool_evaluators = User.query.filter_by(did_rate=True, rating_type='points_pool').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
             points_pool_shuffled_evaluators = User.query.filter_by(did_rate=True, rating_type='points_pool_shuffled').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+            pool_per_project_evaluators = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+
+            for section in group.users:
+                section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
+                if section.project:
+                    section_project_title = section.project.title
+                    # section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
+                    section_score_points_pool = (str(section.project.score_points_pool))
+                    section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
+                    section_score_pool_per_project = (str(round(section.project.score_pool_per_project/pool_per_project_evaluators, 2))) + '/' + (str(group.points_per_project))
+                    section_score_admin = (str(section.project.score_admin)) + '/' + (str(group.points_per_project))
+                    section_score_admin_improvement = (str(section.project.score_admin_improvement)) + '/' + (str(group.points_per_project))
+                    section_user_distinctions = (str(section.project.user_distinctions))
+                    section_admin_distinction = gettext("tak") if section.project.admin_distinction else gettext("nie")
+                else:
+                    section_project_title = '---'
+                    # section_points_sum = '---'
+                    section_score_points_pool = '---'
+                    section_score_points_pool_shuffled = '---'
+                    section_score_pool_per_project = '---'
+                    section_score_admin = '---'
+                    section_score_admin_improvement = '---'
+                    section_user_distinctions = '---'
+                    section_admin_distinction = '---'
+
+                row = (section_name, section_project_title,
+                       section_score_points_pool, section_score_points_pool_shuffled, section_score_pool_per_project,
+                       section_score_admin, section_score_admin_improvement, section_user_distinctions, section_admin_distinction)
+                yield ','.join(row)
+
             row = gettext('\n\n' + 'Oceniający sposobem 1:'), str(points_pool_evaluators)
             yield ','.join(row)
             row = gettext('\n' + 'Oceniający sposobem 2:'), str(points_pool_shuffled_evaluators)
+            yield ','.join(row)
+            row = gettext('\n' + 'Oceniający sposobem 3:'), str(pool_per_project_evaluators)
             yield ','.join(row)
     else:
         flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
