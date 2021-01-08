@@ -27,6 +27,9 @@
           {% else %}
               <p class="lead"> {{ gettext('Termin na udostępnienie projektu:') }} <b> {{ gettext('nie wyznaczono') }} </b> </p>
           {% endif %}
+          {% if current_user.group.rating_status == 'disabled_improvement' %}
+            <p class="h3 text-primary"> {{ gettext('Możesz teraz poprawić swój projekt') }}. </p>
+          {% endif %}
           <hr class="my-4">
           <p> {{ gettext('Jesteś zalogowany. Możesz udostępnić projekt lub go edytować.') }}</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('users.project') }}" role="button">{{ gettext('Projekt') }}</a>
@@ -35,6 +38,9 @@
         <div class="jumbotron">
           <h1 class="display-4">{{ gettext('Witaj!') }}</h1>
           <p class="lead"> {{ gettext('Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie projektów innych użytkowników.') }}</p>
+          {% if group.rating_status == 'disabled_improvement' %}
+            <p class="h3 text-primary"> {{ gettext('Możesz teraz poprawić swój projekt jeśli zalogujesz się jako sekcja (za pomocą pierwotnego klucza)') }}. </p>
+          {% endif %}
           <hr class="my-4">
           <p> {{ gettext('Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych studentów lub zobaczyć wyniki końcowe.') }}</p>
           <a class="btn btn-primary btn-lg" href="{{ url_for('users.rating') }}" role="button">{{ gettext('Ocenianie') }}</a>

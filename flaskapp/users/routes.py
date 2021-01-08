@@ -21,6 +21,7 @@ def project():
         if current_user.project:
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
+        group = current_user.group
         if form.validate_on_submit():
             if current_user.group.rating_status != 'disabled' and current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
@@ -47,7 +48,7 @@ def project():
     else:
         flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('project.html', title=gettext('Projekt'), form=form, legend=gettext('Dodaj projekt'))
+    return render_template('project.html', title=gettext('Projekt'), form=form, legend=gettext('Dodaj projekt'), group=group)
 
 
 @users.route('/project/update', methods=['GET', 'POST'])
@@ -58,13 +59,22 @@ def update_project():
             return redirect(url_for('users.project'))
         form = UpdateProjectForm()
         user_project = Project.query.filter_by(author=current_user).first()
+        group = user_project.author.group
+        section_keys = [section.login for section in group.users]
+        raters_pool_per_project_num = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys), Group.name != user_project.author.login).count()
+        if raters_pool_per_project_num == 0:
+            raters_pool_per_project_num = 1
+
         if form.validate_on_submit():
             if current_user.group.rating_status != 'disabled' and current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
             user_project.title = form.title.data
             user_project.description = form.description.data
             user_project.optional_link = form.url.data
-            user_project.date_posted = datetime.now(pytz.timezone('Poland'))
+            if group.rating_status == 'disabled':
+                user_project.date_posted = datetime.now(pytz.timezone('Poland'))
+            else:
+                user_project.date_posted_improvement = datetime.now(pytz.timezone('Poland'))
 
             ip = request.environ.get('HTTP_X_FORWARDED_FOR')
             if ip is None:
@@ -92,7 +102,8 @@ def update_project():
     else:
         flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('admin.panel'))
-    return render_template('project.html', title=gettext('Edytuj projekt'), form=form, legend=gettext('Edytuj projekt'))
+    return render_template('project.html', title=gettext('Edytuj projekt'), form=form, legend=gettext('Edytuj projekt'),
+                           group=group, project=user_project, raters_pool_per_project_num=raters_pool_per_project_num)
 
 
 @users.route('/keys')

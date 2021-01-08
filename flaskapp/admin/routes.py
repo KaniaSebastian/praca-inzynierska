@@ -269,8 +269,14 @@ def manage_groups():
                 flash(gettext('Ocenianie zostało włączone'), 'success')
             elif set_rating_form.rating_status.data == 'disabled':
                 flash(gettext('Ocenianie zostało wyłączone'), 'success')
-            else:
+            elif set_rating_form.rating_status.data == 'ended':
                 flash(gettext('Ocenianie zostało zakończone'), 'success')
+            elif set_rating_form.rating_status.data == 'disabled_improvement':
+                flash(gettext('Umożliwiono poprawę projektów'), 'success')
+            elif set_rating_form.rating_status.data == 'enabled_improvement':
+                flash(gettext('Ocenianie zostało włączone (poprawa)'), 'success')
+            elif set_rating_form.rating_status.data == 'ended_improvement':
+                flash(gettext('Ocenianie zostało zakończone (poprawa)'), 'success')
             return redirect(url_for('admin.manage_groups'))
         else:
             for error in set_rating_form.points.errors:
@@ -363,6 +369,15 @@ def results_csv(group_id):
             points_pool_shuffled_evaluators = User.query.filter_by(did_rate=True, rating_type='points_pool_shuffled').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
             pool_per_project_evaluators = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
 
+            # numbers needed to calculate score for 3 method
+            group_projects = Project.query.join(User).filter(User.group == group).order_by(User.section_number.asc()).all()
+            raters_pool_per_project_nums = dict()
+            for project in group_projects:
+                raters_num_temp = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys), Group.name != project.author.login).count()
+                if raters_num_temp == 0:
+                    raters_num_temp = 1
+                raters_pool_per_project_nums[project] = raters_num_temp
+
             for section in group.users:
                 section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
                 if section.project:
@@ -370,7 +385,7 @@ def results_csv(group_id):
                     # section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
                     section_score_points_pool = (str(section.project.score_points_pool))
                     section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
-                    section_score_pool_per_project = (str(round(section.project.score_pool_per_project/pool_per_project_evaluators, 2))) + '/' + (str(group.points_per_project))
+                    section_score_pool_per_project = (str(round(section.project.score_pool_per_project/(raters_pool_per_project_nums.get(section.project)), 2))) + '/' + (str(group.points_per_project))
                     section_score_admin = (str(section.project.score_admin)) + '/' + (str(group.points_per_project))
                     section_score_admin_improvement = (str(section.project.score_admin_improvement)) + '/' + (str(group.points_per_project))
                     section_user_distinctions = (str(section.project.user_distinctions))
@@ -471,7 +486,10 @@ def lecturer_rating(group_id):
 
         if form.validate_on_submit():
             for i, single_project in enumerate(group_projects):
-                single_project.score_admin_improvement = form.all_points[i].data.get('points')
+                if group.rating_status == 'enabled':
+                    single_project.score_admin = form.all_points[i].data.get('points')
+                elif group.rating_status == 'enabled_improvement':
+                    single_project.score_admin_improvement = form.all_points[i].data.get('points')
                 distinction = int(form.all_points[i].data.get('distinction'))
                 single_project.admin_distinction = distinction
 

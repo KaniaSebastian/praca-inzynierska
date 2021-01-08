@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-01-08 11:04+0100\n"
+"POT-Creation-Date: 2021-01-08 21:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgid "Zatwierdź"
 msgstr ""
 
 #: flaskapp/admin/forms.py:38 flaskapp/templates/admin/manage_groups.html:11
-#: flaskapp/templates/admin/panel.html:12 flaskapp/templates/home.html:40
+#: flaskapp/templates/admin/panel.html:12 flaskapp/templates/home.html:46
 #: flaskapp/templates/layout.html:58
 msgid "Ocenianie"
 msgstr ""
@@ -125,7 +125,7 @@ msgid "Zakończone (1 tura - można zobaczyć wyniki)"
 msgstr ""
 
 #: flaskapp/admin/forms.py:39
-msgid "Poprawa projektów (wyniki nadal dostępne)"
+msgid "Poprawa projektów"
 msgstr ""
 
 #: flaskapp/admin/forms.py:39
@@ -201,7 +201,7 @@ msgid "Wybrane hasło jest zbyt proste"
 msgstr ""
 
 #: flaskapp/admin/routes.py:32 flaskapp/admin/routes.py:38
-#: flaskapp/main/routes.py:33
+#: flaskapp/main/routes.py:42
 msgid "Zalogowałeś się"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgstr ""
 msgid "Zalogowałeś się. Ze względów bezpieczeństwa musisz ustawić nowe hasło."
 msgstr ""
 
-#: flaskapp/admin/routes.py:41 flaskapp/main/routes.py:36
+#: flaskapp/admin/routes.py:41 flaskapp/main/routes.py:45
 msgid "Logowanie nieudane. Sprawdź poprawność wpisanych danych"
 msgstr ""
 
@@ -227,10 +227,10 @@ msgstr ""
 #: flaskapp/admin/routes.py:103 flaskapp/admin/routes.py:129
 #: flaskapp/admin/routes.py:149 flaskapp/admin/routes.py:163
 #: flaskapp/admin/routes.py:190 flaskapp/admin/routes.py:209
-#: flaskapp/admin/routes.py:231 flaskapp/admin/routes.py:295
-#: flaskapp/admin/routes.py:329 flaskapp/admin/routes.py:401
-#: flaskapp/admin/routes.py:423 flaskapp/admin/routes.py:440
-#: flaskapp/admin/routes.py:506
+#: flaskapp/admin/routes.py:231 flaskapp/admin/routes.py:301
+#: flaskapp/admin/routes.py:335 flaskapp/admin/routes.py:416
+#: flaskapp/admin/routes.py:438 flaskapp/admin/routes.py:455
+#: flaskapp/admin/routes.py:524
 msgid "Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony"
 msgstr ""
 
@@ -270,14 +270,14 @@ msgstr ""
 msgid "Sekcje"
 msgstr ""
 
-#: flaskapp/admin/routes.py:233 flaskapp/main/routes.py:59
+#: flaskapp/admin/routes.py:233 flaskapp/main/routes.py:74
 #: flaskapp/templates/admin/sections.html:27
-#: flaskapp/templates/admin/sections.html:30 flaskapp/templates/home.html:32
-#: flaskapp/templates/layout.html:54 flaskapp/templates/results.html:243
-#: flaskapp/templates/results.html:285 flaskapp/templates/results.html:327
-#: flaskapp/templates/results.html:370 flaskapp/templates/results.html:418
+#: flaskapp/templates/admin/sections.html:30 flaskapp/templates/home.html:35
+#: flaskapp/templates/layout.html:54 flaskapp/templates/results.html:249
+#: flaskapp/templates/results.html:291 flaskapp/templates/results.html:333
+#: flaskapp/templates/results.html:376 flaskapp/templates/results.html:424
 #: flaskapp/users/forms.py:34 flaskapp/users/forms.py:45
-#: flaskapp/users/routes.py:50
+#: flaskapp/users/routes.py:51
 msgid "Projekt"
 msgstr ""
 
@@ -297,138 +297,150 @@ msgstr ""
 msgid "Ocenianie zostało zakończone"
 msgstr ""
 
-#: flaskapp/admin/routes.py:286
+#: flaskapp/admin/routes.py:275
+msgid "Umożliwiono poprawę projektów"
+msgstr ""
+
+#: flaskapp/admin/routes.py:277
+msgid "Ocenianie zostało włączone (poprawa)"
+msgstr ""
+
+#: flaskapp/admin/routes.py:279
+msgid "Ocenianie zostało zakończone (poprawa)"
+msgstr ""
+
+#: flaskapp/admin/routes.py:292
 msgid "Nazwa grupy została zmieniona"
 msgstr ""
 
-#: flaskapp/admin/routes.py:297
+#: flaskapp/admin/routes.py:303
 msgid "Zarządzanie grupami"
 msgstr ""
 
-#: flaskapp/admin/routes.py:310 flaskapp/admin/routes.py:347
+#: flaskapp/admin/routes.py:316 flaskapp/admin/routes.py:353
 #: flaskapp/templates/admin/sections.html:4
 msgid "Grupa:"
 msgstr ""
 
-#: flaskapp/admin/routes.py:312 flaskapp/admin/routes.py:349
-#: flaskapp/templates/admin/sections.html:9 flaskapp/templates/results.html:241
-#: flaskapp/templates/results.html:258 flaskapp/templates/results.html:283
-#: flaskapp/templates/results.html:300 flaskapp/templates/results.html:325
-#: flaskapp/templates/results.html:342 flaskapp/templates/results.html:367
-#: flaskapp/templates/results.html:385 flaskapp/templates/results.html:415
-#: flaskapp/templates/results.html:433
+#: flaskapp/admin/routes.py:318 flaskapp/admin/routes.py:355
+#: flaskapp/templates/admin/sections.html:9 flaskapp/templates/results.html:247
+#: flaskapp/templates/results.html:264 flaskapp/templates/results.html:289
+#: flaskapp/templates/results.html:306 flaskapp/templates/results.html:331
+#: flaskapp/templates/results.html:348 flaskapp/templates/results.html:373
+#: flaskapp/templates/results.html:391 flaskapp/templates/results.html:421
+#: flaskapp/templates/results.html:439
 msgid "Sekcja"
 msgstr ""
 
-#: flaskapp/admin/routes.py:312
+#: flaskapp/admin/routes.py:318
 msgid "Klucz dostepu"
 msgstr ""
 
-#: flaskapp/admin/routes.py:317 flaskapp/admin/routes.py:367
+#: flaskapp/admin/routes.py:323 flaskapp/admin/routes.py:382
 msgid "Sekcja "
 msgstr ""
 
-#: flaskapp/admin/routes.py:319
+#: flaskapp/admin/routes.py:325
 msgid "Uzytkownicy:"
 msgstr ""
 
-#: flaskapp/admin/routes.py:349
+#: flaskapp/admin/routes.py:355
 msgid "Tytuł projektu"
 msgstr ""
 
-#: flaskapp/admin/routes.py:351
+#: flaskapp/admin/routes.py:357
 msgid "Punkty z oceniania sposobem 1"
 msgstr ""
 
-#: flaskapp/admin/routes.py:352
+#: flaskapp/admin/routes.py:358
 msgid "Punkty z oceniania sposobem 2"
 msgstr ""
 
-#: flaskapp/admin/routes.py:353
+#: flaskapp/admin/routes.py:359
 msgid "Punkty z oceniania sposobem 3"
 msgstr ""
 
-#: flaskapp/admin/routes.py:354
+#: flaskapp/admin/routes.py:360
 msgid "Punkty od nauczyciela"
 msgstr ""
 
-#: flaskapp/admin/routes.py:355
+#: flaskapp/admin/routes.py:361
 msgid "Punkty od nauczyciela (poprawa)"
 msgstr ""
 
-#: flaskapp/admin/routes.py:356
+#: flaskapp/admin/routes.py:362
 msgid "Wyróżnienia (studenci)"
 msgstr ""
 
-#: flaskapp/admin/routes.py:357
+#: flaskapp/admin/routes.py:363
 msgid "Wyróżnienie (nauczyciel)"
 msgstr ""
 
-#: flaskapp/admin/routes.py:377
+#: flaskapp/admin/routes.py:392
 msgid "tak"
 msgstr ""
 
-#: flaskapp/admin/routes.py:377
+#: flaskapp/admin/routes.py:392
 msgid "nie"
 msgstr ""
 
-#: flaskapp/admin/routes.py:394
+#: flaskapp/admin/routes.py:409
 msgid ""
 "\n"
 "\n"
 "Oceniający sposobem 1:"
 msgstr ""
 
-#: flaskapp/admin/routes.py:396
+#: flaskapp/admin/routes.py:411
 msgid ""
 "\n"
 "Oceniający sposobem 2:"
 msgstr ""
 
-#: flaskapp/admin/routes.py:398
+#: flaskapp/admin/routes.py:413
 msgid ""
 "\n"
 "Oceniający sposobem 3:"
 msgstr ""
 
-#: flaskapp/admin/routes.py:403
+#: flaskapp/admin/routes.py:418
 msgid "-wyniki"
 msgstr ""
 
-#: flaskapp/admin/routes.py:420
+#: flaskapp/admin/routes.py:435
 msgid "Nowe konto administratora zostało utworzone"
 msgstr ""
 
-#: flaskapp/admin/routes.py:425 flaskapp/admin/routes.py:442
+#: flaskapp/admin/routes.py:440 flaskapp/admin/routes.py:457
 #: flaskapp/templates/admin/add_admin.html:15
 msgid "Dodaj administratora"
 msgstr ""
 
-#: flaskapp/admin/routes.py:437
+#: flaskapp/admin/routes.py:452
 msgid "Hasło zostało zmienione"
 msgstr ""
 
-#: flaskapp/admin/routes.py:457 flaskapp/users/routes.py:131
+#: flaskapp/admin/routes.py:472 flaskapp/users/routes.py:142
 msgid "Za mało udostępnionych projektów, aby przeprowadzić ocenianie"
 msgstr ""
 
-#: flaskapp/admin/routes.py:467 flaskapp/admin/routes.py:468
-#: flaskapp/admin/routes.py:469 flaskapp/main/forms.py:24
+#: flaskapp/admin/routes.py:482 flaskapp/admin/routes.py:483
+#: flaskapp/admin/routes.py:484 flaskapp/main/forms.py:24
 #: flaskapp/main/forms.py:28 flaskapp/main/forms.py:32
 #: flaskapp/users/forms.py:58 flaskapp/users/forms.py:61
 #: flaskapp/users/forms.py:64
 msgid "Komentarz może się składać z maksymalnie 1000 znaków."
 msgstr ""
 
-#: flaskapp/admin/routes.py:470
+#: flaskapp/admin/routes.py:485
 msgid "Opcjonalny komentarz."
 msgstr ""
 
-#: flaskapp/admin/routes.py:503 flaskapp/users/routes.py:173
+#: flaskapp/admin/routes.py:521 flaskapp/users/routes.py:184
 msgid "Punkty zostały przydzielone"
 msgstr ""
 
-#: flaskapp/admin/routes.py:508 flaskapp/users/routes.py:178
+#: flaskapp/admin/routes.py:526 flaskapp/users/routes.py:189
 msgid "Ocenianie prac"
 msgstr ""
 
@@ -476,20 +488,20 @@ msgstr ""
 msgid "Każdy projekt musi otrzymać minimum jeden punkt"
 msgstr ""
 
-#: flaskapp/main/routes.py:12
+#: flaskapp/main/routes.py:21
 msgid "Strona główna"
 msgstr ""
 
-#: flaskapp/main/routes.py:38 flaskapp/templates/home.html:11
+#: flaskapp/main/routes.py:47 flaskapp/templates/home.html:11
 #: flaskapp/templates/login.html:9
 msgid "Zaloguj się"
 msgstr ""
 
-#: flaskapp/main/routes.py:44
+#: flaskapp/main/routes.py:53
 msgid "Wylogowałeś się"
 msgstr ""
 
-#: flaskapp/main/routes.py:92 flaskapp/templates/admin/panel.html:15
+#: flaskapp/main/routes.py:115 flaskapp/templates/admin/panel.html:15
 #: flaskapp/templates/layout_section.html:15
 msgid "Wyniki"
 msgstr ""
@@ -517,12 +529,12 @@ msgid "Kontakt: zapunktuj.kontakt@gmail.com"
 msgstr ""
 
 #: flaskapp/templates/home.html:6 flaskapp/templates/home.html:23
-#: flaskapp/templates/home.html:36
+#: flaskapp/templates/home.html:39
 msgid "Witaj!"
 msgstr ""
 
 #: flaskapp/templates/home.html:7 flaskapp/templates/home.html:24
-#: flaskapp/templates/home.html:37
+#: flaskapp/templates/home.html:40
 msgid ""
 "Na tej stronie możesz udostępnić swój projekt oraz wziąć udział w ocenie "
 "projektów innych użytkowników."
@@ -563,16 +575,26 @@ msgid "nie wyznaczono"
 msgstr ""
 
 #: flaskapp/templates/home.html:31
+msgid "Możesz teraz poprawić swój projekt"
+msgstr ""
+
+#: flaskapp/templates/home.html:34
 msgid "Jesteś zalogowany. Możesz udostępnić projekt lub go edytować."
 msgstr ""
 
-#: flaskapp/templates/home.html:39
+#: flaskapp/templates/home.html:42
+msgid ""
+"Możesz teraz poprawić swój projekt jeśli zalogujesz się jako sekcja (za "
+"pomocą pierwotnego klucza)"
+msgstr ""
+
+#: flaskapp/templates/home.html:45
 msgid ""
 "Jesteś zalogowany. Możesz teraz ocenić projekty stworzone przez innych "
 "studentów lub zobaczyć wyniki końcowe."
 msgstr ""
 
-#: flaskapp/templates/keys.html:7 flaskapp/users/routes.py:110
+#: flaskapp/templates/keys.html:7 flaskapp/users/routes.py:121
 msgid "Klucze dostępu"
 msgstr ""
 
@@ -654,23 +676,129 @@ msgstr ""
 msgid "Wyniki Końcowe"
 msgstr ""
 
-#: flaskapp/templates/project.html:56 flaskapp/users/routes.py:50
+#: flaskapp/templates/project.html:13
+msgid "Poprawa projektu"
+msgstr ""
+
+#: flaskapp/templates/project.html:64 flaskapp/users/routes.py:51
 msgid "Dodaj projekt"
 msgstr ""
 
-#: flaskapp/templates/project.html:97
+#: flaskapp/templates/admin/lecturer_rating.html:25
+#: flaskapp/templates/admin/lecturer_rating.html:30
+#: flaskapp/templates/admin/projects.html:10
+#: flaskapp/templates/project.html:106 flaskapp/templates/project_view.html:24
+#: flaskapp/templates/project_view.html:66 flaskapp/templates/results.html:86
+msgid "Sekcja nr"
+msgstr ""
+
+#: flaskapp/templates/project.html:106 flaskapp/templates/project_view.html:66
+#: flaskapp/templates/results.html:86
+msgid "zdobyła"
+msgstr ""
+
+#: flaskapp/templates/project.html:107 flaskapp/templates/project.html:108
+#: flaskapp/templates/project.html:109 flaskapp/templates/project.html:110
+#: flaskapp/templates/project.html:112 flaskapp/templates/project_view.html:67
+#: flaskapp/templates/project_view.html:68
+#: flaskapp/templates/project_view.html:69
+#: flaskapp/templates/project_view.html:70
+#: flaskapp/templates/project_view.html:72 flaskapp/templates/results.html:30
+#: flaskapp/templates/results.html:31 flaskapp/templates/results.html:32
+#: flaskapp/templates/results.html:33 flaskapp/templates/results.html:35
+#: flaskapp/templates/results.html:87 flaskapp/templates/results.html:88
+#: flaskapp/templates/results.html:89 flaskapp/templates/results.html:90
+#: flaskapp/templates/results.html:92
+msgid "pkt"
+msgstr ""
+
+#: flaskapp/templates/project.html:107 flaskapp/templates/project_view.html:67
+#: flaskapp/templates/results.html:30 flaskapp/templates/results.html:87
+msgid "od użytkowników oceniających metodą pierwszą"
+msgstr ""
+
+#: flaskapp/templates/project.html:108 flaskapp/templates/project_view.html:68
+#: flaskapp/templates/results.html:31 flaskapp/templates/results.html:88
+msgid "od użytkowników oceniających metodą drugą"
+msgstr ""
+
+#: flaskapp/templates/project.html:109 flaskapp/templates/project_view.html:69
+#: flaskapp/templates/results.html:32 flaskapp/templates/results.html:89
+msgid "od użytkowników oceniających metodą trzecią"
+msgstr ""
+
+#: flaskapp/templates/project.html:110 flaskapp/templates/project_view.html:70
+#: flaskapp/templates/results.html:33 flaskapp/templates/results.html:90
+msgid "od nauczyciela"
+msgstr ""
+
+#: flaskapp/templates/project.html:112 flaskapp/templates/project_view.html:72
+#: flaskapp/templates/results.html:92
+msgid "od nauczyciela po poprawie projektu"
+msgstr ""
+
+#: flaskapp/templates/project.html:115 flaskapp/templates/project_view.html:75
+#: flaskapp/templates/results.html:38 flaskapp/templates/results.html:95
+msgid "Ten projekt został wyróżniony przez studentów"
+msgstr ""
+
+#: flaskapp/templates/project.html:115 flaskapp/templates/project_view.html:75
+#: flaskapp/templates/results.html:38 flaskapp/templates/results.html:95
+msgid "Liczba wyróżnień to"
+msgstr ""
+
+#: flaskapp/templates/project.html:118 flaskapp/templates/project_view.html:78
+#: flaskapp/templates/results.html:41 flaskapp/templates/results.html:98
+msgid "Ten projekt został wyróżniony przez nauczyciela"
+msgstr ""
+
+#: flaskapp/templates/project.html:129 flaskapp/templates/project_view.html:89
+#: flaskapp/templates/results.html:138
+msgid "Komentarze od nauczyciela"
+msgstr ""
+
+#: flaskapp/templates/project.html:133 flaskapp/templates/project_view.html:93
+#: flaskapp/templates/results.html:142
+msgid "Nowy"
+msgstr ""
+
+#: flaskapp/templates/project.html:148 flaskapp/templates/project_view.html:108
+#: flaskapp/templates/results.html:157
+msgid "Komentarz do poprawionej pracy"
+msgstr ""
+
+#: flaskapp/templates/admin/lecturer_rating.html:195
+#: flaskapp/templates/project.html:160 flaskapp/templates/project.html:202
+#: flaskapp/templates/project_view.html:120
+#: flaskapp/templates/project_view.html:162 flaskapp/templates/results.html:169
+#: flaskapp/templates/results.html:211
+msgid "Pozytywne cechy pracy"
+msgstr ""
+
+#: flaskapp/templates/admin/lecturer_rating.html:208
+#: flaskapp/templates/project.html:174 flaskapp/templates/project_view.html:134
+#: flaskapp/templates/results.html:183
+msgid "Rzecz, którą można poprawić"
+msgstr ""
+
+#: flaskapp/templates/project.html:215 flaskapp/templates/project_view.html:175
+#: flaskapp/templates/results.html:224
+msgid "Rzeczy, które można poprawić"
+msgstr ""
+
+#: flaskapp/templates/project.html:233
 msgid "Ocenianie zostało rozpoczęte. Nie można już dodać/edytować projektu."
 msgstr ""
 
-#: flaskapp/templates/project.html:99
+#: flaskapp/templates/project.html:235
 msgid ""
 "Aby wziąć udział w głosowaniu zaloguj się za pomocą klucza do oceniania "
 "dostępnym"
 msgstr ""
 
 #: flaskapp/templates/admin/manage_groups.html:193
-#: flaskapp/templates/admin/panel.html:97 flaskapp/templates/project.html:99
-#: flaskapp/templates/project_view.html:70
+#: flaskapp/templates/admin/panel.html:97 flaskapp/templates/project.html:235
+#: flaskapp/templates/project_view.html:196
 msgid "tutaj"
 msgstr ""
 
@@ -682,25 +810,20 @@ msgstr ""
 msgid "Termin na udostępnienie projektu: nie wyznaczono"
 msgstr ""
 
-#: flaskapp/templates/admin/projects.html:10
-#: flaskapp/templates/project_view.html:24 flaskapp/templates/results.html:80
-msgid "Sekcja nr."
-msgstr ""
-
 #: flaskapp/templates/admin/projects.html:17
-#: flaskapp/templates/project_view.html:31 flaskapp/templates/results.html:100
+#: flaskapp/templates/project_view.html:31 flaskapp/templates/results.html:106
 msgid "PDF"
 msgstr ""
 
 #: flaskapp/templates/admin/projects.html:19
-#: flaskapp/templates/project_view.html:33 flaskapp/templates/results.html:102
+#: flaskapp/templates/project_view.html:33 flaskapp/templates/results.html:108
 msgid "Grafika"
 msgstr ""
 
-#: flaskapp/templates/admin/lecturer_rating.html:39
+#: flaskapp/templates/admin/lecturer_rating.html:51
 #: flaskapp/templates/admin/projects.html:28
 #: flaskapp/templates/project_view.html:42 flaskapp/templates/rating.html:45
-#: flaskapp/templates/results.html:111
+#: flaskapp/templates/results.html:117
 msgid "Dodatkowy załącznik"
 msgstr ""
 
@@ -732,11 +855,11 @@ msgstr ""
 msgid "z ip: (nieznane)"
 msgstr ""
 
-#: flaskapp/templates/project_view.html:68
+#: flaskapp/templates/project_view.html:194
 msgid "Projekt nie istnieje."
 msgstr ""
 
-#: flaskapp/templates/project_view.html:70
+#: flaskapp/templates/project_view.html:196
 msgid "Nie udostępniono jeszcze projektu. Aby to zrobić kliknij"
 msgstr ""
 
@@ -771,24 +894,24 @@ msgstr ""
 msgid "Oceń projekty przydzielając każdemu z nich punkty od 1 do"
 msgstr ""
 
-#: flaskapp/templates/rating.html:20
-msgid "Całkowita liczba punktów do rozdania wynosi"
-msgstr ""
-
-#: flaskapp/templates/rating.html:20
-msgid ""
-"Oznacza to, że możesz je rozdać dowolnie w taki sposób, aby suma punktów "
-"przyznanych dla wszystkich projektów była równa"
-msgstr ""
-
-#: flaskapp/templates/rating.html:21
+#: flaskapp/templates/rating.html:19
 msgid ""
 "Jeśli któryś z projektów zasługuje według ciebie na dodatkowe "
 "wyróżnienie, to możesz go wyróżnić klikając w gwiazdkę"
 msgstr ""
 
-#: flaskapp/templates/rating.html:21
+#: flaskapp/templates/rating.html:19
 msgid " Możesz przyznać maksymalnie 2 wyróżnienia"
+msgstr ""
+
+#: flaskapp/templates/rating.html:21
+msgid "Całkowita liczba punktów do rozdania wynosi"
+msgstr ""
+
+#: flaskapp/templates/rating.html:21
+msgid ""
+"Oznacza to, że możesz je rozdać dowolnie w taki sposób, aby suma punktów "
+"przyznanych dla wszystkich projektów była równa"
 msgstr ""
 
 #: flaskapp/templates/rating.html:23
@@ -835,55 +958,31 @@ msgstr ""
 msgid "uzyskał"
 msgstr ""
 
-#: flaskapp/templates/results.html:30 flaskapp/templates/results.html:31
-#: flaskapp/templates/results.html:32 flaskapp/templates/results.html:33
-#: flaskapp/templates/results.html:35 flaskapp/templates/results.html:81
-#: flaskapp/templates/results.html:82 flaskapp/templates/results.html:83
-#: flaskapp/templates/results.html:84 flaskapp/templates/results.html:86
-msgid "pkt"
-msgstr ""
-
-#: flaskapp/templates/results.html:30 flaskapp/templates/results.html:81
-msgid "od użytkowników oceniających metodą pierwszą"
-msgstr ""
-
-#: flaskapp/templates/results.html:31 flaskapp/templates/results.html:82
-msgid "od użytkowników oceniających metodą drugą"
-msgstr ""
-
-#: flaskapp/templates/results.html:32 flaskapp/templates/results.html:83
-msgid "od użytkowników oceniających metodą trzecią"
-msgstr ""
-
-#: flaskapp/templates/results.html:33 flaskapp/templates/results.html:84
-msgid "od nauczyciela"
-msgstr ""
-
 #: flaskapp/templates/results.html:35
 msgid "od nauczyciela po poprawie"
 msgstr ""
 
-#: flaskapp/templates/results.html:42
+#: flaskapp/templates/results.html:48
 msgid "W głosowaniu wzięło udział"
 msgstr ""
 
-#: flaskapp/templates/results.html:42
+#: flaskapp/templates/results.html:48
 msgid "użytkowników."
 msgstr ""
 
-#: flaskapp/templates/results.html:42
+#: flaskapp/templates/results.html:48
 msgid ""
 "Ocenianie zostało przeprowadzone 3 różnymi metodami. Każdy z użytkowników"
 " oceniał losowo wybraną metodą."
 msgstr ""
 
-#: flaskapp/templates/results.html:44
+#: flaskapp/templates/results.html:50
 msgid ""
 "Pierwsza metoda polegała na przyznaniu wszystkim projektom punktów ze "
 "wspólnej puli"
 msgstr ""
 
-#: flaskapp/templates/results.html:45
+#: flaskapp/templates/results.html:51
 msgid ""
 "Druga metoda była podobna do pierwszej i różniła się tym, że prace były "
 "wyświetlane w kolejności losowej (na podstawie wyników można więc "
@@ -891,144 +990,98 @@ msgid ""
 "uzyskane wyniki)."
 msgstr ""
 
-#: flaskapp/templates/results.html:46
+#: flaskapp/templates/results.html:52
 msgid ""
 "Trzecia metoda polegała na przyznaniu dla każdego projektu punktów w "
 "skali od 1 do "
 msgstr ""
 
-#: flaskapp/templates/results.html:46
+#: flaskapp/templates/results.html:52
 msgid "Osoby oceniające tą metodą mogły także przyznać projektom wyróżnienia"
 msgstr ""
 
-#: flaskapp/templates/results.html:47
+#: flaskapp/templates/results.html:53
 msgid "Nauczyciel oceniał metodą trzecią"
 msgstr ""
 
-#: flaskapp/templates/results.html:53
+#: flaskapp/templates/results.html:59
 msgid "Podgląd"
 msgstr ""
 
-#: flaskapp/templates/results.html:56
+#: flaskapp/templates/results.html:62
 msgid "Ranking-metoda 1"
 msgstr ""
 
-#: flaskapp/templates/results.html:59
+#: flaskapp/templates/results.html:65
 msgid "Ranking-metoda 2"
 msgstr ""
 
-#: flaskapp/templates/results.html:62
+#: flaskapp/templates/results.html:68
 msgid "Ranking-metoda 3"
 msgstr ""
 
-#: flaskapp/templates/results.html:65
+#: flaskapp/templates/results.html:71
 msgid "Ranking-ocena nauczyciela"
 msgstr ""
 
-#: flaskapp/templates/results.html:68
+#: flaskapp/templates/results.html:74
 msgid "Spis wg sekcji"
 msgstr ""
 
-#: flaskapp/templates/results.html:80
-msgid "zdobyła"
-msgstr ""
-
-#: flaskapp/templates/results.html:86
-msgid "od nauczyciela po poprawie projektu"
-msgstr ""
-
-#: flaskapp/templates/results.html:89
-msgid "Ten projekt został wyróżniony przez studentów"
-msgstr ""
-
-#: flaskapp/templates/results.html:89
-msgid "Liczba wyróżnień to"
-msgstr ""
-
-#: flaskapp/templates/results.html:92
-msgid "Ten projekt został wyróżniony przez nauczyciela"
-msgstr ""
-
-#: flaskapp/templates/results.html:115 flaskapp/templates/results.html:117
-#: flaskapp/templates/results.html:119
+#: flaskapp/templates/results.html:121 flaskapp/templates/results.html:123
+#: flaskapp/templates/results.html:125
 msgid "Ostatnio edytowano:"
 msgstr ""
 
-#: flaskapp/templates/results.html:115 flaskapp/templates/results.html:117
-#: flaskapp/templates/results.html:119 flaskapp/templates/results.html:264
-#: flaskapp/templates/results.html:268 flaskapp/templates/results.html:306
-#: flaskapp/templates/results.html:310 flaskapp/templates/results.html:348
-#: flaskapp/templates/results.html:352 flaskapp/templates/results.html:396
-#: flaskapp/templates/results.html:400 flaskapp/templates/results.html:451
-#: flaskapp/templates/results.html:455
+#: flaskapp/templates/results.html:121 flaskapp/templates/results.html:123
+#: flaskapp/templates/results.html:125 flaskapp/templates/results.html:270
+#: flaskapp/templates/results.html:274 flaskapp/templates/results.html:312
+#: flaskapp/templates/results.html:316 flaskapp/templates/results.html:354
+#: flaskapp/templates/results.html:358 flaskapp/templates/results.html:402
+#: flaskapp/templates/results.html:406 flaskapp/templates/results.html:457
+#: flaskapp/templates/results.html:461
 msgid "o godzinie"
 msgstr ""
 
-#: flaskapp/templates/results.html:132
-msgid "Komentarze od nauczyciela"
-msgstr ""
-
-#: flaskapp/templates/results.html:136
-msgid "Nowy"
-msgstr ""
-
-#: flaskapp/templates/results.html:151
-msgid "Komentarz do poprawionej pracy"
-msgstr ""
-
-#: flaskapp/templates/admin/lecturer_rating.html:183
-#: flaskapp/templates/results.html:163 flaskapp/templates/results.html:205
-msgid "Pozytywne cechy pracy"
-msgstr ""
-
-#: flaskapp/templates/admin/lecturer_rating.html:196
-#: flaskapp/templates/results.html:177
-msgid "Rzecz, którą można poprawić"
-msgstr ""
-
-#: flaskapp/templates/results.html:218
-msgid "Rzeczy, które można poprawić"
-msgstr ""
-
-#: flaskapp/templates/results.html:242 flaskapp/templates/results.html:284
-#: flaskapp/templates/results.html:326 flaskapp/templates/results.html:368
-#: flaskapp/templates/results.html:416
+#: flaskapp/templates/results.html:248 flaskapp/templates/results.html:290
+#: flaskapp/templates/results.html:332 flaskapp/templates/results.html:374
+#: flaskapp/templates/results.html:422
 msgid "Zdobyte punkty"
 msgstr ""
 
-#: flaskapp/templates/results.html:245 flaskapp/templates/results.html:287
-#: flaskapp/templates/results.html:329 flaskapp/templates/results.html:372
-#: flaskapp/templates/results.html:420
+#: flaskapp/templates/results.html:251 flaskapp/templates/results.html:293
+#: flaskapp/templates/results.html:335 flaskapp/templates/results.html:378
+#: flaskapp/templates/results.html:426
 msgid "Ostatnia edycja"
 msgstr ""
 
-#: flaskapp/templates/results.html:264 flaskapp/templates/results.html:266
-#: flaskapp/templates/results.html:306 flaskapp/templates/results.html:308
-#: flaskapp/templates/results.html:348 flaskapp/templates/results.html:350
-#: flaskapp/templates/results.html:396 flaskapp/templates/results.html:398
-#: flaskapp/templates/results.html:451 flaskapp/templates/results.html:453
+#: flaskapp/templates/results.html:270 flaskapp/templates/results.html:272
+#: flaskapp/templates/results.html:312 flaskapp/templates/results.html:314
+#: flaskapp/templates/results.html:354 flaskapp/templates/results.html:356
+#: flaskapp/templates/results.html:402 flaskapp/templates/results.html:404
+#: flaskapp/templates/results.html:457 flaskapp/templates/results.html:459
 msgid "w terminie"
 msgstr ""
 
-#: flaskapp/templates/results.html:268 flaskapp/templates/results.html:310
-#: flaskapp/templates/results.html:352 flaskapp/templates/results.html:400
-#: flaskapp/templates/results.html:455
+#: flaskapp/templates/results.html:274 flaskapp/templates/results.html:316
+#: flaskapp/templates/results.html:358 flaskapp/templates/results.html:406
+#: flaskapp/templates/results.html:461
 msgid "po terminie"
 msgstr ""
 
-#: flaskapp/templates/results.html:369
+#: flaskapp/templates/results.html:375
 msgid "Wyróżnienia"
 msgstr ""
 
-#: flaskapp/templates/results.html:417
+#: flaskapp/templates/results.html:423
 msgid "Dodatkowe wyróżnienie"
 msgstr ""
 
-#: flaskapp/templates/results.html:438
+#: flaskapp/templates/results.html:444
 msgid "Ocena nauczyciela w 1 turze"
 msgstr ""
 
-#: flaskapp/templates/results.html:439
+#: flaskapp/templates/results.html:445
 msgid "Ocena nauczyciela w 2 turze (po poprawie)"
 msgstr ""
 
@@ -1072,7 +1125,15 @@ msgstr ""
 msgid "Oceń projekty przydzielając im punkty od 1 do"
 msgstr ""
 
-#: flaskapp/templates/admin/lecturer_rating.html:173
+#: flaskapp/templates/admin/lecturer_rating.html:25
+msgid "Ta sekcja poprawiła projekt"
+msgstr ""
+
+#: flaskapp/templates/admin/lecturer_rating.html:30
+msgid "Ta sekcja nie poprawiła projektu"
+msgstr ""
+
+#: flaskapp/templates/admin/lecturer_rating.html:185
 msgid "Poprzednie komentarze nauczyciela"
 msgstr ""
 
@@ -1399,24 +1460,24 @@ msgstr ""
 msgid " pkt. za mało"
 msgstr ""
 
-#: flaskapp/users/routes.py:45
+#: flaskapp/users/routes.py:46
 msgid "Projekt został dodany"
 msgstr ""
 
-#: flaskapp/users/routes.py:48 flaskapp/users/routes.py:93
-#: flaskapp/users/routes.py:108
+#: flaskapp/users/routes.py:49 flaskapp/users/routes.py:103
+#: flaskapp/users/routes.py:119
 msgid "Dostęp do tej strony posiada tylko sekcja"
 msgstr ""
 
-#: flaskapp/users/routes.py:86
+#: flaskapp/users/routes.py:96
 msgid "Projekt został edytowany"
 msgstr ""
 
-#: flaskapp/users/routes.py:95
+#: flaskapp/users/routes.py:105
 msgid "Edytuj projekt"
 msgstr ""
 
-#: flaskapp/users/routes.py:176
+#: flaskapp/users/routes.py:187
 msgid "Dostęp do tej strony posiada tylko pojedynczy użytkownik sekcji"
 msgstr ""
 

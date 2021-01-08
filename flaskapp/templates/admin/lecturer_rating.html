@@ -19,7 +19,19 @@
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             {% for project in group_projects %}
-                <div class="card mb-3 mx-auto" style="max-width: 720px;">
+                {% if project.date_posted_improvement and group.rating_status == 'enabled_improvement' %}
+                <div class="card mb-3 mx-auto border border-success" style="max-width: 720px;">
+                  <div class="card-header text-success">
+                    <b>{{ gettext('Sekcja nr') }} {{ project.author.section_number }}. {{ gettext('Ta sekcja poprawiła projekt') }}.</b>
+                  </div>
+                {% elif not project.date_posted_improvement and group.rating_status == 'enabled_improvement' %}
+                <div class="card mb-3 mx-auto border border-danger" style="max-width: 720px;">
+                  <div class="card-header text-danger">
+                    <b>{{ gettext('Sekcja nr') }} {{ project.author.section_number }}. {{ gettext('Ta sekcja nie poprawiła projektu') }}.</b>
+                  </div>
+                {% else %}
+                  <div class="card mb-3 mx-auto" style="max-width: 720px;">
+                {% endif %}
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
                         <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">

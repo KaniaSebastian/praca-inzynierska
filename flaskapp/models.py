@@ -36,6 +36,7 @@ class Project(db.Model):
     creators_num = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     last_editor = db.Column(db.String)
+    date_posted_improvement = db.Column(db.DateTime)
     score_points_pool = db.Column(db.Integer, default=0)
     score_points_pool_shuffled = db.Column(db.Integer, default=0)
     score_pool_per_project = db.Column(db.Integer, default=0)

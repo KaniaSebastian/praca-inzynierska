@@ -29,10 +29,16 @@
                       <ul>
                         <li><b> {{ user_project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
                         <li><b> {{ user_project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
-                        <li><b> {{ (user_project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
-                        <li><b> {{ user_project.score_admin }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+                        <li><b> {{ (user_project.score_pool_per_project/raters_pool_per_project_nums.get(user_project))|round(2) }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+                        <li class="text-info"><b> {{ user_project.score_admin }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
                         {% if user_project.score_admin_improvement %}
-                          <li><b> {{ user_project.score_admin_improvement }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie') }}.</li>
+                          <li class="text-success"><b> {{ user_project.score_admin_improvement }}/{{ user_project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie') }}.</li>
+                        {% endif %}
+                        {% if user_project.user_distinctions > 0 %}
+                        <li>{{ gettext('Ten projekt został wyróżniony przez studentów') }}. {{ gettext('Liczba wyróżnień to') }}: {{ user_project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i>.</li>
+                        {% endif %}
+                        {% if user_project.admin_distinction > 0 %}
+                          <li>{{ gettext('Ten projekt został wyróżniony przez nauczyciela') }}<i class="fas fa-star icon-color-gold"></i>.</li>
                         {% endif %}
                       </ul>
                     </p>
@@ -77,10 +83,10 @@
                     <div class="card mb-3 mx-auto" style="max-width: 720px;">
                 {% endif %}
                   <div class="card-header">
-                      {{ gettext('Sekcja nr.') }} {{ project.author.section_number }} {{ gettext('zdobyła') }}:<br>
+                      {{ gettext('Sekcja nr') }} {{ project.author.section_number }} {{ gettext('zdobyła') }}:<br>
                       <li><b> {{ project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
                       <li><b> {{ project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
-                      <li><b> {{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+                      <li><b> {{ (project.score_pool_per_project/raters_pool_per_project_nums.get(project))|round(2) }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
                       <li class="text-info"><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
                       {% if group.admin_rating_status == 'finished_improvement' %}
                         <li class="text-success"><b> {{ project.score_admin_improvement }}/{{ group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie projektu') }}.</li>
@@ -291,7 +297,7 @@
 
               <tbody>
 
-              {% for project in group_projects_sorted %}
+              {% for project in group_projects|sort(attribute='score_points_pool', reverse=True) %}
                 {% if not current_user.is_admin and project == user_project %}
                     <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% else %}
@@ -376,14 +382,14 @@
 
               <tbody>
 
-              {% for project in group_projects|sort(attribute='score_pool_per_project', reverse=True) %}
+              {% for project in group_projects_sorted %}
                 {% if not current_user.is_admin and project == user_project %}
                     <tr class="table-row-hover border border-thick" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% else %}
                     <tr class="table-row-hover" data-href=" {{ url_for('static', filename='projects/' + project.upload_file) }} ">
                 {% endif %}
                   <td>{{ gettext('Sekcja') }} {{ project.author.section_number }}</td>
-                  <td>{{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }}</td>
+                  <td>{{ (project.score_pool_per_project/raters_pool_per_project_nums.get(project))|round(2) }}/{{ project.author.group.points_per_project }}</td>
                   {% if project.user_distinctions > 0 %}
                       <td>{{ project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i> </td>
                   {% else %}

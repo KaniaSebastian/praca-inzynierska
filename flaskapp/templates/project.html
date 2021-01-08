@@ -7,6 +7,14 @@
             <h6 class="mb-3 lead">{{ gettext('Termin na udostępnienie projektu:') }} <b> {{ gettext('nie wyznaczono') }} </b></h6>
         {% endif %}
 
+        {% if group.rating_status == 'disabled_improvement' %}
+          <div class="jumbotron p-3 mb-5">
+            <h3 class="text-info">
+              {{ gettext('Poprawa projektu') }}
+            </h3>
+          </div>
+        {% endif %}
+
         <div class="body-section">
             <form method="POST" action="" novalidate enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
@@ -91,6 +99,134 @@
                     </div>
             </form>
         </div>
+
+        {% if not group.rating_status == 'disabled' and not group.rating_status == 'enabled' %}
+          <hr class="mt-5 mb-5">
+          <div class="card-header">
+              {{ gettext('Sekcja nr') }} {{ project.author.section_number }} {{ gettext('zdobyła') }}:<br>
+              <li><b> {{ project.score_points_pool }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą pierwszą') }},</li>
+              <li><b> {{ project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
+              <li><b> {{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
+              <li class="text-info"><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
+              {% if group.admin_rating_status == 'finished_improvement' %}
+                <li class="text-success"><b> {{ project.score_admin_improvement }}/{{ group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie projektu') }}.</li>
+              {% endif %}
+              {% if project.user_distinctions > 0%}
+                <li>{{ gettext('Ten projekt został wyróżniony przez studentów') }}. {{ gettext('Liczba wyróżnień to') }}: {{ project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i>.</li>
+              {% endif %}
+              {% if project.admin_distinction > 0%}
+                <li>{{ gettext('Ten projekt został wyróżniony przez nauczyciela') }}<i class="fas fa-star icon-color-gold"></i>.</li>
+              {% endif %}
+          </div>
+
+          <!--Comments-->
+          <div id="accordion">
+            <!--First card-->
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne-{{ project.id }}" aria-expanded="false" aria-controls="collapseOne">
+                    {{ gettext('Komentarze od nauczyciela') }}
+                    <i class="fa fa-lg" aria-hidden="true"></i>
+                    {% if group.rating_status == 'ended_improvement' %}
+                      {% for comment in project.comments if comment.author.is_admin and comment.second_iteration %}
+                        <span class="badge badge-pill badge-info">{{ gettext('Nowy') }}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </button>
+                </h5>
+              </div>
+
+              <div id="collapseOne-{{ project.id }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+
+                  {% if group.rating_status == 'ended_improvement' %}
+                    {% for comment in project.comments %}
+                      {% if comment.author.is_admin and comment.second_iteration %}
+                        <div class="card mb-2">
+                          <div class="card-header">
+                            {{ gettext('Komentarz do poprawionej pracy') }}
+                          </div>
+                          <div class="card-body">
+                            <li> {{ comment.comment_wish }} </li>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+
+                  <div class="card mb-2">
+                    <div class="card-header">
+                      {{ gettext('Pozytywne cechy pracy') }}
+                    </div>
+                    <div class="card-body">
+                      {% for comment in project.comments %}
+                        {% if comment.author.is_admin and not comment.second_iteration %}
+                          <li> {{ comment.comment_star_1 }} </li>
+                          <li> {{ comment.comment_star_2 }} </li>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-header">
+                      {{ gettext('Rzecz, którą można poprawić') }}
+                    </div>
+                    <div class="card-body">
+                      {% for comment in project.comments %}
+                        {% if comment.author.is_admin and not comment.second_iteration %}
+                          <li> {{ comment.comment_wish }} </li>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Second card-->
+            <div class="card">
+              <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo-{{ project.id }}" aria-expanded="false" aria-controls="collapseTwo">
+                    Komentarze od studentów
+                    <i class="fa fa-lg" aria-hidden="true"></i>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseTwo-{{ project.id }}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                  <div class="card mb-2">
+                    <div class="card-header">
+                      {{ gettext('Pozytywne cechy pracy') }}
+                    </div>
+                    <div class="card-body">
+                      {% for comment in project.comments %}
+                        {% if not comment.author.is_admin %}
+                          <li> {{ comment.comment_star_1 }} </li>
+                          <li> {{ comment.comment_star_2 }} </li>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header">
+                      {{ gettext('Rzeczy, które można poprawić') }}
+                    </div>
+                    <div class="card-body">
+                      {% for comment in project.comments %}
+                        {% if not comment.author.is_admin %}
+                          <li> {{ comment.comment_wish }} </li>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
     {% else %}
 
         <div class="jumbotron">

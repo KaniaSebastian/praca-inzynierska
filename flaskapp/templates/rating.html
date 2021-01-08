@@ -15,10 +15,10 @@
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
         <div class="jumbotron">
           {% if current_user.rating_type == "pool_per_project" %}
-            <p class="lead">{{ gettext('Oceń projekty przydzielając każdemu z nich punkty od 1 do') }} {{ group.points_per_project }}.</p>
+            <p class="lead">{{ gettext('Oceń projekty przydzielając każdemu z nich punkty od 1 do') }} <b>{{ group.points_per_project }}</b>.</p>
+            <p class="lead">{{ gettext('Jeśli któryś z projektów zasługuje według ciebie na dodatkowe wyróżnienie, to możesz go wyróżnić klikając w gwiazdkę') }}. {{ gettext(' Możesz przyznać maksymalnie 2 wyróżnienia') }}.</p>
           {% else %}
             <p class="lead">{{ gettext('Całkowita liczba punktów do rozdania wynosi') }} <b id="points_to_give">{{ group.points_per_user }}</b>. {{ gettext('Oznacza to, że możesz je rozdać dowolnie w taki sposób, aby suma punktów przyznanych dla wszystkich projektów była równa') }} <b>{{ group.points_per_user }}</b>.</p>
-            <p class="lead">{{ gettext('Jeśli któryś z projektów zasługuje według ciebie na dodatkowe wyróżnienie, to możesz go wyróżnić klikając w gwiazdkę') }}. {{ gettext(' Możesz przyznać maksymalnie 2 wyróżnienia') }}.</p>
           {% endif %}
         <p class="lead">{{ gettext('Zostaw odpowiednie komentarze pod każdym z projektów') }}. {{ gettext('Wszystkie pola muszą zostać uzupełnione') }}.</p>
         </div>
