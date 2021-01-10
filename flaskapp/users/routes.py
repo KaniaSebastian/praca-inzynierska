@@ -18,6 +18,9 @@ users = Blueprint('users', __name__)
 @login_required
 def project():
     if not current_user.is_admin and current_user.group.is_containing_sections:
+        if not current_user.project and current_user.group.rating_status == 'disabled_improvement':
+            flash(gettext('Teraz trwa poprawa projektów. Nie możesz poprawić projektu jeśli go wcześniej nie udostępniłeś.'), 'warning')
+            return redirect(url_for('main.home'))
         if current_user.project:
             return redirect(url_for('main.project_view'))
         form = CreateProjectForm()
@@ -55,6 +58,9 @@ def project():
 @login_required
 def update_project():
     if not current_user.is_admin:
+        if not current_user.project and current_user.group.rating_status == 'disabled_improvement':
+            flash(gettext('Teraz trwa poprawa projektów. Nie możesz poprawić projektu jeśli go wcześniej nie udostępniłeś.'), 'warning')
+            return redirect(url_for('main.home'))
         if not current_user.project:
             return redirect(url_for('users.project'))
         form = UpdateProjectForm()
@@ -68,14 +74,20 @@ def update_project():
         if form.validate_on_submit():
             if current_user.group.rating_status != 'disabled' and current_user.group.rating_status != 'disabled_improvement':
                 return redirect(url_for('main.home'))
-            user_project.title = form.title.data
-            user_project.description = form.description.data
-            user_project.optional_link = form.url.data
+            #####
             if group.rating_status == 'disabled':
+                user_project.title = form.title.data
+                user_project.description = form.description.data
+                user_project.optional_link = form.url.data
                 user_project.date_posted = datetime.now(pytz.timezone('Poland'))
             else:
+                user_project.title_improvement = form.title.data
+                user_project.description_improvement = form.description.data
+                user_project.optional_link_improvement = form.url.data
                 user_project.date_posted_improvement = datetime.now(pytz.timezone('Poland'))
+            #####
 
+            # get user IP
             ip = request.environ.get('HTTP_X_FORWARDED_FOR')
             if ip is None:
                 ip = request.remote_addr
@@ -88,17 +100,30 @@ def update_project():
             user_project.last_editor = user_ip
 
             if form.file.data:
-                old_file = user_project.upload_file
-                new_file = save_file(form.file.data)
-                user_project.upload_file = new_file
-                os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+                if group.rating_status == 'disabled':
+                    old_file = user_project.upload_file
+                    new_file = save_file(form.file.data)
+                    user_project.upload_file = new_file
+                    os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+                else:
+                    old_file = user_project.upload_file_improvement
+                    new_file = save_file(form.file.data)
+                    user_project.upload_file_improvement = new_file
+                    if old_file:
+                        os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+
             db.session.commit()
             flash(gettext('Projekt został edytowany'), 'success')
             return redirect(url_for('main.project_view'))
         elif request.method == 'GET':
-            form.title.data = user_project.title
-            form.description.data = user_project.description
-            form.url.data = user_project.optional_link
+            if user_project.upload_file_improvement and (group.rating_status == 'disabled_improvement' or group.rating_status == 'enabled_improvement' or group.rating_status == 'ended_improvement'):
+                form.title.data = user_project.title_improvement
+                form.description.data = user_project.description_improvement
+                form.url.data = user_project.optional_link_improvement
+            else:
+                form.title.data = user_project.title
+                form.description.data = user_project.description
+                form.url.data = user_project.optional_link
     else:
         flash(gettext('Dostęp do tej strony posiada tylko sekcja'), 'warning')
         return redirect(url_for('admin.panel'))

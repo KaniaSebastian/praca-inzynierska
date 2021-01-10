@@ -87,7 +87,10 @@ def delete_group(group_id):
             if section.project:
                 section_project = Project.query.filter_by(author=section).first()
                 old_file = section_project.upload_file
+                old_file_improvement = section_project.upload_file_improvement
                 os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+                if old_file_improvement:
+                    os.remove(os.path.join(app.root_path, 'static/projects', old_file_improvement))
 
             section_users_group = Group.query.filter_by(name=section.login).first()
             if section_users_group:
@@ -181,7 +184,10 @@ def delete_section(section_id):
         if section_to_delete.project:
             section_project = Project.query.filter_by(author=section_to_delete).first()
             old_file = section_project.upload_file
+            old_file_improvement = section_project.upload_file_improvement
             os.remove(os.path.join(app.root_path, 'static/projects', old_file))
+            if old_file_improvement:
+                os.remove(os.path.join(app.root_path, 'static/projects', old_file_improvement))
 
         db.session.delete(section_to_delete)
         db.session.commit()
@@ -230,7 +236,7 @@ def projects(group_id):
     else:
         flash(gettext('Musisz mieć uprawnienia administratora, aby uzyskać dostęp do tej strony'), 'warning')
         return redirect(url_for('main.home'))
-    return render_template('admin/projects.html', title=gettext('Projekt'), projects=projects, number_of_sections=number_of_sections)
+    return render_template('admin/projects.html', title=gettext('Projekt'), projects=projects, number_of_sections=number_of_sections, group=group)
 
 
 @admin.route('/manage-groups', methods=['GET', 'POST'])
@@ -381,7 +387,10 @@ def results_csv(group_id):
             for section in group.users:
                 section_name = '\n' + gettext('Sekcja ') + str(section.section_number)
                 if section.project:
-                    section_project_title = section.project.title
+                    if section.project.upload_file_improvement and (group.rating_status == 'disabled_improvement' or group.rating_status == 'enabled_improvement' or group.rating_status == 'ended_improvement'):
+                        section_project_title = section.project.title_improvement
+                    else:
+                        section_project_title = section.project.title
                     # section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
                     section_score_points_pool = (str(section.project.score_points_pool))
                     section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
@@ -475,7 +484,12 @@ def lecturer_rating(group_id):
             user_ratings = [{'points': 0} for item in range(len(group_projects))]
         elif group.rating_status == 'enabled_improvement':
             user_ratings = [{'points': item.score_admin} for item in group_projects]
-        form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+
+        if group.rating_status == 'enabled':
+            form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user)
+        else:
+            form = PointsPoolPerProjectForm(all_points=user_ratings, points_per_project=group.points_per_user, distinction_num=4)
+
         # if rating improved project disable DataRequired validation for comments
         if group.rating_status == 'enabled_improvement':
             for field in form.all_points:

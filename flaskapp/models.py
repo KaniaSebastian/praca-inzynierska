@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     did_rate = db.Column(db.Boolean, default=False)
     section_number = db.Column(db.Integer)
     admin_groups = db.relationship('Group', foreign_keys="[Group.admin_id]", backref='admin', lazy=True)  # add cascade?
-    rating_type = db.Column(db.String(50), nullable=True)
+    rating_type = db.Column(db.String(50), nullable=True)  # 'points_pool', 'points_pool_shuffled', 'pool_per_project'
     comments = db.relationship('Comments', backref='author', lazy=True)
 
     def __repr__(self):
@@ -36,7 +36,6 @@ class Project(db.Model):
     creators_num = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     last_editor = db.Column(db.String)
-    date_posted_improvement = db.Column(db.DateTime)
     score_points_pool = db.Column(db.Integer, default=0)
     score_points_pool_shuffled = db.Column(db.Integer, default=0)
     score_pool_per_project = db.Column(db.Integer, default=0)
@@ -45,6 +44,12 @@ class Project(db.Model):
     user_distinctions = db.Column(db.Integer, default=0)
     admin_distinction = db.Column(db.Boolean, default=False)
     comments = db.relationship('Comments', backref='project', lazy=True, cascade="all, delete")
+    date_posted_improvement = db.Column(db.DateTime)
+
+    title_improvement = db.Column(db.String(60))
+    upload_file_improvement = db.Column(db.String(20))
+    description_improvement = db.Column(db.Text(1500))
+    optional_link_improvement = db.Column(db.String)
 
     def __repr__(self):
         return f"Project('{self.title}', 'author_id={self.user_id}')"
@@ -71,7 +76,7 @@ class Group(db.Model):
     points_per_user = db.Column(db.Integer, default=0)
     admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     points_per_project = db.Column(db.Integer, default=0)
-    admin_rating_status = db.Column(db.String(20), default='not_started')
+    admin_rating_status = db.Column(db.String(20), default='not_started')  # 'not_started', 'finished', 'finished_improvement'
     # rating_type_for_admin = db.Column(db.String(50), nullable=True, default='points_pool')
 
     def __repr__(self):

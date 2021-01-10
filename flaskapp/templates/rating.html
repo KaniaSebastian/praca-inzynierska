@@ -12,6 +12,10 @@
         <div class="jumbotron">
           <p class="lead">{{ gettext('Projekty zostały przez ciebie ocenione. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki końcowe') }}</a>.</p>
         </div>
+    {% elif group.rating_status == 'enabled_improvement' %}
+        <div class="jumbotron">
+          <p class="lead">{{ gettext('Trwa ocenianie poprawionych projektów przez nauczyciela. Kiedy ocenianie się zakończy będzie można zobaczyć wyniki w zakładce') }} <a href="{{ url_for('main.results') }}">{{ gettext('wyniki końcowe') }}</a>.</p>
+        </div>
     {% elif group.rating_status == 'enabled' and not current_user.did_rate %}
         <div class="jumbotron">
           {% if current_user.rating_type == "pool_per_project" %}

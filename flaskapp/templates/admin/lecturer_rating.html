@@ -21,8 +21,9 @@
             {% for project in group_projects %}
                 {% if project.date_posted_improvement and group.rating_status == 'enabled_improvement' %}
                 <div class="card mb-3 mx-auto border border-success" style="max-width: 720px;">
-                  <div class="card-header text-success">
-                    <b>{{ gettext('Sekcja nr') }} {{ project.author.section_number }}. {{ gettext('Ta sekcja poprawiła projekt') }}.</b>
+                  <div class="card-header text-success py-2">
+                    <b class="align-middle">{{ gettext('Sekcja nr') }} {{ project.author.section_number }}. {{ gettext('Ta sekcja poprawiła projekt') }}.</b>
+                    <a target="_blank" href=" {{ url_for('static', filename='projects/' + project.upload_file) }} "> <button type="button" class="btn btn-sm btn-outline-secondary float-right" data-toggle="tooltip" data-placement="top" title="{{ gettext('Wersja z przed poprawy') }}">{{ gettext('Poprzednia wersja') }} <i class="fas fa-external-link-alt"></i></button> </a>
                   </div>
                 {% elif not project.date_posted_improvement and group.rating_status == 'enabled_improvement' %}
                 <div class="card mb-3 mx-auto border border-danger" style="max-width: 720px;">
@@ -34,6 +35,16 @@
                 {% endif %}
                   <div class="row no-gutters">
                     <div class="col-md-4 border-bottom">
+                      {% if project.upload_file_improvement and (group.rating_status == 'disabled_improvement' or group.rating_status == 'enabled_improvement' or group.rating_status == 'ended_improvement') %}
+                        <a href="{{ url_for('static', filename='projects/' + project.upload_file_improvement) }} " target="_blank">
+                            {% set extension = project.upload_file_improvement.split('.') %}
+                            {% if extension[1] == 'pdf' %}
+                                <img src="{{ url_for('static', filename='default_pdf_icon.png') }}" class="card-img" alt="PDF">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='projects/' + project.upload_file_improvement) }}" class="card-img" alt="Grafika">
+                            {% endif %}
+                        </a>
+                      {% else %}
                         <a href="{{ url_for('static', filename='projects/' + project.upload_file) }} " target="_blank">
                             {% set extension = project.upload_file.split('.') %}
                             {% if extension[1] == 'pdf' %}
@@ -42,13 +53,22 @@
                                 <img src="{{ url_for('static', filename='projects/' + project.upload_file) }}" class="card-img" alt="Grafika">
                             {% endif %}
                         </a>
+                      {% endif %}
                     </div>
                     <div class="col-md-8 border-left border-bottom">
                       <div class="card-body">
-                        <h5 class="card-title">{{ project.title }}</h5>
-                        <p class="card-text">{{ project.description }}</p>
-                        {% if project.optional_link %}
-                            <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                        {% if project.upload_file_improvement and (group.rating_status == 'disabled_improvement' or group.rating_status == 'enabled_improvement' or group.rating_status == 'ended_improvement') %}
+                          <h5 class="card-title">{{ project.title_improvement }}</h5>
+                          <p class="card-text">{{ project.description_improvement }}</p>
+                          {% if project.optional_link_improvement %}
+                              <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link_improvement }}" target="_blank" title="{{ project.optional_link_improvement }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                          {% endif %}
+                        {% else %}
+                          <h5 class="card-title">{{ project.title }}</h5>
+                          <p class="card-text">{{ project.description }}</p>
+                          {% if project.optional_link %}
+                              <p class="blockquote-footer mt-5"><a class="text-secondary" href="{{ project.optional_link }}" target="_blank" title="{{ project.optional_link }}">{{ gettext('Dodatkowy załącznik') }}<i class="fa fa-external-link fa-lg text-info ml-1"></i></a> </p>
+                          {% endif %}
                         {% endif %}
 
                         {{ form.all_points[loop.index0].hidden_tag() }}

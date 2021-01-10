@@ -39,9 +39,10 @@ class PointsPoolPerProjectEntryForm(FlaskForm):
 
 class PointsPoolPerProjectForm(FlaskForm):
 
-    def __init__(self, points_per_project, *args, **kwargs):
+    def __init__(self, points_per_project, distinction_num=2, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.points_per_project = points_per_project
+        self.distinction_num = distinction_num
 
     all_points = FieldList(FormField(PointsPoolPerProjectEntryForm))
     submit = SubmitField(lazy_gettext('Zatwierdź'))
@@ -51,8 +52,8 @@ class PointsPoolPerProjectForm(FlaskForm):
         for field in all_points:
             # distinction validation
             number_of_distinctions += int(field.data.get('distinction'))
-            if number_of_distinctions > 2:
-                flash(lazy_gettext('Nie można przydzielić więcej niż 2 wyróżnień'), 'danger')
+            if number_of_distinctions > self.distinction_num:
+                flash(lazy_gettext('Nie można przydzielić więcej niż ' + str(self.distinction_num) + ' wyróżnień'), 'danger')
                 raise ValidationError()
 
             # points validation

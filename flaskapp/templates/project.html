@@ -108,7 +108,7 @@
               <li><b> {{ project.score_points_pool_shuffled }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą drugą') }},</li>
               <li><b> {{ (project.score_pool_per_project/raters_pool_per_project_num)|round(2) }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od użytkowników oceniających metodą trzecią') }},</li>
               <li class="text-info"><b> {{ project.score_admin }}/{{ project.author.group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela') }}.</li>
-              {% if group.admin_rating_status == 'finished_improvement' %}
+              {% if project.upload_file_improvement and (group.rating_status == 'disabled_improvement' or group.rating_status == 'enabled_improvement' or group.rating_status == 'ended_improvement') %}
                 <li class="text-success"><b> {{ project.score_admin_improvement }}/{{ group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie projektu') }}.</li>
               {% endif %}
               {% if project.user_distinctions > 0%}

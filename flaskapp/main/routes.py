@@ -101,6 +101,11 @@ def results(group_id):
     section_keys = [section.login for section in group.users]
     users_that_rated_num = User.query.filter_by(did_rate=True).join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
 
+    evaluators_nums = dict()
+    evaluators_nums['points_pool_evaluators'] = User.query.filter_by(did_rate=True, rating_type='points_pool').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+    evaluators_nums['points_pool_shuffled_evaluators'] = User.query.filter_by(did_rate=True, rating_type='points_pool_shuffled').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+    evaluators_nums['pool_per_project_evaluators'] = User.query.filter_by(did_rate=True, rating_type='pool_per_project').join(Group, Group.id == User.group_id).filter(Group.name.in_(section_keys)).count()
+
     # numbers needed to calculate score for 3 method
     raters_pool_per_project_nums = dict()
     for project in group_projects:
@@ -114,4 +119,4 @@ def results(group_id):
 
     return render_template('results.html', title=gettext('Wyniki'), group=group, group_projects=group_projects,
                            group_projects_sorted=group_projects_sorted, user_project=user_project,
-                           users_that_rated_num=users_that_rated_num, raters_pool_per_project_nums=raters_pool_per_project_nums)
+                           users_that_rated_num=users_that_rated_num, raters_pool_per_project_nums=raters_pool_per_project_nums, evaluators_nums=evaluators_nums)
