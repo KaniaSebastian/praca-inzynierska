@@ -11,6 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LebXs0UAAAAAFQBK8V3c5CIno49c8CqU6zbg4F9'
 app.config['RECAPTCHA_PRIVATE_KEY'] = 'your_recaptcha_key'
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
+app.config['WTF_CSRF_TIME_LIMIT'] = 3600*24*7
 app.config['LANGUAGES'] = {
     'en': 'English',
     'pl': 'Polish'

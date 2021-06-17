@@ -367,7 +367,10 @@ def results_csv(group_id):
                       gettext("Punkty od nauczyciela (poprawa)"),
                       gettext("Wyróżnienia (studenci)"),
                       gettext("Wyróżnienie (nauczyciel)"))
-            yield ",".join(header) + '\n\n'
+            yield ",".join(header) + '\n'
+            group_points_per_project = str(group.points_per_project)
+            row = '','','','',f'(od 1 do {group_points_per_project})',f'(od 1 do {group_points_per_project})',f'(od 1 do {group_points_per_project})'
+            yield ",".join(row) + '\n'
 
             # Count numbers of evaluators
             section_keys = [section.login for section in group.users]
@@ -394,9 +397,9 @@ def results_csv(group_id):
                     # section_points_sum = (str(section.project.score_points_pool + section.project.score_points_pool_shuffled))
                     section_score_points_pool = (str(section.project.score_points_pool))
                     section_score_points_pool_shuffled = (str(section.project.score_points_pool_shuffled))
-                    section_score_pool_per_project = (str(round(section.project.score_pool_per_project/(raters_pool_per_project_nums.get(section.project)), 2))) + '/' + (str(group.points_per_project))
-                    section_score_admin = (str(section.project.score_admin)) + '/' + (str(group.points_per_project))
-                    section_score_admin_improvement = (str(section.project.score_admin_improvement)) + '/' + (str(group.points_per_project))
+                    section_score_pool_per_project = (str(round(section.project.score_pool_per_project/(raters_pool_per_project_nums.get(section.project)), 2)))
+                    section_score_admin = (str(section.project.score_admin))
+                    section_score_admin_improvement = (str(section.project.score_admin_improvement))
                     section_user_distinctions = (str(section.project.user_distinctions))
                     section_admin_distinction = gettext("tak") if section.project.admin_distinction else gettext("nie")
                 else:
