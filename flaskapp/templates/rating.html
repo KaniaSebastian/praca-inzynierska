@@ -56,7 +56,7 @@
                                 <div class="input-group input-group-sm">
                                     <div class="input-group-prepend input-group-sm">
                                         {{ form.all_points[loop.index0].points.label(class="input-group-text") }}
-                                        {{ form.all_points[loop.index0].points(class="form-control form-control-lg is-invalid") }}
+                                        {{ form.all_points[loop.index0].points(class="form-control form-control-lg is-invalid form-control-points") }}
                                     </div>
                                 </div>
 
@@ -71,7 +71,7 @@
                                 <div class="input-group input-group-sm">
                                         <div class="input-group-prepend input-group-sm">
                                             {{ form.all_points[loop.index0].points.label(class="input-group-text") }}
-                                            {{ form.all_points[loop.index0].points(class="form-control", onfocus="clear_if_zero(this)") }}
+                                            {{ form.all_points[loop.index0].points(class="form-control form-control-points", onfocus="clear_if_zero(this)") }}
                                         </div>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
         $('.form-group').on('input', '.form-control', function(){
             var totalSum = 0;
             var difference = 0;
-            $('.form-group .form-control').each(function(){
+            $('.form-group .form-control-points').each(function(){
                 var inputVal = $(this).val();
 
                 if($.isNumeric(inputVal)){
