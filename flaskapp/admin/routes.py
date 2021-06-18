@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, login_required
 import os
 from werkzeug.urls import url_quote
 from flask_babel import gettext, lazy_gettext
-import sys
+# import sys
 
 admin = Blueprint('admin', __name__)
 
@@ -368,8 +368,8 @@ def results_csv(group_id):
                       gettext("Wyróżnienia (studenci)"),
                       gettext("Wyróżnienie (nauczyciel)"))
             yield ",".join(header) + '\n'
-            group_points_per_project = str(group.points_per_project)
-            row = '','','','',f'(od 1 do {group_points_per_project})',f'(od 1 do {group_points_per_project})',f'(od 1 do {group_points_per_project})'
+            group_points_per_project = gettext(f'(od 1 do {str(group.points_per_project)})')
+            row = '', '', '', '', group_points_per_project, group_points_per_project, group_points_per_project
             yield ",".join(row) + '\n'
 
             # Count numbers of evaluators

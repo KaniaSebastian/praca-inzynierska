@@ -144,7 +144,7 @@
                         {% if group.rating_status != 'enabled_improvement' %}
                         <li class="list-group-item border-left-0 border-right-0">
                             <div class="form-group">
-                                {{ form.all_points[loop.index0].comment_star_1.label(class="form-control-label") }}
+                                {{ form.all_points[loop.index0].comment_star_1.label(class="form-control-label comment-icon-star-1") }}
 
                                 {% if form.all_points[loop.index0].comment_star_1.errors %}
                                     {{ form.all_points[loop.index0].comment_star_1(class="form-control form-control-lg is-invalid") }}
@@ -161,7 +161,7 @@
 
                         <li class="list-group-item border-left-0 border-right-0">
                             <div class="form-group">
-                                {{ form.all_points[loop.index0].comment_star_2.label(class="form-control-label") }}
+                                {{ form.all_points[loop.index0].comment_star_2.label(class="form-control-label comment-icon-star-2") }}
 
                                 {% if form.all_points[loop.index0].comment_star_2.errors %}
                                     {{ form.all_points[loop.index0].comment_star_2(class="form-control form-control-lg is-invalid") }}
@@ -178,7 +178,7 @@
                         {% endif %}
                         <li class="list-group-item border-left-0 border-right-0">
                             <div class="form-group">
-                                {{ form.all_points[loop.index0].comment_wish.label(class="form-control-label") }}
+                                {{ form.all_points[loop.index0].comment_wish.label(class="form-control-label comment-icon-wish") }}
 
                                 {% if form.all_points[loop.index0].comment_wish.errors %}
                                     {{ form.all_points[loop.index0].comment_wish(class="form-control form-control-lg is-invalid") }}

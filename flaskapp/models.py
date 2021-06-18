@@ -81,8 +81,3 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"Group ({self.name}, is_containing_sections={self.is_containing_sections}, users({len(self.users)}):{self.users})"
-
-
-# class Questionnaire(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.Text(1500), nullable=False)

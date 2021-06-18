@@ -95,10 +95,10 @@ body
  .distinctChkBox   input[type='checkbox']+ label:before
 {
     font-family: 'Font Awesome 5 Free';
-    content: "\f005";
+    content: "\f004";
     font-size:1.5rem;
     cursor:pointer;
-    color: #DAA520;
+    color: #C0392B;
     margin-right: 5px
 }
 
@@ -118,4 +118,31 @@ body
 
 [data-toggle="collapse"].collapsed .fa:before {
   content: "\f0d7";
+}
+
+.comment-icon-star-1:before
+{
+    font-family: "Font Awesome 5 Free";
+    content: "1\f005";
+    margin-right: 5px;
+    font-weight:600;
+    color: #DAA520;
+}
+
+.comment-icon-star-2:before
+{
+    font-family: "Font Awesome 5 Free";
+    content: "2\f005";
+    margin-right: 5px;
+    font-weight:600;
+    color: #DAA520;
+}
+
+.comment-icon-wish:before
+{
+    font-family: "Font Awesome 5 Free";
+    content: "\f0d0";
+    margin-right: 5px;
+    font-weight:600;
+    color: #4779D3;
 }
