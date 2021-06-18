@@ -112,6 +112,15 @@ body
     color: #DAA520;
 }
 
+.icon-color-red
+{
+    color: #C0392B
+}
+.icon-color-blue
+{
+    color: #4779D3;
+}
+
 [data-toggle="collapse"] .fa:before {
   content: "\f0d8";
 }

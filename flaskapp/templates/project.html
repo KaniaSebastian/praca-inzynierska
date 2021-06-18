@@ -112,10 +112,10 @@
                 <li class="text-success"><b> {{ project.score_admin_improvement }}/{{ group.points_per_project }} {{ gettext('pkt') }} </b> {{ gettext('od nauczyciela po poprawie projektu') }}.</li>
               {% endif %}
               {% if project.user_distinctions > 0%}
-                <li>{{ gettext('Ten projekt został wyróżniony przez studentów') }}. {{ gettext('Liczba wyróżnień to') }}: {{ project.user_distinctions }}<i class="fas fa-star icon-color-gold"></i>.</li>
+                <li>{{ gettext('Ten projekt został wyróżniony przez studentów') }}. {{ gettext('Liczba wyróżnień to') }}: {{ project.user_distinctions }}<i class="fas fa-heart icon-color-red"></i>.</li>
               {% endif %}
               {% if project.admin_distinction > 0%}
-                <li>{{ gettext('Ten projekt został wyróżniony przez nauczyciela') }}<i class="fas fa-star icon-color-gold"></i>.</li>
+                <li>{{ gettext('Ten projekt został wyróżniony przez nauczyciela') }}<i class="fas fa-heart icon-color-red"></i>.</li>
               {% endif %}
           </div>
 
@@ -157,6 +157,7 @@
 
                   <div class="card mb-2">
                     <div class="card-header">
+                      <i class="fas fa-star icon-color-gold"></i>
                       {{ gettext('Pozytywne cechy pracy') }}
                     </div>
                     <div class="card-body">
@@ -171,6 +172,7 @@
 
                   <div class="card">
                     <div class="card-header">
+                      <i class="fas fa-magic icon-color-blue"></i>
                       {{ gettext('Rzecz, którą można poprawić') }}
                     </div>
                     <div class="card-body">
@@ -199,6 +201,7 @@
                 <div class="card-body">
                   <div class="card mb-2">
                     <div class="card-header">
+                      <i class="fas fa-star icon-color-gold"></i>
                       {{ gettext('Pozytywne cechy pracy') }}
                     </div>
                     <div class="card-body">
@@ -212,6 +215,7 @@
                   </div>
                   <div class="card">
                     <div class="card-header">
+                      <i class="fas fa-magic icon-color-blue"></i>
                       {{ gettext('Rzeczy, które można poprawić') }}
                     </div>
                     <div class="card-body">
