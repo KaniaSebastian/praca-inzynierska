@@ -169,8 +169,8 @@
             {% endfor %}
 
             <div class="sum text-center">
-                <output id="output-text"></output>
-                <output id="result"></output>
+                <output class="output-text"></output>
+                <output class="result"></output>
             </div>
 
             {{ form.submit(class="btn btn-info btn-block mb-1") }}
@@ -187,7 +187,7 @@
     {{ super() }}
     <script type=text/javascript>
 
-    {% if current_user.rating_type != 'pool_per_project' %}
+      {% if current_user.rating_type != 'pool_per_project' %}
         var points_to_give = $('#points_to_give').text();
         points_to_give = parseInt(points_to_give, 10)
         $('.form-group').on('input', '.form-control', function(){
@@ -206,40 +206,47 @@
             });
             if(!$.isNumeric(difference))
             {
-                $('#output-text').text('')
-                $('#result').html('')
+                $('.output-text').text('')
+                $('.result').html('')
             }
 
             else if (difference > 0)
             {
-                $('#output-text').html("<p class='text-warning'>{{ gettext('Pozostałe punkty do rozdania:') }} </p>")
-                $('#result').html('<b>'+difference+'</b>')
+                $('.output-text').html("<p class='text-warning'>{{ gettext('Pozostałe punkty do rozdania:') }} </p>")
+                $('.result').html('<b>'+difference+'</b>')
             }
             else if (difference < 0)
             {
-                $('#output-text').html("<p class='text-danger'>{{ gettext('Przydzielono o') }} " + '<b>' + Math.abs(difference) + '</b>' + " {{ gettext('pkt. za dużo') }}</p>")
-                $('#result').text('')
+                $('.output-text').html("<p class='text-danger'>{{ gettext('Przydzielono o') }} " + '<b>' + Math.abs(difference) + '</b>' + " {{ gettext('pkt. za dużo') }}</p>")
+                $('.result').text('')
             }
             else if (difference == 0)
             {
-                $('#output-text').html("<p class='text-success'></p>")
-                $('#result').text('')
+                $('.output-text').html("<p class='text-success'></p>")
+                $('.result').text('')
             }
             else
             {
-                $('#output-text').text('')
-                $('#result').html('')
+                $('.output-text').text('')
+                $('.result').html('')
             }
         });
 
-        {% endif %}
-
-        function clear_if_zero(input) {
-            if (input.value <= 0 )
-            {
-                input.value = ''
-            }
+        if ($(window).width() >= 768) {
+            $(window).scroll(function(){
+              $("#user-menu").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
+            });
         }
+
+      {% endif %}
+
+      function clear_if_zero(input) {
+          if (input.value <= 0 )
+          {
+              input.value = ''
+          }
+      }
+
     </script>
 
 {% endblock scripts%}
