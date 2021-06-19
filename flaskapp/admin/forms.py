@@ -17,15 +17,28 @@ class AdminLoginForm(FlaskForm):
 
 
 class CreateGroupForm(FlaskForm):
-    name = StringField(lazy_gettext('Nazwa grupy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=20, message=lazy_gettext('Nazwa grupy musi zawierać od 1 do 20 znaków'))])
+    name = StringField(lazy_gettext('Nazwa grupy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=40, message=lazy_gettext('Nazwa grupy musi zawierać od 1 do 40 znaków'))])
     number = IntegerField(lazy_gettext('Liczba sekcji w grupie'), validators=[InputRequired(message=lazy_gettext('To pole jest wymagane, a wartość musi być liczbą całkowitą')), NumberRange(min=0, max=100, message=lazy_gettext('Ta wartość nie może być ujemna, ani wększa niż 100'))])
-    subject = StringField(lazy_gettext('Przedmiot - skrót od nazwy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=6, message=lazy_gettext('Skrót może się składać z maksymalnie 6 znaków'))])
+    subject = StringField(lazy_gettext('Przedmiot - skrót od nazwy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane')), Length(max=8, message=lazy_gettext('Skrót może się składać z maksymalnie 8 znaków'))])
     submit = SubmitField(lazy_gettext('Utwórz'))
 
     def validate_name(self, name):
         group = Group.query.filter_by(name=name.data).first()
         if group:
             raise ValidationError(lazy_gettext('Ta nazwa jest już używana dla innej grupy'))
+
+
+class EditGroupNameForm(FlaskForm):
+    name = StringField(lazy_gettext('Nazwa grupy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane.')), Length(max=40, message=lazy_gettext('Nazwa grupy musi zawierać od 1 do 40 znaków'))])
+    subject = StringField(lazy_gettext('Przedmiot - skrót od nazwy'), validators=[DataRequired(), Length(max=8, message=lazy_gettext('Skrót może się składać z maksymalnie 8 znaków'))])
+    selected_group_id = HiddenField(lazy_gettext('Id'), validators=[DataRequired()])
+    submitName = SubmitField(lazy_gettext('Zatwierdź'))
+
+    def validate_name(self, name):
+        group = Group.query.filter_by(name=name.data).first()
+        group_for_validation = Group.query.get(self.selected_group_id.data)
+        if group and group.id != group_for_validation.id:
+            raise ValidationError(lazy_gettext('Ta nazwa jest już używana dla innej grupy.'))
 
 
 class SetUploadTimeForm(FlaskForm):
@@ -44,19 +57,6 @@ class SetRatingForm(FlaskForm):
     # rating_type_for_admin = SelectField(lazy_gettext('Metoda oceniania, której użyje nauczyciel'), choices=[('points_pool', lazy_gettext('Metoda 1')), ('points_pool_shuffled', lazy_gettext('Metoda 2'))])
     selected_group_id = HiddenField(lazy_gettext('Id'), validators=[DataRequired()])
     submitRating = SubmitField(lazy_gettext('Zatwierdź'))
-
-
-class EditGroupNameForm(FlaskForm):
-    name = StringField(lazy_gettext('Nazwa grupy'), validators=[DataRequired(message=lazy_gettext('To pole jest wymagane.')), Length(max=20, message=lazy_gettext('Nazwa grupy musi zawierać od 1 do 20 znaków'))])
-    subject = StringField(lazy_gettext('Przedmiot - skrót od nazwy'), validators=[DataRequired(), Length(max=6, message=lazy_gettext('Skrót może się składać z maksymalnie 6 znaków'))])
-    selected_group_id = HiddenField(lazy_gettext('Id'), validators=[DataRequired()])
-    submitName = SubmitField(lazy_gettext('Zatwierdź'))
-
-    def validate_name(self, name):
-        group = Group.query.filter_by(name=name.data).first()
-        group_for_validation = Group.query.get(self.selected_group_id.data)
-        if group and group.id != group_for_validation.id:
-            raise ValidationError(lazy_gettext('Ta nazwa jest już używana dla innej grupy.'))
 
 
 class AddAdminForm(FlaskForm):
