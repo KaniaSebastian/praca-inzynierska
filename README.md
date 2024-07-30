@@ -18,13 +18,27 @@ It has a super-user that is able to add more administrators (teachers) that have
 When a group is created, adnim is able to download and send access codes to studets so they can log in.
 Students do projects in subsections (1:N students per section) but complete the assessment individually.
 
-## Details
-- Backend - Python 3.7
-- Web Framework - Flask
-- Frontend - Bootstrap 4.3.1
-- Database - SQLite
-- ORM - SQLAlchemy
-- Translations - Babel
+
+
+## Made with
+  
+- Backend - ![Python](https://img.shields.io/badge/python_3.7-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+- Web Framework - ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+- Frontend - ![Bootstrap](https://img.shields.io/badge/bootstrap_4-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+- Database - ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+- ORM - ![SQLAlchemy](https://img.shields.io/badge/SQL_Alchemy-%23DD0031?style=for-the-badge&logo=sqlalchemy&logoColor=white)
+- Translations - ![Babel](https://img.shields.io/badge/Babel-F9DC3e?style=for-the-badge&logo=babel&logoColor=black)
 
 **Detailed technical and user documentation available uppon request.**
 
+## Screenshots
+
+![login](https://github.com/user-attachments/assets/148923b6-b500-4f02-8fbd-74d3038e70fb)
+
+![interfejs](https://github.com/user-attachments/assets/49c1151a-d530-4baf-a219-92a8098435aa)
+
+![podglad](https://github.com/user-attachments/assets/9b182383-0b77-4741-aa64-86940979f676)
+
+![sekcje](https://github.com/user-attachments/assets/eb8f5ae7-ef91-4403-966c-e15dc0886fa6)
+
+![ranking](https://github.com/user-attachments/assets/5563a2ad-3fdd-4c5a-aaa7-13331b08a7ee)
